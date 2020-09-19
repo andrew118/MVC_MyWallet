@@ -19,9 +19,7 @@ class Signup extends \Core\Controller
 		if ($user->save()) {
 			View::RenderTemplate('Signup/success.html');
 		} else {
-			var_dump($user->errors);
+			View::RenderTemplate('Signup/new.html', ['user' => $user]);
 		}
-		
-		
 	}
 }

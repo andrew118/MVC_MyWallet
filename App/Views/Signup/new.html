@@ -6,6 +6,15 @@
 
     <h1>Rejestracja</h1>
 	
+	{% if user.errors is not empty %}
+		<p>Błędy formularza:</p>
+			<ul>
+				{% for error in user.errors %}
+					<li>{{ error }}</li>
+				{% endfor %}
+			</ul>
+	{% endif %}
+	
 	<form method="post" action="/signup/create">
 		<div>
 			<label for="inputName">Name:</label>
