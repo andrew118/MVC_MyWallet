@@ -6,6 +6,9 @@ use PDO;
 
 class User extends \Core\Model
 {
+	public $errors = [];
+	
+	
     public function __construct($data)
 	{
 		foreach ($data as $key => $value) {
@@ -22,18 +25,50 @@ class User extends \Core\Model
 	
 	public function save()
 	{
-		$password_hash = password_hash($this->password, PASSWORD_DEFAULT);
+		$this->validate();
 		
-		$sql = 'INSERT INTO users (name, email, password_hash)
-				VALUES (:name, :email, :password_hash)';
+		if (empty($this->errors)) {
+			$password_hash = password_hash($this->password, PASSWORD_DEFAULT);
 		
-		$db = static::getDB();
-		$stmt = $db->prepare($sql);
+			$sql = 'INSERT INTO users (name, email, password_hash)
+					VALUES (:name, :email, :password_hash)';
+			
+			$db = static::getDB();
+			$stmt = $db->prepare($sql);
+			
+			$stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
+			$stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+			$stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+			
+			return $stmt->execute();
+		}
+			return false;
+	}
+	
+	public function validate()
+	{
+		if ($this->name == '') {
+			$this->errors[] = 'Imię jest wymagane';
+		}
 		
-		$stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-		$stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
-		$stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+		if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
+			$this->errors[] = 'Niepoprawny email';
+		}
 		
-		$stmt->execute();
+		if (strlen($this->password) < 6) {
+			$this->errors[] = 'Hasło musi mieć conajmniej 6 znaków';
+		}
+		
+		if (preg_match('/.*[a-z]+.*/i', $this->password) == 0) {
+			$this->errors[] = 'Hasło musi zawierać conajmniej jedną literę';
+		}
+		
+		if (preg_match('/.*\d+.*/i', $this->password) == 0) {
+			$this->errors[] = 'Hasło musi zawierać conajmniej 1 cyfrę';
+		}
+		
+		if ($this->password != $this->password_confirmation) {
+			$this->errors[] = 'Podane hasła nie pasują do siebie';
+		}
 	}
 }
