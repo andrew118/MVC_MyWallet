@@ -52,7 +52,11 @@ class User extends \Core\Model
 		}
 		
 		if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
-			$this->errors[] = 'Niepoprawny email';
+			$this->errors[] = 'Niepoprawny e-mail';
+		}
+		
+		if ($this->emailExists($this->email)) {
+			$this->errors[] = 'E-mail jest już zajęty';
 		}
 		
 		if (strlen($this->password) < 6) {
@@ -70,5 +74,18 @@ class User extends \Core\Model
 		if ($this->password != $this->password_confirmation) {
 			$this->errors[] = 'Podane hasła nie pasują do siebie';
 		}
+	}
+	
+	protected function emailExists($email)
+	{
+		$sql = 'SELECT * FROM users WHERE email = :email';
+		
+		$db = static::getDB();
+		$stmt = $db->prepare($sql);
+		$stmt->bindParam(':email', $email, PDO::PARAM_STR);
+		
+		$stmt->execute();
+		
+		return $stmt->fetch() !== false;
 	}
 }
