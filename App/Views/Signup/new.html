@@ -3,6 +3,7 @@
 {% block title %}Rejestracja{% endblock %}
 
 {% block footer %}
+	<script src="/js/hideShowPassword.min.js"></script>
 
 	<script>
 		$.validator.addMethod('validPassword',
@@ -35,11 +36,18 @@
 						required: true,
 						minlength: 6,
 						validPassword: true
-					},
-					password_confirmation: {
-						equalTo: '#inputPassword'
+					}
+				},
+				messages: {
+					email: {
+						remote: 'Email jest zajęty'
 					}
 				}
+				
+				$('#inputPassword').hideShowPassword({
+					show: false,
+					innerToggle: 'focus'
+				});
 			});
 		});
 	</script>
@@ -71,10 +79,7 @@
 			<label for="inputPassword">Password:</label>
 			<input type="password" id="inputPassword" name="password" placeholder="Hasło" required />
 		</div>
-		<div>
-			<label for="inputPasswordConfirmation">E-mail:</label>
-			<input type="password" id="inputPasswordConfirmation" name="password_confirmation" placeholder="Powtórz hasło" required />
-		</div>
+
 		<div>
 			<button type="submit">Sign up</button>
 		</div>

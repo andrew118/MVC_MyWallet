@@ -70,10 +70,6 @@ class User extends \Core\Model
 		if (preg_match('/.*\d+.*/i', $this->password) == 0) {
 			$this->errors[] = 'Hasło musi zawierać conajmniej 1 cyfrę';
 		}
-		
-		if ($this->password != $this->password_confirmation) {
-			$this->errors[] = 'Podane hasła nie pasują do siebie';
-		}
 	}
 	
 	public static function emailExists($email)
