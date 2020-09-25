@@ -9,7 +9,7 @@ class User extends \Core\Model
 	public $errors = [];
 	
 	
-    public function __construct($data)
+    public function __construct($data =[])
 	{
 		foreach ($data as $key => $value) {
 			$this->$key = $value;
@@ -84,6 +84,8 @@ class User extends \Core\Model
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
 		$stmt->bindParam(':email', $email, PDO::PARAM_STR);
+		
+		$stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 		
 		$stmt->execute();
 		
