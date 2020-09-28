@@ -4,8 +4,12 @@
 
 {% block body %}
 
-    <h1>MyWallet</h1>
+  <h1>MyWallet</h1>
 	
-	<a href="/signup/new">Zarejestruj się</a> lub <a href="/login">Zaloguj się</a>.
+	{% if session.user_id %}
+		Zalogowano użytkownika o ID {{ session.user_id }}
+	{% else %}
+		<a href="/signup/new">Zarejestruj się</a> lub <a href="/login">Zaloguj się</a>.
+	{% endif %}
 
 {% endblock %}
