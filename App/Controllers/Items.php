@@ -4,13 +4,8 @@ namespace App\Controllers;
 
 use \Core\View;
 
-class Items extends \Core\Controller
+class Items extends Authenticated
 {
-	protected function before()
-	{
-		$this->requireLogin();
-	}
-	
 	public function indexAction()
 	{
 		View::renderTemplate('Items/index.html');
