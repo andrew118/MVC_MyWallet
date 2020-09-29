@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Core\View;
 use \App\Models\User;
 use \App\Auth;
+use \App\Flash;
 
 class Login extends \Core\Controller
 {
@@ -20,15 +21,28 @@ class Login extends \Core\Controller
 		if ($user) {
 			Auth::login($user);
 			
+			Flash::addMessage('Logowanie pomyślne');
+			
 			$this->redirect(Auth::getReturnToPage());
 		} else {
-			View::renderTemplate('Login/new.html', ['email' => $_POST['email']]);
+			Flash::addMessage('Niepoprawny email lub hasło');
+			
+			View::renderTemplate('Login/new.html', [
+				'email' => $_POST['email']
+			]);
 		}
 	}
 	
 	public function destroyAction()
 	{
 		Auth::logout();
+		
+		$this->redirect('/login/show-logout-message');
+	}
+	
+	public function showLogoutMessageAction()
+	{
+		Flash::addMessage('Wylogowałeś się');
 		
 		$this->redirect('/');
 	}

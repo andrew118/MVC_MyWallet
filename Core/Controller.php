@@ -3,6 +3,7 @@
 namespace Core;
 
 use \App\Auth;
+use \App\Flash;
 
 abstract class Controller
 {
@@ -46,6 +47,8 @@ abstract class Controller
 	public function requireLogin()
 	{
 		if (! Auth::getUser()) {
+			Flash::addMessage('Najpierw się zaloguj');
+			
 			Auth::rememberRequestedPage();
 			
 			$this->redirect('/login');
