@@ -37,6 +37,8 @@ class Auth
 		
 		// Finally, destroy the session.
 		session_destroy();
+		
+		static::forgetLogin();
 	}
 	
 	public static function rememberRequestedPage()
@@ -72,6 +74,21 @@ class Auth
 				
 				return $user;
 			}
+		}
+	}
+	
+	protected static function forgetLogin()
+	{
+		$cookie = $_COOKIE['remember_me'] ?? false;
+		
+		if ($cookie) {
+			$remembered_login = RememberedLogin::findByToken($cookie);
+			
+			if ($remembered_login) {
+				$remembered_login->delete();
+			}
+			
+			setcookie('remember_me', '', time() - 3600); // set expire in the past
 		}
 	}
 }
