@@ -21,8 +21,13 @@
 			<input type="email" id="inputEmail" name="email" placeholder="Adres e-mail" required value="{{ email }}" />
 		</div>
 		<div>
-			<label for="inputPassword">Password:</label>
+			<label for="inputPassword">Hasło:</label>
 			<input type="password" id="inputPassword" name="password" placeholder="Hasło" required />
+		</div>
+		<div>
+			<label>
+				<input type="checkbox" name="remember_me" {% if remember_me %} checked="checked" {% endif %} /> Zapamiętaj mnie
+			</label>
 		</div>
 
 		<div>
