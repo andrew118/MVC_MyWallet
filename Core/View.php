@@ -24,7 +24,6 @@ class View
         if ($twig === null) {
             $loader = new \Twig\Loader\Filesystemloader(dirname(__DIR__) . '/App/Views');
             $twig = new \Twig\Environment($loader);
-			$twig->addGlobal('is_logged_in', \App\Auth::isLoggedIn());
 			$twig->addGlobal('current_user', \App\Auth::getUser());
         }
 
