@@ -7,7 +7,9 @@
   <h1>MyWallet</h1>
 	
 	{% if is_logged_in %}
-		Zalogowano użytkownika. <a href="/logout">Wyloguj się</a>
+		Witaj {{ current_user.name }}!
+		
+		<a href="/logout">Wyloguj się</a>
 	{% else %}
 		<a href="/signup/new">Zarejestruj się</a> lub <a href="/login">Zaloguj się</a>.
 	{% endif %}
