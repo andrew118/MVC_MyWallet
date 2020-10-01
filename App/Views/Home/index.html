@@ -3,13 +3,51 @@
 {% block title %}Weź w garść swoje pieniądze już dziś{% endblock %}
 
 {% block body %}
-	
-	{% if current_user %}
-		Witaj {{ current_user.name }}!
+
+	<section>
+					
+		<div class="row">
+			<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto rounded" style="border: 1px #f2f2f2 dashed; background-color: rgba(242, 242, 242, 0.2); ">
+				
+				<form action="/Login/create" method="post">
+					
+					<div class="col-10 offset-1 mt-5">
+						<input type="text" class="form-control mb-3" placeholder="E-mail" name="email" id="inputEmail" value="{{ email }}" required />
+					</div>
+					
+					<div class="col-10 offset-1">
+						<input type="password" class="form-control mb-4" placeholder="Hasło" name="password" id="inputPassword" required />
+					</div>
+					
+					<div class="col-10 offset-1">
+						<input type="submit" class="btn btn-success btn-block mb-5 font-weight-bold" value="Zaloguj">
+					</div>
+				
+				</form>
+				
+				<div class="col-10 offset-1">
+					<a href="#" class="btn btn-info btn-block mb-5 font-weight-bold" role="button">Zarejestruj</a>
+				</div>
+				
+			</div>
+		</div>
 		
-		<a href="/logout">Wyloguj się</a>
-	{% else %}
-		<a href="/signup/new">Zarejestruj się</a> lub <a href="/login">Zaloguj się</a>.
-	{% endif %}
+	</section>
+	
+	<article>
+				
+				<div class="row mt-4">
+					<h1 class="h4 col-12 text-center mb-4">Życie zmienia smak, gdy <strong>Twoje finanse</strong> znajdują się <strong>pod Twoją kontrolą</strong></h1>
+				
+					<div class="col-12 text-center">
+						<ul class="list-unstyled">
+							<li class="mb-1">Bilans z całego miesiąca lub wybranego okresu</li>
+							<li class="mb-1">Wydatki posegregowane według kategorii</li>
+							<li class="mb-1">Wizualizacja obszarów Twoich wydatków</li>
+						</ul>
+					</div>
+				</div>
+				
+			</article>
 
 {% endblock %}
