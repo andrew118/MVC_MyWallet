@@ -8,3 +8,59 @@ body {
 .font-lobster {
 	font-family: 'Lobster';
 }
+
+.letter-spacing-4 {
+	letter-spacing: 4px;
+}
+
+.letter-spacing-2, strong {
+	letter-spacing: 2px;
+}
+
+.wallet {
+	background-color: #525252 !important;
+}
+
+.nav-link:hover {
+	color: #36b03c !important;
+}
+
+.dropdown-item {
+	color: #f2f2f2 !important;
+}
+
+.dropdown-item:hover {
+	background-color: inherit !important;
+	color: #36b03c !important;
+}
+
+.navbar-nav {
+    float:none;
+    margin:0 auto;
+    display: block;
+    text-align: center;
+}
+
+.navbar-nav > li {
+    display: inline-block;
+    float:none;
+}
+
+@media (max-width: 767px) {
+	.navbar-nav {
+		display: flex;
+		text-align: left;
+	}
+}
+
+@media (min-width: 992px) {
+	li.nav-item {
+	min-width: 170px !important;
+	}
+}
+
+@media (min-width: 1200px){
+	li.nav-item {
+	min-width: 200px !important;
+	}
+}
