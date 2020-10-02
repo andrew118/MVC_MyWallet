@@ -54,8 +54,6 @@
 {% endblock %}
 
 {% block body %}
-
-    <h1>Rejestracja</h1>
 	
 	{% if user.errors is not empty %}
 		<p>Błędy formularza:</p>
@@ -66,23 +64,50 @@
 			</ul>
 	{% endif %}
 	
-	<form method="post" action="/signup/create" id="signupForm">
-		<div>
-			<label for="inputName">Name:</label>
-			<input id="inputName" name="name" placeholder="Imię" autofocus value="{{ user.name }}" required />
+	<section>
+					
+		<div class="row">
+			<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto rounded" style="border: 1px #f2f2f2 dashed; background-color: rgba(242, 242, 242, 0.2); ">
+				
+				<form action="/signup/create" method="post" id="signupForm">
+					
+					<div class="col-10 offset-1 mt-5">
+						<input type="text" class="form-control mb-3" placeholder="Imię" name="name" id="inputName" value="{{ user.name }}" required />
+					</div>
+					
+					<div class="col-10 offset-1 mt-3">
+						<input type="email" class="form-control mb-3" placeholder="E-mail" name="email" id="inputEmail" value="{{ user.email }}" required />
+					</div>
+					
+					<div class="col-10 offset-1">
+						<input type="password" class="form-control mb-4" placeholder="Hasło" name="password" id="inputPassword" required />
+					</div>
+					
+					<div class="col-10 offset-1">
+						<input type="submit" class="btn btn-info btn-block mb-5 font-weight-bold" value="Zarejestruj">
+					</div>
+				
+				</form>
+				
+			</div>
 		</div>
-		<div>
-			<label for="inputEmail">E-mail:</label>
-			<input type="email" id="inputEmail" name="email" placeholder="Adres e-mail" value="{{ user.email }}" required />
+		
+	</section>
+	
+		<article>
+				
+		<div class="row mt-4">
+			<h1 class="h4 col-12 text-center mb-4">Zarejestruj się za darmo i trzymaj wydatki <strong>pod kontrolą</strong></h1>
+		
+			<div class="col-12 text-center">
+				<ul class="list-unstyled">
+					<li class="mb-1">Bilans z całego miesiąca lub wybranego okresu</li>
+					<li class="mb-1">Wydatki posegregowane według kategorii</li>
+					<li class="mb-1">Wizualizacja obszarów Twoich wydatków</li>
+				</ul>
+			</div>
 		</div>
-		<div>
-			<label for="inputPassword">Password:</label>
-			<input type="password" id="inputPassword" name="password" placeholder="Hasło" required />
-		</div>
-
-		<div>
-			<button type="submit">Sign up</button>
-		</div>
-	</form>
+		
+	</article>
 
 {% endblock %}
