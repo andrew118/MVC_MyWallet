@@ -3,53 +3,35 @@
 {% block title %}Rejestracja{% endblock %}
 
 {% block footer %}
-	<script src="/js/hideShowPassword.min.js"></script>
+	<script src="/js/app.js"></script>
 
 	<script>
-		$.validator.addMethod('validPassword',
-			function(value, element, param) {
-				if (value != '') {
-					if (value.match(/.*[a-z]+.*/i) == null) {
-						return false;
-					}
-					if (value.match(/.*\d+.*/) == null) {
-						return false;
-					}
-				}
-				
-				return true;
-			},
-			'Conajmniej jedna litera i jedna liczba'
-		);
-		
-		$(document).ready(function() {
-			
-			$('#signupForm').validate({
-				rules: {
-					name: 'required',
-					email: {
-						required: true,
-						email: true,
-						remote: '/account/validate-email'
-					},
-					password: {
-						required: true,
-						minlength: 6,
-						validPassword: true
-					}
-				},
-				messages: {
-					email: {
-						remote: 'Email jest zajęty'
-					}
-				}
-				
-				$('#inputPassword').hideShowPassword({
-					show: false,
-					innerToggle: 'focus'
-				});
+			$(document).ready(function() {
+
+					$('#signupForm').validate({
+							rules: {
+									name: 'required',
+									email: {
+											required: true,
+											email: true,
+											remote: '/account/validate-email'
+									},
+									password: {
+											required: true,
+											minlength: 6,
+											validPassword: true
+									}
+							},
+							messages: {
+									email: {
+											remote: 'Podany email jest zajęty'
+									},
+									password: {
+											minlength: 'Hasło musi mieć minimum 6 znaków'
+									}
+							}
+					});
 			});
-		});
 	</script>
 {% endblock %}
 
@@ -97,7 +79,7 @@
 		<article>
 				
 		<div class="row mt-4">
-			<h1 class="h4 col-12 text-center mb-4">Zarejestruj się za darmo i trzymaj wydatki <strong>pod kontrolą</strong></h1>
+			<h1 class="h4 col-12 text-center mb-4"><strong>Zarejestruj się za darmo</strong> i trzymaj wydatki pod kontrolą</h1>
 		
 			<div class="col-12 text-center">
 				<ul class="list-unstyled">
