@@ -12,7 +12,7 @@
 	{% if user.errors is not empty %}
 		<div class="row">
 			<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto alert alert-warning alert-dismissible fade show" role="alert">
-				<span class="alert-heading"><strong>Błędy formularza:</strong></span>
+				<span class="alert-heading font-weight-bold">Błędy formularza</span>
 				<div class="text-center">
 						{% for error in user.errors %}
 							{{ error }} <br>
