@@ -1,17 +1,35 @@
-{% extends "base.html" %}
+{% extends "desktop.html" %}
 
-{% block title %}Home{% endblock %}
+{% block my_script %}
+	<script src="/js/comment.js"></script>
+{% endblock %}
+		
+{% block title %}Pulpit{% endblock %}
 
 {% block body %}
 
-  <h1>MyWallet</h1>
+	<section>
+				
+		<div class="row">
+			<div class="col-12 text-center mt-4">
+				
+				<h3 class="h2 mb-4">Witaj <span class="text-capitalize">
+				{{ current_user.name }}
+				</span>!</h3>
+				<p class="h4">Miło, że tu zajrzałeś</p>
+				<p class="h4 mt-2 mb-4">Dziś <span id="dayOfWeek"></span></p>
+				<img src="/img/save.jpg" class="img-thumbnail" alt="Oszczędzaj pieniądze" />
+				<p class="h4 mt-2">Zerknijmy jak mają się Twoje finanse...</p>
+				
+			</div>
+		</div>
 	
-	{% if current_user %}
-		Witaj {{ current_user.name }}!
-		
-		<a href="/logout">Wyloguj się</a>
-	{% else %}
-		<a href="/signup/new">Zarejestruj się</a> lub <a href="/login">Zaloguj się</a>.
-	{% endif %}
+	</section>
+
+{% block footer %}
+<script>
+	$(document).ready(dayComment);
+</script>
+{% endblock %}
 
 {% endblock %}

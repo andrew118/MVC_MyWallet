@@ -13,7 +13,7 @@ class Login extends \Core\Controller
 	{
 		View::renderTemplate('Login/new.html');
 	}
-	
+
 	public function createAction()
 	{
 		$user = User::authenticate($_POST['email'], $_POST['password']);
@@ -22,8 +22,6 @@ class Login extends \Core\Controller
 		
 		if ($user) {
 			Auth::login($user, $remember_me);
-			
-			Flash::addMessage('Logowanie pomyślne');
 			
 			$this->redirect(Auth::getReturnToPage());
 		} else {

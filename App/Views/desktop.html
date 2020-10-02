@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+{% block navbar %}
+	<nav class="navbar navbar-dark navbar-expand-md rounded wallet sticky-top py-0" style="border: 1px #000 solid">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		
+		<div class="collapse navbar-collapse" id="mainmenu">
+		
+			<ul class="navbar-nav">
+				
+				<li class="nav-item">
+					<a class="nav-link" href="#"><i class="icon-money"></i> Dodaj przychód </a>
+				</li>
+				
+				<li class="nav-item">
+					<a class="nav-link" href="#"><i class="icon-basket"></i> Dodaj wydatek </a>
+				</li>
+				
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="false" id="submenu" aria-haspopup="true"><i class="icon-calendar"></i> Przeglądaj bilans </a>
+					
+					<div class="dropdown-menu wallet" aria-labelledby="submenu">
+						<form method="post">
+							<input type="submit" name="current" class="dropdown-item btn btn-link" formaction="#" value=" Bierzący miesiąc ">
+							<input type="submit" name="previous" class="dropdown-item btn btn-link" formaction="#" value=" Poprzedni miesiąc ">
+						</form>
+						<button class="dropdown-item btn btn-link"  data-toggle="modal" data-target="#dateRangeModal"> Inny zakres </button>
+						
+					</div>
+					
+				</li>
+				
+				<li class="nav-item">
+					<a class="nav-link" href="#"><i class="icon-conf"></i> Ustawienia </a>
+				</li>
+				
+				<li class="nav-item">
+					<a class="nav-link" href="/logout"><i class="icon-logout"></i> Wyloguj </a>
+				</li>
+				
+			</ul>
+		
+		</div>
+		
+	</nav>
+	
+<!-- MODAL STARTS HERE -->
+	<div class="modal fade" id="dateRangeModal" tabindex="-1" role="dialog" aria-labelledby="dateRangeInput" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title text-dark font-weight-bold" id="dateRangeInput">Podaj zakres dat</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<form action="#" method="post">
+					<div class="modal-body">
+						<div class="row">
+							
+								<div class="col-sm-6">
+									<h6 class="h6 text-dark">Podaj datę początkową</h6>
+									<input type="date" class="mb-3 rounded" name="begin_date" id="begin_date">
+								</div>
+								
+								<div class="col-sm-6">
+									<h6 class="h6 text-dark">Podaj datę końcową</h6>
+									<input type="date" class="mb-2 rounded" name="end_date" id="end_date">
+								</div>
+							
+						</div>
+					</div>
+					
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-success" id="modal_submit">Zastosuj</button>
+						<button type="button" class="btn btn-outline-danger" data-dismiss="modal">Porzuć pomysł</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% endblock %}

@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 
-class Home extends \Core\Controller
+class Home extends Authenticated
 {
     public function indexAction()
     {
