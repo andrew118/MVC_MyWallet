@@ -3,8 +3,17 @@
 {% block my_script %}
 	<script src="/js/comment.js"></script>
 {% endblock %}
-		
+
+
 {% block title %}Pulpit{% endblock %}
+
+
+{% block footer %}
+	<script>
+		$(document).ready(dayComment);
+	</script>
+{% endblock %}
+
 
 {% block body %}
 
@@ -26,10 +35,6 @@
 	
 	</section>
 
-{% block footer %}
-<script>
-	$(document).ready(dayComment);
-</script>
-{% endblock %}
+
 
 {% endblock %}
