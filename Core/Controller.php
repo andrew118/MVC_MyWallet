@@ -47,7 +47,6 @@ abstract class Controller
 	public function requireLogin()
 	{
 		if (! Auth::getUser()) {
-			Flash::addMessage('Najpierw się zaloguj');
 			
 			Auth::rememberRequestedPage();
 			

@@ -1,53 +1,35 @@
-{% extends "base.html" %}
+{% extends "desktop.html" %}
 
-{% block title %}Weź w garść swoje pieniądze już dziś{% endblock %}
+{% block my_script %}
+	<script src="/js/comment.js"></script>
+{% endblock %}
+		
+{% block title %}Pulpit{% endblock %}
 
 {% block body %}
 
 	<section>
-					
+				
 		<div class="row">
-			<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto rounded" style="border: 1px #f2f2f2 dashed; background-color: rgba(242, 242, 242, 0.2); ">
+			<div class="col-12 text-center mt-4">
 				
-				<form action="/Login/create" method="post">
-					
-					<div class="col-10 offset-1 mt-5">
-						<input type="text" class="form-control mb-3" placeholder="E-mail" name="email" id="inputEmail" value="{{ email }}" required />
-					</div>
-					
-					<div class="col-10 offset-1">
-						<input type="password" class="form-control mb-4" placeholder="Hasło" name="password" id="inputPassword" required />
-					</div>
-					
-					<div class="col-10 offset-1">
-						<input type="submit" class="btn btn-success btn-block mb-5 font-weight-bold" value="Zaloguj">
-					</div>
-				
-				</form>
-				
-				<div class="col-10 offset-1">
-					<a href="#" class="btn btn-info btn-block mb-5 font-weight-bold" role="button">Zarejestruj</a>
-				</div>
+				<h3 class="h2 mb-4">Witaj <span class="text-capitalize">
+				{{ current_user.name }}
+				</span>!</h3>
+				<p class="h4">Miło, że tu zajrzałeś</p>
+				<p class="h4 mt-2 mb-4">Dziś <span id="dayOfWeek"></span></p>
+				<img src="/img/save.jpg" class="img-thumbnail" alt="Oszczędzaj pieniądze" />
+				<p class="h4 mt-2">Zerknijmy jak mają się Twoje finanse...</p>
 				
 			</div>
 		</div>
-		
-	</section>
 	
-	<article>
-				
-				<div class="row mt-4">
-					<h1 class="h4 col-12 text-center mb-4">Życie zmienia smak, gdy <strong>Twoje finanse</strong> znajdują się <strong>pod Twoją kontrolą</strong></h1>
-				
-					<div class="col-12 text-center">
-						<ul class="list-unstyled">
-							<li class="mb-1">Bilans z całego miesiąca lub wybranego okresu</li>
-							<li class="mb-1">Wydatki posegregowane według kategorii</li>
-							<li class="mb-1">Wizualizacja obszarów Twoich wydatków</li>
-						</ul>
-					</div>
-				</div>
-				
-			</article>
+	</section>
+
+{% block footer %}
+<script>
+	$(document).ready(dayComment);
+</script>
+{% endblock %}
 
 {% endblock %}

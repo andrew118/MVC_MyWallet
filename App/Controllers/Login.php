@@ -10,9 +10,9 @@ use \App\Flash;
 class Login extends \Core\Controller
 {
 	public function newAction()
--	{
--		View::renderTemplate('Login/new.html');
--	}
+	{
+		View::renderTemplate('Login/new.html');
+	}
 
 	public function createAction()
 	{
@@ -23,13 +23,11 @@ class Login extends \Core\Controller
 		if ($user) {
 			Auth::login($user, $remember_me);
 			
-			Flash::addMessage('Logowanie pomyślne');
-			
 			$this->redirect(Auth::getReturnToPage());
 		} else {
 			Flash::addMessage('Niepoprawny email lub hasło');
 			
-			View::renderTemplate('Home/index.html', [
+			View::renderTemplate('Login/new.html', [
 				'email' => $_POST['email'],
 				'remember_me' => $remember_me
 			]);
