@@ -16,7 +16,14 @@
 					</div>
 					
 					<div class="col-10 offset-1">
-						<input type="password" class="form-control mb-4" placeholder="Hasło" name="password" id="inputPassword" required />
+						<input type="password" class="form-control mb-1" placeholder="Hasło" name="password" id="inputPassword" required />
+					</div>
+					
+					<div class="col-10 offset-1 mb-4 text-right"">
+						<label style="font-size: 17px;">
+						<input type="checkbox" name="remember_me" {% if remember_me %} checked="checked"{% endif %} />
+						Zapamiętaj mnie
+						</label>
 					</div>
 					
 					<div class="col-10 offset-1">
