@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\User;
+use \App\Flash;
 
 class Signup extends \Core\Controller
 {
@@ -17,7 +18,9 @@ class Signup extends \Core\Controller
 		$user = new User($_POST);
 
 		if ($user->save()) {
-			$this->redirect('/signup/success');
+			Flash::addMessage('Zarejestrowałeś się pomyślnie. Możesz się zalogować');
+			
+			$this->redirect('/login/new');
 		} else {
 			View::RenderTemplate('Signup/new.html', ['user' => $user]);
 		}
