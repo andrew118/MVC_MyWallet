@@ -23,11 +23,17 @@
 									}
 							},
 							messages: {
+									name: {
+											required: 'Musisz podać imię'
+									},
 									email: {
-											remote: 'Podany email jest zajęty'
+											remote: 'Podany email jest zajęty',
+											required: 'Musisz podać email',
+											email: 'Podaj popraawny email'
 									},
 									password: {
-											minlength: 'Hasło musi mieć minimum 6 znaków'
+											minlength: 'Hasło musi mieć minimum 6 znaków',
+											required: 'Musisz podać hasło'
 									}
 							}
 					});
@@ -38,12 +44,19 @@
 {% block body %}
 	
 	{% if user.errors is not empty %}
-		<p>Błędy formularza:</p>
-			<ul>
-				{% for error in user.errors %}
-					<li>{{ error }}</li>
-				{% endfor %}
-			</ul>
+		<div class="row">
+			<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto alert alert-warning alert-dismissible fade show" role="alert">
+				<span class="alert-heading"><strong>Błędy formularza:</strong></span>
+				<div class="text-center">
+						{% for error in user.errors %}
+							{{ error }} <br>
+						{% endfor %}
+				</div>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>	
+			</div>
+		</div>
 	{% endif %}
 	
 	<section>
@@ -54,19 +67,25 @@
 				<form action="/signup/create" method="post" id="signupForm">
 					
 					<div class="col-10 offset-1 mt-5">
-						<input type="text" class="form-control mb-3" placeholder="Imię" name="name" id="inputName" value="{{ user.name }}" required />
+						<div>
+							<input type="text" class="form-control" placeholder="Imię" name="name" id="inputName" value="{{ user.name }}" required />
+						</div>
 					</div>
 					
 					<div class="col-10 offset-1 mt-3">
-						<input type="email" class="form-control mb-3" placeholder="E-mail" name="email" id="inputEmail" value="{{ user.email }}" required />
+						<div>
+							<input type="email" class="form-control mt-3" placeholder="E-mail" name="email" id="inputEmail" value="{{ user.email }}" required />
+						</div>
 					</div>
 					
 					<div class="col-10 offset-1">
-						<input type="password" class="form-control mb-4" placeholder="Hasło" name="password" id="inputPassword" required />
+						<div>
+							<input type="password" class="form-control mt-3" placeholder="Hasło" name="password" id="inputPassword" required />
+						</div>
 					</div>
 					
 					<div class="col-10 offset-1">
-						<input type="submit" class="btn btn-info btn-block mb-5 font-weight-bold" value="Zarejestruj">
+						<input type="submit" class="btn btn-info btn-block mt-4 mb-5 font-weight-bold" value="Zarejestruj">
 					</div>
 				
 				</form>
