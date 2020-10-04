@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use \Core\View;
 
-class Items extends Authenticated
+class Incomes extends Authenticated
 {
-	public function indexAction()
+	public function addIncomeAction()
 	{
 		View::renderTemplate('Incomes/add.html');
 	}
