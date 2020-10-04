@@ -15,5 +15,5 @@ $.validator.addMethod('validDate',
         }
         // return true;
     },
-    'Pdaj poprawną datę w formacie rrrr-mm-dd'
+    'Podaj poprawną datę w formacie rrrr-mm-dd'
 );

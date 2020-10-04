@@ -1,6 +1,15 @@
 $(document).ready(function() {
 
     $('#incomeForm').validate({
+            errorPlacement: function(error, element) {
+              if (element.attr('name') == 'money') {
+                error.insertAfter("#cash");
+              }
+              if (element.attr('name') == 'dater') {
+                error.insertAfter('#date')
+              }
+              $('.error').css('padding-left', '1.5rem');
+            },
             rules: {
                     money: {
                             required: true,
