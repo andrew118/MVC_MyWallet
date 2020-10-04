@@ -16,4 +16,8 @@ class Incomes extends Authenticated
 	{
 		echo('Nowy wydatek');
 	}
+    
+    public static function todayDate() {
+        return date('Y-m-d');
+    }
 }
