@@ -2,6 +2,11 @@
 
 {% block title %}Dodaj przychód{% endblock %}
 
+{% block footer %}
+	<script src="/js/formValidation.js"></script>
+	<script src="/js/validDate.js"></script>
+{% endblock %}
+
 {% block body %}
 
 	<article>
@@ -10,7 +15,7 @@
 		<div class="row mx-2">
 			
 			<div class="col-sm-10 col-md-8 col-lg-6 mx-auto p-3 rounded" style="border: 2px #f2f2f2 dashed">
-				<form action="/incomes/new" method="post">
+				<form action="/incomes/new" method="post" id="incomeForm">
 												
 					<div class="col">
 						<label class="sr-only">Kwota</label>
@@ -18,7 +23,7 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text px-2">Kwota</span>
 								</div>
-								<input type="number" class="form-control" step="0.01" name="money" min="0.00">
+								<input type="number" class="form-control" name="money" min="0.00" step="0.01" placeholder="0.00" id="userMonay" required />
 							</div>
 					</div>
 					
@@ -28,7 +33,7 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text px-3">Data</span>
 								</div>
-								<input type="date" class="form-control" name="dater">
+								<input type="text" class="form-control" name="dater" id="userDate" required />
 							</div>
 					</div>
 													
