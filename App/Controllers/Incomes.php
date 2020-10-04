@@ -8,7 +8,7 @@ class Items extends Authenticated
 {
 	public function indexAction()
 	{
-		View::renderTemplate('Items/index.html');
+		View::renderTemplate('Incomes/add.html');
 	}
 	
 	public function newAction()
