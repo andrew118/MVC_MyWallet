@@ -14,7 +14,7 @@ class Incomes extends Authenticated
 	
 	public function newAction()
 	{
-		echo('Nowy wydatek');
+		var_dump($_POST);
 	}
     
     public static function todayDate() {
