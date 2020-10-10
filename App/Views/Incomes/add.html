@@ -3,11 +3,27 @@
 {% block title %}Dodaj przychód{% endblock %}
 
 {% block footer %}
-	<script src="/js/formValidation.js"></script>
-	<script src="/js/validDate.js"></script>
+<script src="/js/formValidation.js"></script>
+<script src="/js/validDate.js"></script>
 {% endblock %}
 
 {% block body %}
+
+	{% if income.errors is not empty %}
+		<div class="row mt-3">
+			<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto alert alert-warning alert-dismissible fade show" role="alert">
+				<span class="alert-heading font-weight-bold">Błędy formularza</span>
+				<div class="text-center">
+						{% for error in income.errors %}
+							{{ error }} <br>
+						{% endfor %}
+				</div>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>	
+			</div>
+		</div>
+	{% endif %}
 
 	<article>
 		<h1 class="h4 mt-4 mb-3 font-weight-bold text-center">Dodaj swoje przychody</h1>
@@ -23,7 +39,7 @@
 									<div class="input-group-prepend">
 										<span class="input-group-text px-2">Kwota</span>
 									</div>
-									<input type="number" class="form-control" name="money" min="0.01" step="0.01" id="userMoney" required />
+									<input type="number" class="form-control" name="money" min="0.01" step="0.01" id="userMoney" placeholder="0.00" value="{{ income.money }}"required />
 								</div>
 						</div>
 					</div>
