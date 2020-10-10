@@ -3,28 +3,24 @@
 namespace App\Controllers;
 
 use \Core\View;
-use \App\Models\cashFlow;
+use \App\Models\CashFlow;
 
 class Incomes extends Authenticated
-{  
+{
   public function addIncomeAction()
 	{
-    $userIncomeCategories = $this->getCategories();
-    //var_dump($userIncomeCategories);
+    $userIncomeCategories = CashFlow::loadIncomeCategories($_SESSION['user_id']);
+    
     View::renderTemplate('Incomes/add.html', [ 'categories' => $userIncomeCategories]);
 	}
 	
 	public function newAction()
 	{ 
-    var_dump($this->getIncomes());
+    $moneyFlow = new CashFlow($_POST);
+    var_dump($moneyFlow);
 	}
     
   public static function todayDate() {
       return date('Y-m-d');
-  }
-  
-  private function getCategories()
-  {
-    return cashFlow::loadIncomeCategories($_SESSION['user_id']);
   }
 }

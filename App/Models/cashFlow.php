@@ -6,6 +6,13 @@ use PDO;
 
 class cashFlow extends \Core\Model
 { 
+  public function __construct($data =[])
+  {
+    foreach ($data as $key => $value) {
+      $this->$key = $value;
+    }
+  }
+  
   public static function assignDefaultCategoriesToUser($id)
   {
     $db = static::getDB();
@@ -28,8 +35,10 @@ class cashFlow extends \Core\Model
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
 		
-		$stmt->execute();
+    $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 		
-		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt->execute();
+		
+		return $stmt->fetchAll();
   }
 }

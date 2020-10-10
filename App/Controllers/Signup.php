@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\User;
-use \App\Models\cashFlow;
+use \App\Models\CashFlow;
 use \App\Flash;
 
 class Signup extends \Core\Controller
