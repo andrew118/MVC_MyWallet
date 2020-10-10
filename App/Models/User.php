@@ -10,7 +10,7 @@ class User extends \Core\Model
 	public $errors = [];
 	
 	
-    public function __construct($data =[])
+  public function __construct($data =[])
 	{
 		foreach ($data as $key => $value) {
 			$this->$key = $value;

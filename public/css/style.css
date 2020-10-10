@@ -5,11 +5,11 @@ body {
 	font-family: 'Dosis', sans-serif;
 }
 
-#inputName-error, #inputEmail-error, #inputPassword-error {
+label.error {
 	font-size: 14px;
 	font-style: italic;
 	color: #ede5d5;
-	padding-left: 0.5rem;
+	padding-left: 0.5rem;	
 }
 
 .font-lobster {
