@@ -42,8 +42,14 @@
 					<div class="col mt-4 mb-4">
 						<label class="mr-sm-2" for="categoty">Kategoria</label>
 						<select class="custom-select mr-sm-2" name="category">
+						{% if categories %}
+							{% for row in categories %}
+							<option value="{{ row.id }}">{{ row.name }}</option>
+							{% endfor %}
+						{% else %}
+							<strong>NI MA</strong>
+						{% endif %}
 						</select>
-									
 								
 						<div class="form-group mt-2 mb-4">
 							<label for="comment" class="sr-only">Komentarz</label>
