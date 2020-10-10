@@ -50,12 +50,21 @@ class cashFlow extends \Core\Model
     $this->validate();
     
     if (empty($this->errors)) {
+      $sql = 'INSERT INTO incomes (user_id, income_category_assigned_to_user_id, amount, date_of_income, income_comment) VALUES (:userID, :incomeID, :money, :date, :comment)';
       
-      return true;
-    } else {
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
       
-      return false;
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindValue(':incomeID', $this->category, PDO::PARAM_INT);
+      $stmt->bindValue(':money', $this->money, PDO::PARAM_STR);
+      $stmt->bindValue('date', $this->dater, PDO::PARAM_STR);
+      $stmt->bindValue('comment', $this->comment, PDO::PARAM_STR);
+      
+      return $stmt->execute();
     }
+
+    return false;
   }
   
   private function validate()
