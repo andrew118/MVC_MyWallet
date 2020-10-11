@@ -53,6 +53,9 @@
 					<div class="col mt-2 mb-4">
 						<label class="mr-sm-2" for="payment">Metoda płatności</label>
 						<select class="custom-select mr-sm-2" name="payment">
+							{% for row in payments %}
+							<option value="{{ row.id }}">{{ row.name }}</option>
+							{% endfor %}
 						</select>
 					</div>
 					<div class="col mt-4 mb-4">
