@@ -26,7 +26,7 @@ class View
             $twig = new \Twig\Environment($loader);
             $twig->addGlobal('current_user', \App\Auth::getUser());
             $twig->addGlobal('flash_messages', \App\Flash::getMessages());
-            $twig->addGlobal('currentDate', \App\Controllers\Incomes::todayDate());
+            $twig->addGlobal('currentDate', \App\Controllers\Home::todayDate());
         }
 
         echo $twig->render($template, $args);

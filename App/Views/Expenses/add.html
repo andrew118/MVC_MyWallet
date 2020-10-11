@@ -1,6 +1,6 @@
 {% extends "desktop.html" %}
 
-{% block title %}Dodaj przychód{% endblock %}
+{% block title %}Dodaj Wydatek{% endblock %}
 
 {% block footer %}
 <script src="/js/formValidation.js"></script>
@@ -9,12 +9,12 @@
 
 {% block body %}
 
-	{% if income.errors is not empty %}
+	{% if expense.errors is not empty %}
 		<div class="row mt-3">
 			<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto alert alert-warning alert-dismissible fade show" role="alert">
 				<span class="alert-heading font-weight-bold">Błędy formularza</span>
 				<div class="text-center">
-						{% for error in income.errors %}
+						{% for error in expense.errors %}
 							{{ error }} <br>
 						{% endfor %}
 				</div>
@@ -26,20 +26,20 @@
 	{% endif %}
 
 	<article>
-		<h1 class="h4 my-3 font-weight-bold text-center">Dodaj swoje przychody</h1>
+		<h1 class="h4 my-3 font-weight-bold text-center">Dodaj swoje wydatki</h1>
 		
 		<div class="row mx-2">
 			
 			<div class="col-sm-10 col-md-8 col-lg-6 mx-auto p-3 rounded" style="border: 2px #f2f2f2 dashed">
-				<form action="/incomes/new" method="post" id="addForm">
-					<div>							
+				<form action="/expenses/new" method="post" id="addForm">
+					<div>
 						<div class="col" id="cash">
 							<label class="sr-only">Kwota</label>
 								<div class="input-group input-group-lg">
 									<div class="input-group-prepend">
 										<span class="input-group-text px-2">Kwota</span>
 									</div>
-									<input type="number" class="form-control" name="money" min="0.01" step="0.01" id="userMoney" placeholder="0.00" value="{{ income.money }}"required />
+									<input type="number" class="form-control" name="money" min="0.01" step="0.01" id="userMoney" placeholder="0.00" value="{{ income.money }}" required />
 								</div>
 						</div>
 					</div>
@@ -54,7 +54,15 @@
 									<input type="date" class="form-control" name="dater" id="userDate" value="{{ currentDate }}" required />
 								</div>
 						</div>
-					</div>								
+					</div>
+					<div class="col mt-2 mb-4">
+						<label class="mr-sm-2" for="payment">Metoda płatności</label>
+						<select class="custom-select mr-sm-2" name="payment">
+							{% for row in payments %}
+							<option value="{{ row.id }}">{{ row.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
 					<div class="col mt-4 mb-4">
 						<label class="mr-sm-2" for="categoty">Kategoria</label>
 						<select class="custom-select mr-sm-2" name="category">
@@ -66,7 +74,7 @@
 						<div class="form-group mt-2 mb-4">
 							<label for="comment" class="sr-only">Komentarz</label>
 							<input type="text" class="form-control" name="comment" placeholder="Komentarz (opcjonalnie)" aria-describedby="commentHelp">
-							<small id="commentHelp" class="form-text text-warning text-right">Dodatkowy opis, np. sprzedany rower, dywidendy itp.</small>
+							<small id="commentHelp" class="form-text text-warning text-right">Dodatkowy opis, np. weekend w górach, obiad na mieście itp.</small>
 						</div>
 					</div>
 				

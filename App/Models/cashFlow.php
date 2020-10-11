@@ -29,9 +29,28 @@ class cashFlow extends \Core\Model
     return false;
   }
   
-  public static function loadIncomeCategories($userID)
+  public static function getCategories($userID, $tableIndicator)
+  {  
+    if ($tableIndicator == 'incomes') {
+      $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
+    } else if ($tableIndicator == 'expenses') {
+      $sql = 'SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = :userID';
+    }
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+		
+    $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+		
+    $stmt->execute();
+		
+		return $stmt->fetchAll();
+  }
+  public static function getPaymentMethods($userID)
   {
-    $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
+    $sql = 'SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = :userID';
     
     $db = static::getDB();
     
@@ -57,6 +76,27 @@ class cashFlow extends \Core\Model
       
       $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
       $stmt->bindValue(':incomeID', $this->category, PDO::PARAM_INT);
+      $stmt->bindValue(':money', $this->money, PDO::PARAM_STR);
+      $stmt->bindValue('date', $this->dater, PDO::PARAM_STR);
+      $stmt->bindValue('comment', $this->comment, PDO::PARAM_STR);
+      
+      return $stmt->execute();
+    }
+  }
+  
+  public function saveExpense($userID)
+  {
+    $this->validate();
+    
+    if (empty($this->errors)) {
+      $sql = 'INSERT INTO expenses (user_id, expense_category_assigned_to_user_id, payment_method_assigned_to_user_id, amount, date_of_expense, expense_comment) VALUES (:userID, :expenseID, :paymentID, :money, :date, :comment)';
+      
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
+      
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindValue(':expenseID', $this->category, PDO::PARAM_INT);
+      $stmt->bindValue(':paymentID', $this->payment, PDO::PARAM_INT);
       $stmt->bindValue(':money', $this->money, PDO::PARAM_STR);
       $stmt->bindValue('date', $this->dater, PDO::PARAM_STR);
       $stmt->bindValue('comment', $this->comment, PDO::PARAM_STR);
