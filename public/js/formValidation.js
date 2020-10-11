@@ -1,6 +1,6 @@
 $(document).ready(function() {
   
-  $('#incomeForm').validate({
+  $('#addForm').validate({
           errorPlacement: function(error, element) {
             if (element.attr('name') == 'money') {
               error.insertAfter("#cash");
