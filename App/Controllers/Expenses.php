@@ -23,10 +23,7 @@ class Expenses extends Authenticated
     if ($moneyFlow->saveExpense($_SESSION['user_id'])) {
       Flash::addMessage('Wydatek dodany');
       
-      View::RenderTemplate('Expenses/add.html', [ 
-        'categories' => $this->loadUserCategories(),
-        'payments' => $this->loadPaymentMethods()
-      ]);
+      $this->redirect('/expenses/add-expense');
     } else {
       View::RenderTemplate('Expenses/add.html', [
         'expense' => $moneyFlow,

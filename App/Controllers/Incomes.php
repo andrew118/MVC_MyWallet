@@ -19,7 +19,8 @@ class Incomes extends Authenticated
     
     if ($moneyFlow->saveIncome($_SESSION['user_id'])) {
       Flash::addMessage('Przychód dodany');
-      View::RenderTemplate('Incomes/add.html', [ 'categories' => $this->loadUserCategories()]);
+      
+      $this->redirect('/incomes/add-income');
     } else {
       View::RenderTemplate('Incomes/add.html', ['income' => $moneyFlow, 'categories' => $this->loadUserCategories()]);
     }
