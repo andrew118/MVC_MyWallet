@@ -8,7 +8,7 @@ use \App\Flash;
 
 class Expenses extends Authenticated
 {
-  public function addExpense()
+  public function addExpenseAction()
   {
     View::RenderTemplate('Expenses/add.html', [
       'categories' => $this->loadUserCategories(),
