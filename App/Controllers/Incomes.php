@@ -10,7 +10,7 @@ class Incomes extends Authenticated
 {
   public function addIncomeAction()
 	{
-    View::renderTemplate('Incomes/add.html', [ 'categories' => $this->getUserCategories()]);
+    View::renderTemplate('Incomes/add.html', [ 'categories' => $this->loadUserCategories()]);
 	}
 	
 	public function newAction()
@@ -19,15 +19,15 @@ class Incomes extends Authenticated
     
     if ($moneyFlow->saveIncome($_SESSION['user_id'])) {
       Flash::addMessage('Przychód dodany');
-      View::RenderTemplate('Incomes/add.html', [ 'categories' => $this->getUserCategories()]);
+      View::RenderTemplate('Incomes/add.html', [ 'categories' => $this->loadUserCategories()]);
     } else {
-      View::RenderTemplate('Incomes/add.html', ['income' => $moneyFlow, 'categories' => $this->getUserCategories()]);
+      View::RenderTemplate('Incomes/add.html', ['income' => $moneyFlow, 'categories' => $this->loadUserCategories()]);
     }
 	}
   
-  private function getUserCategories()
+  private function loadUserCategories()
   {
-    return CashFlow::loadCategories($_SESSION['user_id'], 'incomes');
+    return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
   }
     
   public static function todayDate() {

@@ -29,7 +29,7 @@ class cashFlow extends \Core\Model
     return false;
   }
   
-  public static function loadCategories($userID, $tableIndicator)
+  public static function getCategories($userID, $tableIndicator)
   {  
     if ($tableIndicator == 'incomes') {
       $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
@@ -48,7 +48,7 @@ class cashFlow extends \Core\Model
 		
 		return $stmt->fetchAll();
   }
-  public static function loadPaymentMethods($userID)
+  public static function getPaymentMethods($userID)
   {
     $sql = 'SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = :userID';
     
