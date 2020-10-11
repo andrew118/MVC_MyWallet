@@ -82,6 +82,27 @@ class cashFlow extends \Core\Model
       
       return $stmt->execute();
     }
+  }
+  
+  public function saveExpense($userID)
+  {
+    $this->validate();
+    
+    if (empty($this->errors)) {
+      $sql = 'INSERT INTO expenses (user_id, expense_category_assigned_to_user_id, payment_method_assigned_to_user_id, amount, date_of_expense, expense_comment) VALUES (:userID, :expenseID, :paymentID, :money, :date, :comment)';
+      
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
+      
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindValue(':expenseID', $this->category, PDO::PARAM_INT);
+      $stmt->bindValue(':paymentID', $this->payment, PDO::PARAM_INT);
+      $stmt->bindValue(':money', $this->money, PDO::PARAM_STR);
+      $stmt->bindValue('date', $this->dater, PDO::PARAM_STR);
+      $stmt->bindValue('comment', $this->comment, PDO::PARAM_STR);
+      
+      return $stmt->execute();
+    }
 
     return false;
   }

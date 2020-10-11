@@ -29,8 +29,4 @@ class Incomes extends Authenticated
   {
     return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
   }
-    
-  public static function todayDate() {
-      return date('Y-m-d');
-  }
 }
