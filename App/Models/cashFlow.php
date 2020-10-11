@@ -29,9 +29,13 @@ class cashFlow extends \Core\Model
     return false;
   }
   
-  public static function loadIncomeCategories($userID)
-  {
-    $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
+  public static function loadCategories($userID, $tableIndicator)
+  {  
+    if ($tableIndicator == 'incomes') {
+      $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
+    } else if ($tableIndicator == 'expenses') {
+      $sql = 'SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = :userID';
+    }
     
     $db = static::getDB();
     

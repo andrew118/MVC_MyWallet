@@ -27,7 +27,7 @@ class Incomes extends Authenticated
   
   private function getUserCategories()
   {
-    return CashFlow::loadIncomeCategories($_SESSION['user_id']);
+    return CashFlow::loadCategories($_SESSION['user_id'], 'incomes');
   }
     
   public static function todayDate() {
