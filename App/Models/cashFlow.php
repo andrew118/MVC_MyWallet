@@ -114,16 +114,21 @@ class cashFlow extends \Core\Model
     }
     
     $date = trim($this->dater);
-    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) == 0) {
+    if (static::checkDatePattern($date) == 0) {
       $this->errors[] = 'Podaj datę w formacie RRRR-MM-DD';
     }
     
-    if (!$this->isDateCorrect($date)) {
+    if (!$this->static::isDateCorrect($date)) {
       $this->errors[] = 'Podaj poprawną datę';
     }
   }
   
-  private function isDateCorrect($date)
+  public static function checkDatePattern($date)
+  {
+    return preg_match('/^\d{4}-\d{2}-\d{2}$/', $date);
+  }
+  
+  public static function isDateCorrect($date)
   {
     $separated_date = explode('-', $date);
     
