@@ -11,14 +11,19 @@ class Balance extends Authenticated
 {
   private $beginDate;
   private $endDate;
+  private $incomesSummary;
+  private $expensesSummary;
   
   public function showAction()
   {
     $this->setDateRange();
+    $this->loadIncomesAndExpensesSum();
     
     View::RenderTemplate('Balance/show.html', [
       'beginDate' => date('Y-m-d', $this->beginDate->getTimestamp()),
-      'endDate' => date('Y-m-d', $this->endDate->getTimestamp())
+      'endDate' => date('Y-m-d', $this->endDate->getTimestamp()),
+      'sumIncomes' => $this->incomesSummary['summary'],
+      'sumExpenses' => $this->expensesSummary['summary']
     ]);
   }
   
@@ -66,22 +71,29 @@ class Balance extends Authenticated
         return false;
       }
       
-      if (!cashFlow::isDateCorrect($_POST['begin_date'])
-          || !cashFlow::isDateCorrect($_POST['end_date'])) {
-        
-        Flash::addMessage('Niepoprawna data');
-        
-        return false;
-      }
+    if (!cashFlow::isDateCorrect($_POST['begin_date'])
+        || !cashFlow::isDateCorrect($_POST['end_date'])) {
       
-      $begin = DateTime::createFromFormat('Y-m-d', $_POST['begin_date']);
-      $end = DateTime::createFromFormat('Y-m-d', $_POST['end_date']);
-      if ($begin->getTimestamp() > $end->getTimestamp()) {
-        Flash::addMessage('Początkowa data musi być mniejsza niż końcowa');
-        
-        return false;
-      }
+      Flash::addMessage('Niepoprawna data');
       
-      return true;
+      return false;
+    }
+    
+    $begin = DateTime::createFromFormat('Y-m-d', $_POST['begin_date']);
+    $end = DateTime::createFromFormat('Y-m-d', $_POST['end_date']);
+    if ($begin->getTimestamp() > $end->getTimestamp()) {
+      Flash::addMessage('Początkowa data musi być mniejsza niż końcowa');
+      
+      return false;
+    }
+    
+    return true;
+  }
+
+  private function loadIncomesAndExpensesSum()
+  {
+    $this->incomesSummary = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    
+    $this->expensesSummary = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
 }

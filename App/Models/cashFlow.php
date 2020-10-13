@@ -134,4 +134,24 @@ class cashFlow extends \Core\Model
     
     return checkdate($separated_date[1], $separated_date[2], $separated_date[0]); //format M-D-Y
   }
+  
+  public static function getSumIncomesExpenses($userID, $beginDate, $endDate, $incomeExpenseIndicator)
+  {
+    if ($incomeExpenseIndicator == 'incomes') {
+      $sql = 'SELECT SUM(amount) AS summary FROM incomes WHERE user_id = :userID AND date_of_income BETWEEN :begin AND :end';
+    } else if ($incomeExpenseIndicator == 'expenses') {
+      $sql = 'SELECT SUM(amount) AS summary FROM expenses WHERE user_id = :userID AND date_of_expense BETWEEN :begin AND :end';
+    }
+      
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
+      
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindValue('begin', $beginDate, PDO::PARAM_STR);
+      $stmt->bindValue('end', $endDate, PDO::PARAM_STR);
+      
+      $stmt->execute();
+      
+      return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
 }
