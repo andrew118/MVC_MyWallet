@@ -14,15 +14,15 @@
 			
 				<div class="row mb-4">
 					<div class="col text-center">
-						<h2 class="h4 d-inline-block"><span class="" id="comment">$balance_comment Masz teraz na koncie:</span></h2>
-						<h2 class="h2 d-inline-block"><span class="$balance_info" id="balance">$difference zł</span></h2>
+						<h2 class="h4 d-inline-block"><span class="" id="comment">{{ comment.balanceComment }} Bilans  tym okresie to:</span></h2>
+						<h2 class="h2 d-inline-block"><span class="{{ comment.balanceInfo }}" id="balance">{{ sumIncomes - sumExpenses }} zł</span></h2>
 					</div>
 				</div>
 				
 				<div class="row mb-2">
 					<div class="col text-left">
 						<h2 class="h5 d-inline-block my-1">Twoje <span class="font-weight-bold h4">przychody</span> w wybranym okreise:</h2>
-						<h2 class="h3 d-inline-block my-1"><span class="badge badge-info" id="incomeSummary">{{ sumIncomes }} zł</span></h2>
+						<h2 class="h3 d-inline-block my-1"><span class="badge badge-info" id="incomeSummary">{% if sumIncomes is null %}0{% else %}{{ sumIncomes }}{% endif %} zł</span></h2>
 					</div>
 				</div>
 				
@@ -45,7 +45,7 @@
 				<div class="row mb-2 mt-3">
 					<div class="col text-left">
 						<h2 class="h5 d-inline-block my-1">Twoje <span class="font-weight-bold h4">wydatki</span> w wybranym okreise:</h2>
-						<h2 class="h3 d-inline-block my-1"><span class="badge badge-info" id="expanseSummary">{{ sumExpenses }} zł</span></h2>
+						<h2 class="h3 d-inline-block my-1"><span class="badge badge-info" id="expanseSummary">{% if sumExpenses is null %}0{% else %}{{ sumExpenses }}{% endif %} zł</span></h2>
 					</div>
 				</div>
 				

@@ -118,7 +118,7 @@ class cashFlow extends \Core\Model
       $this->errors[] = 'Podaj datę w formacie RRRR-MM-DD';
     }
     
-    if (!$this->static::isDateCorrect($date)) {
+    if (!static::isDateCorrect($date)) {
       $this->errors[] = 'Podaj poprawną datę';
     }
   }

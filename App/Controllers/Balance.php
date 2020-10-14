@@ -18,12 +18,15 @@ class Balance extends Authenticated
   {
     $this->setDateRange();
     $this->loadIncomesAndExpensesSum();
+
+    $comment = $this->getDifferenceComment();
     
     View::RenderTemplate('Balance/show.html', [
       'beginDate' => date('Y-m-d', $this->beginDate->getTimestamp()),
       'endDate' => date('Y-m-d', $this->endDate->getTimestamp()),
       'sumIncomes' => $this->incomesSummary['summary'],
-      'sumExpenses' => $this->expensesSummary['summary']
+      'sumExpenses' => $this->expensesSummary['summary'],
+      'comment' => $comment
     ]);
   }
   
@@ -95,5 +98,20 @@ class Balance extends Authenticated
     $this->incomesSummary = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
     
     $this->expensesSummary = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+  }
+  
+  private function getDifferenceComment()
+  {
+    if ($this->incomesSummary > $this->expensesSummary) {
+      return ['balanceInfo'  => 'badge badge-success', 'balanceComment' => 'Dobrze zarządzasz! '];
+    }
+    
+    if ($this->incomesSummary == $this->expensesSummary) {
+      return ['balanceInfo'  => 'badge badge-warning', 'balanceComment' => 'Przejrzyj wydatki. Coś idzie nie najlepiej. '];
+    }
+    
+    if ($this->incomesSummary < $this->expensesSummary) {
+      return ['balanceInfo'  => 'badge badge-danger', 'balanceComment' => 'Nie wygląda to dobrze...  '];
+    }
   }
 }
