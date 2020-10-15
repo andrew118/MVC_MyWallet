@@ -13,23 +13,25 @@ class Balance extends Authenticated
   private $endDate;
   private $totalIncomesAmount;
   private $totalExpensesAmount;
+  private $incomesByCategories;
   
   public function showAction()
   {
     $this->setDateRange();
     $this->loadIncomesAndExpensesSum();
-
+    $this->loadIncomesByCategories();
     $comment = $this->getDifferenceComment();
-    
+
     View::RenderTemplate('Balance/show.html', [
       'beginDate' => date('Y-m-d', $this->beginDate->getTimestamp()),
       'endDate' => date('Y-m-d', $this->endDate->getTimestamp()),
       'sumIncomes' => $this->totalIncomesAmount['summary'],
       'sumExpenses' => $this->totalExpensesAmount['summary'],
-      'comment' => $comment
+      'comment' => $comment,
+      'incomes' => $this->incomesByCategories
     ]);
   }
-  
+
   private function setDateRange()
   {
     $this->beginDate = new DateTime();
@@ -113,5 +115,13 @@ class Balance extends Authenticated
     if ($this->totalIncomesAmount < $this->totalExpensesAmount) {
       return ['balanceInfo'  => 'badge badge-danger', 'balanceComment' => 'Nie wygląda to dobrze...  '];
     }
+  }
+  
+  private function loadIncomesByCategories()
+  {
+    $incomes = new CashFlow;
+    $this->incomesByCategories = $incomes->getIncomesByCategories(
+$_SESSION['user_id'], $this->beginDate->format(
+'Y-m-d'), $this->endDate->format('Y-m-d'));
   }
 }
