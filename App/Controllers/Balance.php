@@ -14,12 +14,14 @@ class Balance extends Authenticated
   private $totalIncomesAmount;
   private $totalExpensesAmount;
   private $incomesByCategories;
+  private $expensesByCategories;
   
   public function showAction()
   {
     $this->setDateRange();
     $this->loadIncomesAndExpensesSum();
     $this->loadIncomesByCategories();
+    $this->loadExpensesByCategories();
     $comment = $this->getDifferenceComment();
 
     View::RenderTemplate('Balance/show.html', [
@@ -28,7 +30,8 @@ class Balance extends Authenticated
       'sumIncomes' => $this->totalIncomesAmount['summary'],
       'sumExpenses' => $this->totalExpensesAmount['summary'],
       'comment' => $comment,
-      'incomes' => $this->incomesByCategories
+      'incomes' => $this->incomesByCategories,
+      'expenses' => $this->expensesByCategories
     ]);
   }
 
@@ -120,8 +123,18 @@ class Balance extends Authenticated
   private function loadIncomesByCategories()
   {
     $incomes = new CashFlow;
-    $this->incomesByCategories = $incomes->getIncomesByCategories(
+    
+    $this->incomesByCategories = $incomes->getIncomesExpensesByCategories(
 $_SESSION['user_id'], $this->beginDate->format(
-'Y-m-d'), $this->endDate->format('Y-m-d'));
+'Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+  }
+  
+  private function loadExpensesByCategories()
+  {
+    $expenses = new CashFlow;
+    
+    $this->expensesByCategories = $expenses->getIncomesExpensesByCategories(
+$_SESSION['user_id'], $this->beginDate->format(
+'Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
 }
