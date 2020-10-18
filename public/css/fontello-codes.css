@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+ 
+.icon-conf:before { content: '\26ef'; } /* '⛯' */
+.icon-pencil:before { content: '\2710'; } /* '✐' */
+.icon-money:before { content: '\e020'; } /* '' */
+.icon-basket:before { content: '\e0d2'; } /* '' */
+.icon-logout:before { content: '\e741'; } /* '' */
+.icon-dot:before { content: '\e78d'; } /* '' */
+.icon-calendar:before { content: '📅'; } /* '\1f4c5' */

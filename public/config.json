@@ -1,0 +1,52 @@
+{
+  "name": "",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "e0d15ef5945000f5f264acc35494002f",
+      "css": "basket",
+      "code": 57554,
+      "src": "typicons"
+    },
+    {
+      "uid": "b8e88705f42bd79580be828233c65da0",
+      "css": "money",
+      "code": 57376,
+      "src": "linecons"
+    },
+    {
+      "uid": "531bc468eecbb8867d822f1c11f1e039",
+      "css": "calendar",
+      "code": 128197,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "98687378abd1faf8f6af97c254eb6cd6",
+      "css": "conf",
+      "code": 9967,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "0d20938846444af8deb1920dc85a29fb",
+      "css": "logout",
+      "code": 59201,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "d10920db2e79c997c5e783279291970c",
+      "css": "dot",
+      "code": 59277,
+      "src": "entypo"
+    },
+    {
+      "uid": "eedb189bc6326c685d83627f78e1c9de",
+      "css": "pencil",
+      "code": 10000,
+      "src": "iconic"
+    }
+  ]
+}
