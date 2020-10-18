@@ -8,7 +8,44 @@
 
 <script>
 $( "#incomeTable tbody tr" ).on( "click", function() {
-  console.log($(this).attr('id') );
+	
+	var id = $(this).attr('id');
+	var beginDate = $('#beginDate').text();
+	var endDate = $('#endDate').text();
+	
+	$.ajax({
+		type: 'POST',
+		url: '/balance/show-all-incomes',
+		dataType: 'json',
+		data: {
+			'category_id': id,
+			'begin_date': beginDate,
+			'end_date': endDate
+		},
+
+		success: function(response) {
+
+			$('#modalLongTitle').text(response[0].inc_name);
+			
+			var incomes = new Array();
+			
+			for (i = 0; i < response.length; i++) {
+				
+				var line = '<div class="row text-dark"><div class="col border-bottom">' + response[i].date + '</div><div class="col border-bottom">' + response[i].amount + '</div><div class="col border-bottom">' + response[i].comment + '</div><div class="col-1 border-bottom"><i class="icon-pencil"></i></div></div>';
+				
+				incomes.push(line);
+				line = '';
+			}
+			
+			$('#modalData').after(incomes);
+			$('#detailsModal').modal('toggle');
+			$('#detailsModal').modal('show');
+			
+		},
+    error : function(xhr, desc, err) {
+       console.log(err);
+    }
+	});
 });
 
 $( "#expenseTable tbody tr" ).on( "click", function() {
@@ -23,7 +60,7 @@ $( "#expenseTable tbody tr" ).on( "click", function() {
 
 <main>
 	<h1 class="h4 mt-4 mb-3 font-weight-bold text-center">Twój bilans w okresie od 
-	<span class="h2 font-weight-bold mx-3" style="letter-spacing: 2px;"> {{ beginDate }}</span> do <span class="h2 font-weight-bold mx-3" style="letter-spacing: 2px;">{{ endDate }}<span></h1>
+	<span class="h2 font-weight-bold mx-3" style="letter-spacing: 2px;" id="beginDate"> {{ beginDate }}</span> do <span class="h2 font-weight-bold mx-3" style="letter-spacing: 2px;" id="endDate">{{ endDate }}<span></h1>
 
 	<div class="row mx-2">
 		
@@ -69,7 +106,7 @@ $( "#expenseTable tbody tr" ).on( "click", function() {
 			</div>
 			
 			<div class="row">
-				<div class="col">
+				<div class="col-12">
 					<table class="table table-striped table-dark table-hover table-sm text-light" id="expenseTable">
 						<thead>
 							<tr>
@@ -85,9 +122,30 @@ $( "#expenseTable tbody tr" ).on( "click", function() {
 					</table>
 				</div>
 			</div>
-		</div>
-					
+		</div>	
 	</div>
+	
+	<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-dark font-weight-bold" id="modalLongTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+			<div id="modalData">
+			</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
+      </div>
+    </div>
+  </div>
+</div>
+	
 	<div class="row py-4">
 		<canvas id="pieChart" class="mx-auto" style="height: 360px; width: 90%;">
 		</canvas>

@@ -124,17 +124,27 @@ class Balance extends Authenticated
   {
     $incomes = new CashFlow;
     
-    $this->incomesByCategories = $incomes->getIncomesExpensesByCategories(
-$_SESSION['user_id'], $this->beginDate->format(
-'Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    $this->incomesByCategories = $incomes->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
   }
   
   private function loadExpensesByCategories()
   {
     $expenses = new CashFlow;
     
-    $this->expensesByCategories = $expenses->getIncomesExpensesByCategories(
-$_SESSION['user_id'], $this->beginDate->format(
-'Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    $this->expensesByCategories = $expenses->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+  }
+  
+  public function showAllIncomesAction()
+  {
+    $categoryID = $_POST['category_id'];
+    $beginDate = $_POST['begin_date'];
+    $endDate = $_POST['end_date'];
+    $userID = $_SESSION['user_id'];
+    
+    $incomes = new CashFlow;
+    $incomesInCategory = $incomes->getAllInCategory($userID, $categoryID, $beginDate, $endDate);
+    
+    header('Content-Type: application/json');
+		echo json_encode($incomesInCategory);
   }
 }

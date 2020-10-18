@@ -177,4 +177,21 @@ class cashFlow extends \Core\Model
 		
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+  
+  public function getAllInCategory($userID, $categoryID, $beginDate, $endDate)
+  {
+    $sql = 'SELECT cat.name AS inc_name, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment FROM incomes AS inc, incomes_category_assigned_to_users AS cat WHERE inc.user_id = :userID AND inc.income_category_assigned_to_user_id = :categoryID AND inc.date_of_income BETWEEN :beginDate AND :endDate AND cat.user_id = :userID AND cat.id = :categoryID ORDER BY inc.date_of_income DESC';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':beginDate', $beginDate, PDO::PARAM_STR);
+    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+		
+    $stmt->execute();
+		
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
 }
