@@ -5,7 +5,7 @@
 {% block footer %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script src="/js/pieChart.js"></script>
-<!-- <script src="/js/detailsModal.js"></script> -->
+<script src="/js/detailsModal.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -44,10 +44,10 @@
 						</thead>
 						<tbody>
 						{% for income in incomes %}
-							<tr id="{{ income.id }}" style="width: 50%;" class="font-weight-bold bg-secondary"><td>{{ income.inc_name }}</td><td style="width: 40%;">{{ income.inc_amount }}</td><td style="width: 10%;" class="text-right"><i class="icon-dot"></i></td></tr>
+							<tr style="width: 50%;" class="font-weight-bold bg-secondary"><td>{{ income.inc_name }}</td><td style="width: 40%;">{{ income.inc_amount }}</td><td style="width: 10%;" class="text-right"><i class="icon-dot" id="{{ income.id }}"></i></td></tr>
 							{% for record in allIncomes %}
 								{% if income.id == record.catID %}
-								<tr class="font-italic" id="{{ record.id }}"><td colspan="2">{{ record.date }} - {{ record.amount }} - {{ record.comment }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+								<tr class="font-italic item-hidden cat-id-{{ income.id }} income-detailed-row" id="{{ record.id }}"><td colspan="2">{{ record.date }} - {{ record.amount }} - {{ record.comment }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
 								{% endif %}
 							{% endfor %}
 						{% endfor %}
