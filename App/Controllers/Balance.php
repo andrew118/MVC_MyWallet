@@ -13,15 +13,17 @@ class Balance extends Authenticated
   private $endDate;
   private $totalIncomesAmount;
   private $totalExpensesAmount;
-  private $incomesByCategories;
-  private $expensesByCategories;
+  private $sumOfIncomesByCategories;
+  private $sumOfExpensesByCategories;
+  private $incomesByCategory;
   
   public function showAction()
   {
     $this->setDateRange();
     $this->loadIncomesAndExpensesSum();
-    $this->loadIncomesByCategories();
-    $this->loadExpensesByCategories();
+    $this->loadSumOfIncomesByCategories();
+    $this->loadSumOfExpensesByCategories();
+    $this->loadAllIncomes();
     $comment = $this->getDifferenceComment();
 
     View::RenderTemplate('Balance/show.html', [
@@ -30,8 +32,9 @@ class Balance extends Authenticated
       'sumIncomes' => $this->totalIncomesAmount['summary'],
       'sumExpenses' => $this->totalExpensesAmount['summary'],
       'comment' => $comment,
-      'incomes' => $this->incomesByCategories,
-      'expenses' => $this->expensesByCategories
+      'incomes' => $this->sumOfIncomesByCategories,
+      'allIncomes' => $this->incomesByCategory,
+      'expenses' => $this->sumOfExpensesByCategories
     ]);
   }
 
@@ -120,31 +123,25 @@ class Balance extends Authenticated
     }
   }
   
-  private function loadIncomesByCategories()
+  private function loadSumOfIncomesByCategories()
   {
     $incomes = new CashFlow;
     
-    $this->incomesByCategories = $incomes->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    $this->sumOfIncomesByCategories = $incomes->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
   }
   
-  private function loadExpensesByCategories()
+  private function loadSumOfExpensesByCategories()
   {
     $expenses = new CashFlow;
     
-    $this->expensesByCategories = $expenses->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    $this->sumOfExpensesByCategories = $expenses->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
   
-  public function showAllIncomesAction()
+  public function loadAllIncomes()
   {
-    $categoryID = $_POST['category_id'];
-    $beginDate = $_POST['begin_date'];
-    $endDate = $_POST['end_date'];
     $userID = $_SESSION['user_id'];
     
     $incomes = new CashFlow;
-    $incomesInCategory = $incomes->getAllInCategory($userID, $categoryID, $beginDate, $endDate);
-    
-    header('Content-Type: application/json');
-		echo json_encode($incomesInCategory);
+    $this->incomesByCategory = $incomes->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'));
   }
 }

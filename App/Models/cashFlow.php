@@ -158,11 +158,11 @@ class cashFlow extends \Core\Model
   public function getIncomesExpensesByCategories($userID, $beginDate, $endDate, $incomeExpenseIndicator)
   {
     if ($incomeExpenseIndicator == 'incomes') {
-      $sql = 'SELECT cat.name AS inc_name, cat.id, SUM(inc.amount) AS inc_amount FROM incomes AS inc, incomes_category_assigned_to_users AS cat WHERE inc.user_id = :userID AND cat.user_id = :userID AND inc.income_category_assigned_to_user_id = cat.id AND inc.date_of_income BETWEEN :beginDate AND :endDate GROUP BY inc_name ORDER BY inc_amount DESC';
+      $sql = 'SELECT cat.name AS inc_name, cat.id AS id, SUM(inc.amount) AS inc_amount FROM incomes AS inc, incomes_category_assigned_to_users AS cat WHERE inc.user_id = :userID AND cat.user_id = :userID AND inc.income_category_assigned_to_user_id = cat.id AND inc.date_of_income BETWEEN :beginDate AND :endDate GROUP BY inc_name ORDER BY inc_amount DESC';
     }
     
     if ($incomeExpenseIndicator == 'expenses') {
-      $sql = 'SELECT cat.name AS ex_name, cat.id, SUM(ex.amount) AS ex_amount FROM expenses AS ex, expenses_category_assigned_to_users AS cat WHERE ex.user_id = :userID AND cat.user_id = :userID AND ex.expense_category_assigned_to_user_id = cat.id AND ex.date_of_expense BETWEEN :beginDate AND :endDate GROUP BY ex_name ORDER BY ex_amount DESC';
+      $sql = 'SELECT cat.name AS ex_name, cat.id AS id, SUM(ex.amount) AS ex_amount FROM expenses AS ex, expenses_category_assigned_to_users AS cat WHERE ex.user_id = :userID AND cat.user_id = :userID AND ex.expense_category_assigned_to_user_id = cat.id AND ex.date_of_expense BETWEEN :beginDate AND :endDate GROUP BY ex_name ORDER BY ex_amount DESC';
     }
     
     
@@ -178,15 +178,14 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public function getAllInCategory($userID, $categoryID, $beginDate, $endDate)
+  public function getAllByCategory($userID, $beginDate, $endDate)
   {
-    $sql = 'SELECT cat.name AS inc_name, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment FROM incomes AS inc, incomes_category_assigned_to_users AS cat WHERE inc.user_id = :userID AND inc.income_category_assigned_to_user_id = :categoryID AND inc.date_of_income BETWEEN :beginDate AND :endDate AND cat.user_id = :userID AND cat.id = :categoryID ORDER BY inc.date_of_income DESC';
+    $sql = 'SELECT inc.id AS id, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment, income_category_assigned_to_user_id AS catID FROM incomes AS inc WHERE inc.user_id = :userID AND inc.date_of_income BETWEEN :beginDate AND :endDate ORDER BY catID';
     
     $db = static::getDB();
     
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
-    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
     $stmt->bindParam(':beginDate', $beginDate, PDO::PARAM_STR);
     $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
 		
