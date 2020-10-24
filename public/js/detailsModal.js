@@ -6,13 +6,14 @@ $(document).ready(function() {
 function showHideDetails() {
   
   var incomeDetails = $('.income-detailed-row');
+  var expenseDetails = $('.expense-detailed-row');
   
   $('.icon-dot').click(function() {
 	
-  console.log(this.id);
-  var classKey = '.cat-id-' + this.id;
+  var classKey = '.' + this.id;
   
   incomeDetails.filter(classKey).toggleClass('item-hidden');
+  expenseDetails.filter(classKey).toggleClass('item-hidden');
 
 });
 }

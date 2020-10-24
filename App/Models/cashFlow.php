@@ -178,9 +178,14 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public function getAllByCategory($userID, $beginDate, $endDate)
+  public function getAllByCategory($userID, $beginDate, $endDate, $incomeExpenseIndicator)
   {
-    $sql = 'SELECT inc.id AS id, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment, income_category_assigned_to_user_id AS catID FROM incomes AS inc WHERE inc.user_id = :userID AND inc.date_of_income BETWEEN :beginDate AND :endDate ORDER BY catID';
+    if($incomeExpenseIndicator == 'incomes') {
+      $sql = 'SELECT inc.id AS id, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment, income_category_assigned_to_user_id AS catID FROM incomes AS inc WHERE inc.user_id = :userID AND inc.date_of_income BETWEEN :beginDate AND :endDate ORDER BY catID';
+    }
+    if ($incomeExpenseIndicator == 'expenses') {
+      $sql = 'SELECT ex.id AS id, ex.amount AS amount, ex.date_of_expense AS date, ex.expense_comment AS comment, expense_category_assigned_to_user_id AS catID FROM expenses AS ex WHERE ex.user_id = :userID AND ex.date_of_expense BETWEEN :beginDate AND :endDate ORDER BY catID';
+    }
     
     $db = static::getDB();
     

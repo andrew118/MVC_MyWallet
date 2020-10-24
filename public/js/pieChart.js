@@ -3,7 +3,7 @@ $(document).ready(function() {
   var expenseInfo = {categories: [], amount: []};
   var colors = {border: [], fill: []};
   
-  $('#myExpenses tr').each(function(){
+  $('.expense-category').each(function(){
     expenseInfo.categories.push($(this).find('td').html());
     expenseInfo.amount.push($(this).find('td').eq(1).html());
     colors.fill.push(generateColor());
