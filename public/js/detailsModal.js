@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
   showHideDetails();
+  edit
 });
 
 function showHideDetails() {
