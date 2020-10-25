@@ -53,6 +53,10 @@ label.error {
     float:none;
 }
 
+.item-hidden {
+  display: none !important;
+}
+
 @media (max-width: 767px) {
 	.navbar-nav {
 		display: flex;

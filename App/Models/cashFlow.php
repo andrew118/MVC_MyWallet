@@ -114,19 +114,88 @@ class cashFlow extends \Core\Model
     }
     
     $date = trim($this->dater);
-    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) == 0) {
+    if (static::checkDatePattern($date) == 0) {
       $this->errors[] = 'Podaj datę w formacie RRRR-MM-DD';
     }
     
-    if (!$this->isDateCorrect($date)) {
+    if (!static::isDateCorrect($date)) {
       $this->errors[] = 'Podaj poprawną datę';
     }
   }
   
-  private function isDateCorrect($date)
+  public static function checkDatePattern($date)
+  {
+    return preg_match('/^\d{4}-\d{2}-\d{2}$/', $date);
+  }
+  
+  public static function isDateCorrect($date)
   {
     $separated_date = explode('-', $date);
     
     return checkdate($separated_date[1], $separated_date[2], $separated_date[0]); //format M-D-Y
+  }
+  
+  public static function getSumIncomesExpenses($userID, $beginDate, $endDate, $incomeExpenseIndicator)
+  {
+    if ($incomeExpenseIndicator == 'incomes') {
+      $sql = 'SELECT SUM(amount) AS summary FROM incomes WHERE user_id = :userID AND date_of_income BETWEEN :begin AND :end';
+    } else if ($incomeExpenseIndicator == 'expenses') {
+      $sql = 'SELECT SUM(amount) AS summary FROM expenses WHERE user_id = :userID AND date_of_expense BETWEEN :begin AND :end';
+    }
+      
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
+      
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindValue('begin', $beginDate, PDO::PARAM_STR);
+      $stmt->bindValue('end', $endDate, PDO::PARAM_STR);
+      
+      $stmt->execute();
+      
+      return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+  
+  public function getIncomesExpensesByCategories($userID, $beginDate, $endDate, $incomeExpenseIndicator)
+  {
+    if ($incomeExpenseIndicator == 'incomes') {
+      $sql = 'SELECT cat.name AS inc_name, cat.id AS id, SUM(inc.amount) AS inc_amount FROM incomes AS inc, incomes_category_assigned_to_users AS cat WHERE inc.user_id = :userID AND cat.user_id = :userID AND inc.income_category_assigned_to_user_id = cat.id AND inc.date_of_income BETWEEN :beginDate AND :endDate GROUP BY inc_name ORDER BY inc_amount DESC';
+    }
+    
+    if ($incomeExpenseIndicator == 'expenses') {
+      $sql = 'SELECT cat.name AS ex_name, cat.id AS id, SUM(ex.amount) AS ex_amount FROM expenses AS ex, expenses_category_assigned_to_users AS cat WHERE ex.user_id = :userID AND cat.user_id = :userID AND ex.expense_category_assigned_to_user_id = cat.id AND ex.date_of_expense BETWEEN :beginDate AND :endDate GROUP BY ex_name ORDER BY ex_amount DESC';
+    }
+    
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':beginDate', $beginDate, PDO::PARAM_STR);
+    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+		
+    $stmt->execute();
+		
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+  
+  public function getAllByCategory($userID, $beginDate, $endDate, $incomeExpenseIndicator)
+  {
+    if($incomeExpenseIndicator == 'incomes') {
+      $sql = 'SELECT inc.id AS id, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment, income_category_assigned_to_user_id AS catID FROM incomes AS inc WHERE inc.user_id = :userID AND inc.date_of_income BETWEEN :beginDate AND :endDate ORDER BY catID';
+    }
+    if ($incomeExpenseIndicator == 'expenses') {
+      $sql = 'SELECT ex.id AS id, ex.amount AS amount, ex.date_of_expense AS date, ex.expense_comment AS comment, expense_category_assigned_to_user_id AS catID FROM expenses AS ex WHERE ex.user_id = :userID AND ex.date_of_expense BETWEEN :beginDate AND :endDate ORDER BY catID';
+    }
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':beginDate', $beginDate, PDO::PARAM_STR);
+    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+		
+    $stmt->execute();
+		
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 }

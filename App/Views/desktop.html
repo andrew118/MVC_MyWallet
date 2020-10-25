@@ -23,12 +23,12 @@
 				</li>
 				
 				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-expanded="false" id="submenu" aria-haspopup="true"><i class="icon-calendar"></i> Przeglądaj bilans </a>
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="submenu" aria-haspopup="true"><i class="icon-calendar"></i> Przeglądaj bilans </a>
 					
 					<div class="dropdown-menu wallet" aria-labelledby="submenu">
 						<form method="post">
-							<input type="submit" name="current" class="dropdown-item btn btn-link" formaction="#" value=" Bierzący miesiąc ">
-							<input type="submit" name="previous" class="dropdown-item btn btn-link" formaction="#" value=" Poprzedni miesiąc ">
+							<input type="submit" name="current" class="dropdown-item btn btn-link" formaction="/balance/show" value=" Bierzący miesiąc ">
+							<input type="submit" name="previous" class="dropdown-item btn btn-link" formaction="/balance/show" value=" Poprzedni miesiąc ">
 						</form>
 						<button class="dropdown-item btn btn-link"  data-toggle="modal" data-target="#dateRangeModal"> Inny zakres </button>
 						
@@ -60,7 +60,7 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<form action="#" method="post">
+				<form action="/balance/show" method="post">
 					<div class="modal-body">
 						<div class="row">
 							
