@@ -41,6 +41,10 @@ class Expenses extends Authenticated
       Flash::addMessage('Wydatek poprawiony');
       
       $this->redirect('/balance/show');
+    } else {
+      Flash::addMessage('Nie udało się poprawić wydatku');
+      
+      $this->redirect('/balance/show');
     }
     
   }

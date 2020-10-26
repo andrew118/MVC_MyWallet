@@ -70,8 +70,11 @@ function showIncomeEditModal() {
   
   $('.income-detailed-row').click(function() {
     $('#modalLongTitle').text('Edycja przychodu');
+    $('#updateForm').attr('action', '/incomes/update-record');
     
     var selectedRowID = this.id;
+    var input = $("<input>").attr("type", "hidden").attr("name", "elementID").val(selectedRowID);
+    $('#invisible').append($(input));
     
     var nameOfClass = $(this).attr('class');
     var idOfCategory = findCategoryIDInClassName(nameOfClass);

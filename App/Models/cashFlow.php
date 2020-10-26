@@ -211,4 +211,20 @@ class cashFlow extends \Core\Model
     
     return $stmt->execute();
   }
+  
+  public function updateIncome()
+  {
+    $sql = 'UPDATE incomes SET income_category_assigned_to_user_id = :incomeCategory, amount = :amount, date_of_income = :dateIncome, income_comment = :comment WHERE id = :incomeID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':incomeCategory', $this->category, PDO::PARAM_INT);
+    $stmt->bindParam(':amount', $this->money, PDO::PARAM_STR);
+    $stmt->bindParam(':dateIncome', $this->dater, PDO::PARAM_STR);
+    $stmt->bindParam(':comment', $this->comment, PDO::PARAM_STR);
+    $stmt->bindParam(':incomeID', $this->elementID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+  }
 }
