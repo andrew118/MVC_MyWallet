@@ -47,7 +47,7 @@
 							<tr style="width: 50%;" class="font-weight-bold bg-secondary"><td>{{ income.inc_name }}</td><td style="width: 40%;">{{ income.inc_amount }}</td><td style="width: 10%;" class="text-right"><i class="icon-dot" id="inc-{{ income.id }}"></i></td></tr>
 							{% for record in allIncomes %}
 								{% if income.id == record.catID %}
-								<tr class="font-italic item-hidden inc-{{ income.id }} income-detailed-row" id="{{ record.id }}"><td colspan="2">{{ record.date }} -- {{ record.amount }} -- {{ record.comment }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+								<tr class="font-italic item-hidden inc-{{ income.id }} income-detailed-row" id="{{ record.id }}"><td colspan="2"><span class="income-date">{{ record.date }}</span> -- <span class="income-amount">{{ record.amount }}</span> -- <span class="income-comment">{{ record.comment }}</span></td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
 								{% endif %}
 							{% endfor %}
 						{% endfor %}
@@ -78,7 +78,7 @@
 							<tr style="width: 50%;" class="font-weight-bold bg-secondary expense-category"><td>{{ expense.ex_name }}</td><td style="width: 40%;">{{ expense.ex_amount }}</td><td style="width: 10%;" class="text-right"><i class="icon-dot" id="ex-{{ expense.id }}"></i></td></tr>
 							{% for record in allExpenses %}
 								{% if expense.id == record.catID %}
-								<tr class="font-italic item-hidden ex-{{ expense.id }} expense-detailed-row" id="{{ record.id }}"><td colspan="2">{{ record.date }} -- {{ record.amount }} -- {{ record.comment }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+								<tr class="font-italic item-hidden ex-{{ expense.id }} expense-detailed-row" id="{{ record.id }}"><td colspan="2"><span class="expense-date">{{ record.date }}</span> -- <span class="expense-amount">{{ record.amount }}</span> -- <span class="expense-comment">{{ record.comment }}</span> -- <span class="expense-pay-method" id="pay-{{ record.payId }}">{{ record.payName }}</span></td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
 								{% endif %}
 							{% endfor %}
 						{% endfor %}
@@ -91,21 +91,56 @@
 	
 	<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true" data-backdrop="">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content bg-dark">
       <div class="modal-header">
-        <h5 class="modal-title text-dark font-weight-bold" id="modalLongTitle"></h5>
-        <button type="button" class="close" onclick="hideModal()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title font-weight-bold" id="modalLongTitle">Edytuj wpis</h5>
       </div>
-      <div class="modal-body">
-				<div class="container-fluid" id="modalData">
+			<form method="post" action="" id="updateForm">
+				<div class="modal-body">
+					<div class="container-fluid" id="modalData">
+						<div>							
+							<div class="col" id="cash">
+								<label class="sr-only">Kwota</label>
+									<div class="input-group input-group-lg">
+										<div class="input-group-prepend">
+											<span class="input-group-text px-2">Kwota</span>
+										</div>
+										<input type="number" class="form-control" name="money" min="0.01" step="0.01" id="userMoney" placeholder="0.00" required />
+									</div>
+							</div>
+						</div>
+						
+						<div>
+							<div class="col mt-2" id="date">
+								<label class="sr-only">Data</label>
+									<div class="input-group input-group-lg">
+										<div class="input-group-prepend">
+											<span class="input-group-text px-3">Data</span>
+										</div>
+										<input type="date" class="form-control" name="dater" id="userDate" required />
+									</div>
+							</div>
+						</div>
+						<div class="col mt-4 mb-4" id="paymentPlace">
+						</div>
+						<div class="col mt-4 mb-4">
+							<label class="mr-sm-2" for="category">Kategoria</label>
+							<select class="custom-select mr-sm-2" name="category" id="selectBox">
+							</select>
+									
+							<div class="form-group mt-2 mb-4">
+								<label for="comment" class="sr-only">Komentarz</label>
+								<input type="text" class="form-control" name="comment" id="userComment" placeholder="Komentarz (opcjonalnie)" aria-describedby="commentHelp">
+							</div>
+							<div id="invisible"></div>
+						</div>
+					</div>
 				</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="hideModal()">Zamknij</button>
-        <button type="button" class="btn btn-primary">Zapisz zmiany</button>
-      </div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success" id="modal_submit">Zapisz zmiany</button>
+					<button type="button" class="btn btn-outline-danger" id="cancel_modal">Porzuć pomysł</button>
+				</div>
+			</form>
     </div>
   </div>
 </div>

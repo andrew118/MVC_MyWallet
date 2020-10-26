@@ -30,4 +30,20 @@ class Incomes extends Authenticated
   {
     return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
   }
+  
+  public function updateRecordAction()
+  {
+    $moneyFlow = new CashFlow($_POST);
+    
+    if ($moneyFlow->updateIncome()) {
+      Flash::addMessage('Przychód poprawiony');
+      
+      $this->redirect('/balance/show');
+    } else {
+      Flash::addMessage('Nie udało się poprawić przychodu');
+      
+      $this->redirect('/balance/show');
+    }
+    
+  }
 }
