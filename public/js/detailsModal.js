@@ -1,7 +1,8 @@
 $(document).ready(function() {
 
   showHideDetails();
-  edit
+  showEditModal();
+  hideModal();
 });
 
 function showHideDetails() {
@@ -19,4 +20,28 @@ function showHideDetails() {
 });
 }
 
+function showEditModal() {
+  
+  $('.income-detailed-row').click(function() {
+    
+    var elementID = this.id;
+    
+    var elements = $(this).children('td:first-child').children();
+    var date = elements.eq(0).text();
+    var amount = elements.eq(1).text();
+    var comment = elements.eq(2).text();
+    
+    $('#userMoney').val(amount);
+    $('#userDate').val(date);
+    $('#userComment').val(comment);
+
+    $('#detailsModal').modal('show');
+  });
+}
+
+function hideModal() {
+  $('#cancel_modal').click(function() {
+    $('#detailsModal').modal('hide');
+  });
+}
 
