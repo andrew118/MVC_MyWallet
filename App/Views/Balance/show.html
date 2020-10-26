@@ -91,56 +91,56 @@
 	
 	<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="modalLongTitle" aria-hidden="true" data-backdrop="">
   <div class="modal-dialog" role="document">
-    <div class="modal-content">
+    <div class="modal-content bg-dark">
       <div class="modal-header">
-        <h5 class="modal-title text-dark font-weight-bold" id="modalLongTitle">Edytuj wpis</h5>
+        <h5 class="modal-title font-weight-bold" id="modalLongTitle">Edytuj wpis</h5>
       </div>
-      <div class="modal-body">
-				<div class="container-fluid" id="modalData">
-					<div>							
-						<div class="col" id="cash">
-							<label class="sr-only">Kwota</label>
-								<div class="input-group input-group-lg">
-									<div class="input-group-prepend">
-										<span class="input-group-text px-2">Kwota</span>
+			<form method="post" action="" id="updateForm">
+				<div class="modal-body">
+					<div class="container-fluid" id="modalData">
+						<div>							
+							<div class="col" id="cash">
+								<label class="sr-only">Kwota</label>
+									<div class="input-group input-group-lg">
+										<div class="input-group-prepend">
+											<span class="input-group-text px-2">Kwota</span>
+										</div>
+										<input type="number" class="form-control" name="money" min="0.01" step="0.01" id="userMoney" placeholder="0.00" required />
 									</div>
-									<input type="number" class="form-control" name="money" min="0.01" step="0.01" id="userMoney" placeholder="0.00" required />
-								</div>
+							</div>
 						</div>
-					</div>
-					
-					<div>
-						<div class="col mt-2" id="date">
-							<label class="sr-only">Data</label>
-								<div class="input-group input-group-lg">
-									<div class="input-group-prepend">
-										<span class="input-group-text px-3">Data</span>
+						
+						<div>
+							<div class="col mt-2" id="date">
+								<label class="sr-only">Data</label>
+									<div class="input-group input-group-lg">
+										<div class="input-group-prepend">
+											<span class="input-group-text px-3">Data</span>
+										</div>
+										<input type="date" class="form-control" name="dater" id="userDate" required />
 									</div>
-									<input type="date" class="form-control" name="dater" id="userDate" required />
-								</div>
+							</div>
 						</div>
-					</div>
-					<div class="col mt-4 mb-4">
-						<label class="mr-sm-2 text-dark" for="payment">Metoda płatności</label>
-						<select class="custom-select mr-sm-2" name="payment" id="userPayment">
-						</select>
-					</div>
-					<div class="col mt-4 mb-4">
-						<label class="mr-sm-2 text-dark" for="category">Kategoria</label>
-						<select class="custom-select mr-sm-2" name="category" id="selectBox">
-						</select>
-								
-						<div class="form-group mt-2 mb-4">
-							<label for="comment" class="sr-only">Komentarz</label>
-							<input type="text" class="form-control" name="comment" id="userComment" placeholder="Komentarz (opcjonalnie)" aria-describedby="commentHelp">
+						<div class="col mt-4 mb-4" id="paymentPlace">
+						</div>
+						<div class="col mt-4 mb-4">
+							<label class="mr-sm-2" for="category">Kategoria</label>
+							<select class="custom-select mr-sm-2" name="category" id="selectBox">
+							</select>
+									
+							<div class="form-group mt-2 mb-4">
+								<label for="comment" class="sr-only">Komentarz</label>
+								<input type="text" class="form-control" name="comment" id="userComment" placeholder="Komentarz (opcjonalnie)" aria-describedby="commentHelp">
+							</div>
+							<div id="invisible"></div>
 						</div>
 					</div>
 				</div>
-      </div>
-      <div class="modal-footer">
-				<button type="submit" class="btn btn-success" id="modal_submit">Zapisz zmiany</button>
-				<button type="button" class="btn btn-outline-danger" id="cancel_modal">Porzuć pomysł</button>
-      </div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-success" id="modal_submit">Zapisz zmiany</button>
+					<button type="button" class="btn btn-outline-danger" id="cancel_modal">Porzuć pomysł</button>
+				</div>
+			</form>
     </div>
   </div>
 </div>

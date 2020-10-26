@@ -194,4 +194,21 @@ class cashFlow extends \Core\Model
 		
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+  
+  public function updateExpense()
+  {
+    $sql = 'UPDATE expenses SET expense_category_assigned_to_user_id = :expenseCategory, payment_method_assigned_to_user_id = :paymentID, amount = :amount, date_of_expense = :dateExpense, expense_comment = :comment WHERE id = :expenseID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':expenseCategory', $this->category, PDO::PARAM_INT);
+    $stmt->bindParam(':paymentID', $this->payment, PDO::PARAM_INT);
+    $stmt->bindParam(':amount', $this->money, PDO::PARAM_STR);
+    $stmt->bindParam(':dateExpense', $this->dater, PDO::PARAM_STR);
+    $stmt->bindParam(':comment', $this->comment, PDO::PARAM_STR);
+    $stmt->bindParam(':expenseID', $this->elementID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+  }
 }

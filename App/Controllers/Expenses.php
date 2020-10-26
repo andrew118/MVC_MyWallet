@@ -33,6 +33,18 @@ class Expenses extends Authenticated
     }
   }
   
+  public function updateRecordAction()
+  {
+    $moneyFlow = new CashFlow($_POST);
+    
+    if ($moneyFlow->updateExpense()) {
+      Flash::addMessage('Wydatek poprawiony');
+      
+      $this->redirect('/balance/show');
+    }
+    
+  }
+  
   private function loadUserCategories()
   {
     return CashFlow::getCategories($_SESSION['user_id'], 'expenses');

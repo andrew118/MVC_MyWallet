@@ -69,6 +69,7 @@ function showHideDetails() {
 function showIncomeEditModal() {
   
   $('.income-detailed-row').click(function() {
+    $('#modalLongTitle').text('Edycja przychodu');
     
     var selectedRowID = this.id;
     
@@ -105,8 +106,12 @@ function showIncomeEditModal() {
 function showExpenseEditModal() {
   
   $('.expense-detailed-row').click(function() {
+    $('#modalLongTitle').text('Edycja wydatku');
+    $('#updateForm').attr('action', '/expenses/update-record');
     
     var selectedRowID = this.id;
+    var input = $("<input>").attr("type", "hidden").attr("name", "elementID").val(selectedRowID);
+    $('#invisible').append($(input));
     
     var nameOfClass = $(this).attr('class');
 
@@ -120,7 +125,11 @@ function showExpenseEditModal() {
     var payId = selectedRowElements.eq(3).attr('id');
     var payIdNumber = payId.split(/pay-/);
     payIdNumber.shift();
-
+    
+    var selectHTML = '<label class="mr-sm-2" for="payment">Metoda płatności</label><select class="custom-select mr-sm-2" name="payment" id="userPayment"></select>';
+    
+    $('#paymentPlace').append(selectHTML);
+    
     for (const method of paymentMethotds) {
       if (payIdNumber == method.id) {
         var option = '<option value="' + method.id + '" selected>' + method.name + '</option>';
@@ -157,7 +166,8 @@ function hideModal() {
     
     $('#detailsModal').modal('hide');
     $('#selectBox').empty();
-    
+    $('#paymentPlace').empty();
+    $('#invisible').empty();
   });
 }
 
