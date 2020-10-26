@@ -42,11 +42,9 @@ class cashFlow extends \Core\Model
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
 		
-    $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-		
     $stmt->execute();
 		
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   public static function getPaymentMethods($userID)
   {
