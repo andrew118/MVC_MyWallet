@@ -55,11 +55,9 @@ class cashFlow extends \Core\Model
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
 		
-    $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-		
     $stmt->execute();
 		
-		return $stmt->fetchAll();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
   public function saveIncome($userID)
@@ -182,7 +180,7 @@ class cashFlow extends \Core\Model
       $sql = 'SELECT inc.id AS id, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment, income_category_assigned_to_user_id AS catID FROM incomes AS inc WHERE inc.user_id = :userID AND inc.date_of_income BETWEEN :beginDate AND :endDate ORDER BY catID';
     }
     if ($incomeExpenseIndicator == 'expenses') {
-      $sql = 'SELECT ex.id AS id, ex.amount AS amount, ex.date_of_expense AS date, ex.expense_comment AS comment, expense_category_assigned_to_user_id AS catID FROM expenses AS ex WHERE ex.user_id = :userID AND ex.date_of_expense BETWEEN :beginDate AND :endDate ORDER BY catID';
+      $sql = 'SELECT ex.id AS id, ex.amount AS amount, ex.date_of_expense AS date, ex.expense_comment AS comment, expense_category_assigned_to_user_id AS catID, userPay.name AS payName, userPay.id AS payId FROM expenses AS ex, payment_methods_assigned_to_users AS userPay WHERE ex.user_id = :userID AND ex.date_of_expense BETWEEN :beginDate AND :endDate AND ex.payment_method_assigned_to_user_id = userPay.id ORDER BY catID';
     }
     
     $db = static::getDB();

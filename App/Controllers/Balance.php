@@ -156,11 +156,21 @@ class Balance extends Authenticated
     $this->expensesByCategory = $expenses->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
   
-  public function getUserIncomeCategoriesAction()
+  public function getUserIncomeExpenseCategoriesAction()
   {
-    $categories = CashFlow::getCategories($_SESSION['user_id'], 'incomes');
+    $selector = $_POST['selector'];
+    
+    $categories = CashFlow::getCategories($_SESSION['user_id'], $selector);
     
     header('Content-Type: application/json');
 		echo json_encode($categories);
+  }
+  
+  public function getUserPaymentMethodsAction()
+  {
+    $methods = CashFlow::getPaymentMethods($_SESSION['user_id']);
+    
+    header('Content-Type: application/json');
+		echo json_encode($methods);
   }
 }

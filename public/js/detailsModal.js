@@ -1,23 +1,49 @@
 var incomeCategories;
+var expenseCategories;
+var paymentMethotds;
 
 $(document).ready(function() {
   
-  getIncomeCategories();
+  getCategories('incomes');
+  getCategories('expenses');
+  getPaymentMethods();
   showHideDetails();
-  showEditModal();
+  showIncomeEditModal();
+  showExpenseEditModal();
   hideModal();
   findCategoryIDInClassName();
 });
 
-function getIncomeCategories() {
+function getCategories(categoryName) {
   
   $.ajax({
-    url: '/balance/get-user-income-categories',
+    data: {
+      selector: categoryName
+      },
+    url: '/balance/get-user-income-expense-categories',
     method: 'post',
-    dataType: 'json',
     
     success: function(categories) {
-      incomeCategories = categories;
+      if (categoryName == 'incomes') {
+        incomeCategories = categories;
+      } else if (categoryName == 'expenses') {
+        expenseCategories = categories;
+      }
+      
+    },
+    error: function() {
+      console.log("Błąd połączenia");
+    }
+  });
+}
+
+function getPaymentMethods() {
+  
+  $.ajax({
+    url: '/balance/get-user-payment-methods',
+    
+    success: function(methods) {
+      paymentMethotds = methods;
     },
     error: function() {
       console.log("Błąd połączenia");
@@ -40,7 +66,7 @@ function showHideDetails() {
 });
 }
 
-function showEditModal() {
+function showIncomeEditModal() {
   
   $('.income-detailed-row').click(function() {
     
@@ -66,7 +92,56 @@ function showEditModal() {
       }
       
       $('#selectBox').append(option);
+    }
+    
+    $('#userMoney').val(amount);
+    $('#userDate').val(date);
+    $('#userComment').val(comment);
+
+    $('#detailsModal').modal('toggle');
+  });
+}
+
+function showExpenseEditModal() {
+  
+  $('.expense-detailed-row').click(function() {
+    
+    var selectedRowID = this.id;
+    
+    var nameOfClass = $(this).attr('class');
+
+    var idOfCategory = findCategoryIDInClassName(nameOfClass);
+
+    var selectedRowElements = $(this).children('td:first-child').children();
+    
+    var date = selectedRowElements.eq(0).text();
+    var amount = selectedRowElements.eq(1).text();
+    var comment = selectedRowElements.eq(2).text();
+    var payId = selectedRowElements.eq(3).attr('id');
+    var payIdNumber = payId.split(/pay-/);
+    payIdNumber.shift();
+
+    for (const method of paymentMethotds) {
+      if (payIdNumber == method.id) {
+        var option = '<option value="' + method.id + '" selected>' + method.name + '</option>';
+      } else {
+        var option = '<option value="' + method.id + '">' + method.name + '</option>';
+      }
+
+      $('#userPayment').append(option);
+    }
+    
+    for (const category of expenseCategories) {
       
+      if (idOfCategory == category.id) {
+        
+        var option = '<option value="' + category.id + '" selected>' + category.name + '</option>';
+      } else {
+        
+        var option = '<option value="' + category.id + '">' + category.name + '</option>';
+      }
+      
+      $('#selectBox').append(option);
     }
     
     $('#userMoney').val(amount);
@@ -89,7 +164,12 @@ function hideModal() {
 function findCategoryIDInClassName(nameOfClass) {
   
   if(nameOfClass != null) {
-    var id = nameOfClass.match(/inc-(\d+)/i);
-    return id[1];
+    var id = nameOfClass.match(/inc-(\d+)|ex-(\d+)/i);
+
+    if (id[1] == null) {
+      return id[2];
+    } else {
+      return id[1];
+    }
   }
 }
