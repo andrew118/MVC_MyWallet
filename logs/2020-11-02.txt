@@ -1,0 +1,9 @@
+[02-Nov-2020 21:01:53 Europe/Berlin] Uncaught exception: 'ErrorException' with message 'Undefined property: App\Controllers\Balance::$totalIncomesAmount'
+Stack trace: #0 C:\xampp\htdocs\www\App\Controllers\Balance.php(106): Core\Error::errorHandler(8, 'Undefined prope...', 'C:\\xampp\\htdocs...', 106, Array)
+#1 C:\xampp\htdocs\www\App\Controllers\Balance.php(22): App\Controllers\Balance->getDifferenceComment()
+#2 [internal function]: App\Controllers\Balance->showAction()
+#3 C:\xampp\htdocs\www\Core\Controller.php(24): call_user_func_array(Array, Array)
+#4 C:\xampp\htdocs\www\Core\Router.php(75): Core\Controller->__call('show', Array)
+#5 C:\xampp\htdocs\www\public\index.php(21): Core\Router->dispatch('balance/show')
+#6 {main}
+Thrown in 'C:\xampp\htdocs\www\App\Controllers\Balance.php' on line 106

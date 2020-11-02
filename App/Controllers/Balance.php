@@ -11,34 +11,24 @@ class Balance extends Authenticated
 {
   private $beginDate;
   private $endDate;
-  private $totalIncomesAmount;
-  private $totalExpensesAmount;
-  private $sumOfIncomesByCategories;
-  private $sumOfExpensesByCategories;
-  private $incomesByCategory;
-  private $expensesByCategory;
   
   public function showAction()
   {
     $this->setDateRange();
-    $this->loadIncomesAndExpensesSum();
-    $this->loadSumOfIncomesByCategories();
-    $this->loadSumOfExpensesByCategories();
-    $this->loadAllIncomes();
-    $this->loadAllExpenses();
-    $comment = $this->getDifferenceComment();
+    $args['beginDate'] = date('Y-m-d', $this->beginDate->getTimestamp());
+    $args['endDate'] = date('Y-m-d', $this->endDate->getTimestamp());
+    $args['sumIncomes'] = $this->loadIncomesSum();
+    $args['sumExpenses'] = $this->loadExpensesSum();
+    $args['comment'] = $this->getDifferenceComment($args['sumIncomes'], $args['sumExpenses']);
+    $args['incomes'] = $this->loadSumOfIncomesByCategories();
+    $args['expenses'] = $this->loadSumOfExpensesByCategories();
+    $args['allIncomes'] = $this->loadAllIncomes();
+    $args['allExpenses'] = $this->loadAllExpenses();
 
+    //var_dump($args);
     View::RenderTemplate('Balance/show.html', [
-      'beginDate' => date('Y-m-d', $this->beginDate->getTimestamp()),
-      'endDate' => date('Y-m-d', $this->endDate->getTimestamp()),
-      'sumIncomes' => $this->totalIncomesAmount['summary'],
-      'sumExpenses' => $this->totalExpensesAmount['summary'],
-      'comment' => $comment,
-      'incomes' => $this->sumOfIncomesByCategories,
-      'expenses' => $this->sumOfExpensesByCategories,
-      'allIncomes' => $this->incomesByCategory,
-      'allExpenses' => $this->expensesByCategory
-    ]);
+          'args' => $args
+          ]);
   }
 
   private function setDateRange()
@@ -104,24 +94,31 @@ class Balance extends Authenticated
     return true;
   }
 
-  private function loadIncomesAndExpensesSum()
+  private function loadIncomesSum()
   {
-    $this->totalIncomesAmount = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
-    
-    $this->totalExpensesAmount = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    $incomesSum = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+   
+    return $incomesSum['summary'];
   }
   
-  private function getDifferenceComment()
+  private function LoadExpensesSum()
   {
-    if ($this->totalIncomesAmount > $this->totalExpensesAmount) {
+    $expensesSum = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    
+    return $expensesSum['summary'];
+  }
+  
+  private function getDifferenceComment($incomesSum, $expensesSum)
+  {
+    if ($incomesSum > $expensesSum) {
       return ['balanceInfo'  => 'badge badge-success', 'balanceComment' => 'Dobrze zarządzasz! '];
     }
     
-    if ($this->totalIncomesAmount == $this->totalExpensesAmount) {
+    if ($incomesSum == $expensesSum) {
       return ['balanceInfo'  => 'badge badge-warning', 'balanceComment' => 'Przejrzyj wydatki. Coś idzie nie najlepiej. '];
     }
     
-    if ($this->totalIncomesAmount < $this->totalExpensesAmount) {
+    if ($incomesSum < $expensesSum) {
       return ['balanceInfo'  => 'badge badge-danger', 'balanceComment' => 'Nie wygląda to dobrze...  '];
     }
   }
@@ -130,14 +127,14 @@ class Balance extends Authenticated
   {
     $incomes = new CashFlow;
     
-    $this->sumOfIncomesByCategories = $incomes->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    return $incomes->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
   }
   
   private function loadSumOfExpensesByCategories()
   {
     $expenses = new CashFlow;
     
-    $this->sumOfExpensesByCategories = $expenses->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    return $expenses->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
   
   public function loadAllIncomes()
@@ -145,7 +142,8 @@ class Balance extends Authenticated
     $userID = $_SESSION['user_id'];
     
     $incomes = new CashFlow;
-    $this->incomesByCategory = $incomes->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    
+    return $incomes->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
   }
   
   public function loadAllExpenses()
@@ -153,7 +151,8 @@ class Balance extends Authenticated
     $userID = $_SESSION['user_id'];
     
     $expenses = new CashFlow;
-    $this->expensesByCategory = $expenses->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    
+    return $expenses->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
   
   public function getUserIncomeExpenseCategoriesAction()
