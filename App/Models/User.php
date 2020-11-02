@@ -100,7 +100,7 @@ class User extends \Core\Model
 	
 	public static function findByID($id)
 	{
-		$sql = 'SELECT * FROM users WHERE id = :id';
+		$sql = 'SELECT name, email FROM users WHERE id = :id';
 		
 		$db = static::getDB();
 		$stmt = $db->prepare($sql);
