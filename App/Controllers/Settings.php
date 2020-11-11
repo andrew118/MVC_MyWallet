@@ -24,29 +24,21 @@ class Settings extends Authenticated
   
   private function loadUserIncomeCategories()
   {
-    $userID = $_SESSION['user_id'];
-    
-    return CashFlow::getCategories($userID, 'incomes');
+    return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
   }
   
   private function loadUserExpenseCategories()
   {
-    $userID = $_SESSION['user_id'];
-    
-    return CashFlow::getCategories($userID, 'expenses');
+    return CashFlow::getCategories($_SESSION['user_id'], 'expenses');
   }
   
   private function loadUserPaymentMethods()
   {
-    $userID = $_SESSION['user_id'];
-    
-    return CashFlow::getPaymentMethods($userID);
+    return CashFlow::getPaymentMethods($_SESSION['user_id']);
   }
   
   private function loadUserData()
   {
-    $userID = $_SESSION['user_id'];
-    
-    return User::findByID($userID);
+    return User::findByID($_SESSION['user_id']);
   }
 }
