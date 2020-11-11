@@ -2,6 +2,10 @@
 
 {% block title %}Ustawienia{% endblock %}
 
+{% block footer %}
+<script src="/js/settings.js"></script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row mx-2">
@@ -14,12 +18,12 @@
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Kategorie przychodów</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
+							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="income-category"></i></th>
 						</tr>
 					</thead>
 					<tbody>
 {% for incCat in userSettings.incomeCategories %}
-						<tr class="font-weight-bold bg-secondary item-hidden" style="width: 90%;" id={{ incCat.id }}><td>{{ incCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden income-category-row" style="width: 90%;" id={{ incCat.id }}><td>{{ incCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
 {% endfor %}
 					</tbody>
 
@@ -33,12 +37,12 @@
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Kategorie wydatków</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
+							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="expense-category"></i></th>
 						</tr>
 					</thead>
 					<tbody>
 {% for expCat in userSettings.expenseCategories %}
-						<tr class="font-weight-bold bg-secondary item-hidden" style="width: 90%;" id={{ expCat.id }}><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row" style="width: 90%;" id={{ expCat.id }}><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
 {% endfor %}
 					</tbody>
 				</table>
@@ -51,12 +55,12 @@
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Metody płatności</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
+							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="payment-method"></i></th>
 						</tr>
 					</thead>
 					<tbody>
 {% for payment in userSettings.paymentMethods %}
-						<tr class="font-weight-bold bg-secondary item-hidden" style="width: 90%;" id={{ payment.id }}><td>{{ payment.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden payment-method-row" style="width: 90%;" id={{ payment.id }}><td>{{ payment.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
 {% endfor %}
 					</tbody>
 				</table>
@@ -69,13 +73,13 @@
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Ustawienia użytkownika</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
+							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="user-account"></i></th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="font-weight-bold bg-secondary item-hidden" style="width: 90%;" id="userName"><td>{{ userData.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
-						<tr class="font-weight-bold bg-secondary item-hidden" style="width: 90%;" id="userEmail"><td>{{ userData.email }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
-						<tr class="font-weight-bold bg-secondary item-hidden" style="width: 90%;" id="userPassword"><td>*** Zmień hasło ***</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userName"><td>{{ userData.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userEmail"><td>{{ userData.email }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userPassword"><td>*** Zmień hasło ***</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
 					</tbody>
 				</table>
 			</div>
