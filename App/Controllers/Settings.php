@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\CashFlow;
+use \App\Models\User;
 use \App\Flash;
 
 class Settings extends Authenticated
@@ -13,9 +14,11 @@ class Settings extends Authenticated
     $args['incomeCategories'] = $this->loadUserIncomeCategories();
     $args['expenseCategories'] = $this->loadUserExpenseCategories();
     $args['paymentMethods'] = $this->loadUserPaymentMethods();
+    $user = $this->loadUserData();
   
     View::RenderTemplate('Settings/settings.html', [
-          'userSettings' => $args
+          'userSettings' => $args,
+          'userData' => $user
           ]);
   }
   
@@ -38,5 +41,12 @@ class Settings extends Authenticated
     $userID = $_SESSION['user_id'];
     
     return CashFlow::getPaymentMethods($userID);
+  }
+  
+  private function loadUserData()
+  {
+    $userID = $_SESSION['user_id'];
+    
+    return User::findByID($userID);
   }
 }
