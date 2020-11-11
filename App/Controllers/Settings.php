@@ -12,6 +12,7 @@ class Settings extends Authenticated
   {
     $args['incomeCategories'] = $this->loadUserIncomeCategories();
     $args['expenseCategories'] = $this->loadUserExpenseCategories();
+    $args['paymentMethods'] = $this->loadUserPaymentMethods();
   
     View::RenderTemplate('Settings/settings.html', [
           'userSettings' => $args
@@ -25,10 +26,17 @@ class Settings extends Authenticated
     return CashFlow::getCategories($userID, 'incomes');
   }
   
-    private function loadUserExpenseCategories()
+  private function loadUserExpenseCategories()
   {
     $userID = $_SESSION['user_id'];
     
     return CashFlow::getCategories($userID, 'expenses');
+  }
+  
+  private function loadUserPaymentMethods()
+  {
+    $userID = $_SESSION['user_id'];
+    
+    return CashFlow::getPaymentMethods($userID);
   }
 }

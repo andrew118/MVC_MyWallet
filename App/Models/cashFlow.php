@@ -46,6 +46,7 @@ class cashFlow extends \Core\Model
 		
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+  
   public static function getPaymentMethods($userID)
   {
     $sql = 'SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = :userID';
