@@ -18,7 +18,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="font-weight-bold bg-secondary item-hidden"  style="width: 90%;"><td>...</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+{% for incomeCategories in userSettings %}
+	{% for incCat in incomeCategories %}
+						<tr class="font-weight-bold bg-secondary item-hidden"  style="width: 90%;" id={{ incCat.id }}><td>{{ incCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+	{% endfor %}
+{% endfor %}
 					</tbody>
 
 				</table>

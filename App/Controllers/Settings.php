@@ -3,12 +3,24 @@
 namespace App\Controllers;
 
 use \Core\View;
+use \App\Models\CashFlow;
+use \App\Flash;
 
 class Settings extends Authenticated
 {
   public function showAction()
   {
-    View::RenderTemplate('Settings/settings.html');
+    $args['incomeCategories'] = $this->loadUserIncomeCategories();
+  
+    View::RenderTemplate('Settings/settings.html', [
+          'userSettings' => $args
+          ]);
   }
   
+  private function loadUserIncomeCategories()
+  {
+    $userID = $_SESSION['user_id'];
+    
+    return CashFlow::getCategories($userID, 'incomes');
+  }
 }
