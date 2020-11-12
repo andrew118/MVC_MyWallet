@@ -6,18 +6,23 @@ $(document).ready(function() {
 
 function showHideDetails() {
   
-  var incomeCategories = $('.income-category-row');
-  var expenseCategories = $('.expense-category-row');
-  var paymentMethods = $('.expense-category-row');
-  var accountData = $('.user-account-row');
-  
   $('.icon-dot').click(function() {
 	
   var classKey = '.' + this.id + '-row';
   
-  $(classKey).toggleClass('item-hidden');
-  //incomeCategories.filter(classKey).toggleClass('item-hidden');
-  //expenseCategories.filter(classKey).toggleClass('item-hidden');
+  if ($(classKey).hasClass('seen')) {
+    
+    $(classKey).toggleClass('item-hidden');
+    $(classKey).removeClass('seen');
+    
+  } else {
+    
+    $('.seen').toggleClass('item-hidden');
+    $('.seen').removeClass('seen');
+    $(classKey).toggleClass('item-hidden seen');
+  }
+  
+  
 
 });
 }
