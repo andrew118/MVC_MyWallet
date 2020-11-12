@@ -88,20 +88,15 @@
 </div>
 
 <!-- MODAL STARTS HERE -->
-	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="dateRangeInput" aria-hidden="true">
+	<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="dateRangeInput" aria-hidden="true" data-backdrop="">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content bg-dark">
 				<div class="modal-header">
-					<h5 class="modal-title font-weight-bold" id="modalTitle">Edycja</h5>
+					<h5 class="modal-title font-weight-bold" id="modalTitle">Edycja wpisu</h5>
 				</div>
 				<form method="post" id="updateForm">
-					<div class="modal-body">
-						<div class="row">
-							
-								<div class="col-sm-6">
-									<h6 class="h6">Podaj</h6>
-									<input type="text" class="mb-3 rounded" name="begin_date" id="begin_date">
-								</div>
+					<div class="modal-body">	
+						<div class="col" id="modalData">
 							
 						</div>
 					</div>
