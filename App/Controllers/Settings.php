@@ -22,6 +22,17 @@ class Settings extends Authenticated
           ]);
   }
   
+  public function updateNameAction()
+  {
+    if (isset($_POST['name']) && !empty($_POST['name'])) {
+      
+      $success = User::updateUserName($_POST['name'], $_SESSION['user_id']);
+      
+      header('Content-Type: application/json');
+      echo json_encode($success);
+    }
+  }
+  
   private function loadUserIncomeCategories()
   {
     return CashFlow::getCategories($_SESSION['user_id'], 'incomes');

@@ -19,7 +19,9 @@ class User extends \Core\Model
 	
 	public function save()
 	{
-		$this->validate();
+		$this->validateName();
+		$this->validateEmail();
+		$this->validatePassword();
 		
 		if (empty($this->errors)) {
 			$password_hash = password_hash($this->password, PASSWORD_DEFAULT);
@@ -39,12 +41,15 @@ class User extends \Core\Model
 			return false;
 	}
 	
-	public function validate()
+	public function validateName()
 	{
 		if ($this->name == '') {
 			$this->errors[] = 'Imię jest wymagane';
 		}
-		
+	}
+  
+  public function validateEmail()
+  {
 		if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
 			$this->errors[] = 'Niepoprawny e-mail';
 		}
@@ -52,7 +57,10 @@ class User extends \Core\Model
 		if (static::emailExists($this->email)) {
 			$this->errors[] = 'E-mail jest już zajęty';
 		}
-		
+	}
+  
+  public function validatePassword()
+  {
 		if (strlen($this->password) < 6) {
 			$this->errors[] = 'Hasło musi mieć conajmniej 6 znaków';
 		}
@@ -133,4 +141,17 @@ class User extends \Core\Model
 		
 		return $stmt->execute();
 	}
+  
+  public static function updateUserName($newName, $userID)
+  {
+      $sql = 'UPDATE users SET name = :newName WHERE id = :userID';
+    
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
+      
+      $stmt->bindValue(':newName', $newName, PDO::PARAM_STR);
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      
+      return $stmt->execute();
+  }
 }

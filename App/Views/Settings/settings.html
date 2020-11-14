@@ -7,6 +7,8 @@
 {% endblock %}
 
 {% block body %}
+<div class="alert d-none" role="alert" id="requestInfo"></div>
+
 
 <div class="row mx-2">
 	<div class="col-12 p-3 rounded" style="border: 2px #f2f2f2 dashed">
@@ -97,12 +99,11 @@
 				<form method="post" id="updateForm">
 					<div class="modal-body">	
 						<div class="col" id="modalData">
-							
 						</div>
 					</div>
 					
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-success" id="modalSubmit">Zapisz zmiany</button>
+						<button type="button" class="btn btn-success" id="modalSubmit">Zapisz zmiany</button>
 					<button type="button" class="btn btn-outline-danger" id="cancelModal">Porzuć pomysł</button>
 					</div>
 				</form>
