@@ -38,7 +38,7 @@ function editAccountData() {
     
     propertyID = $(this).closest('tr').attr('id');
     var propertyValue = $(this).closest('td').siblings().text();
-    
+
     prepareModalContent(propertyID, propertyValue);
     $('#updateModal').modal('toggle');
     
@@ -48,13 +48,16 @@ function editAccountData() {
 function applyChanges() {
   
     $('#modalSubmit').click(function() {
-      
+
       switch (propertyID) {
     
         case 'userName':
-        updateName();
-        break;
+          updateName();
+          break;
         
+        case 'userEmail':
+          updateEmail();
+          break;
       }
       
     });
@@ -65,6 +68,7 @@ function updateName() {
   let newName = $('#user_name').val();
   
   if (newName !== '') {
+    
     $.post('/settings/update-name', {
         name: newName
     }, function(response) {
@@ -78,8 +82,32 @@ function updateName() {
       }
     });
   } else {
+    
     showWarining();
   }
+}
+
+function updateEmail() {
+  
+  let newEmail = $('#user_email').val();
+  let submit = $('#modalSubmit').val();
+  
+  $('#divWarning').load('/settings/update-email', {
+    
+          email: newEmail,
+          submit: submit
+          
+      }, function(responseText) {
+        
+          if (responseText === 'Uaktualniono') {
+            $('#divWarning').addClass('item-hidden');
+            $('#userEmail td').first().text(newEmail);
+            hideModal();
+            showSuccessMessage();
+            alert('Teraz logujesz się nowym emailem! \n\n' + newEmail);
+          }
+      }
+      );
 }
 
 function showSuccessMessage() {
@@ -112,7 +140,7 @@ function showErrorMessage() {
 
 function showWarining() {
   
-  $('#modalData').append('<div class="text-warning text-right h6">Pole nie moze być puste</div>');
+  $('#divWarning').text('Pole nie moze być puste');
 }
 
 function prepareModalContent(selector, text) {
@@ -151,4 +179,5 @@ function hideModal() {
     $('#updateModal').modal('hide');
     $('#modalTitle').text('');
     $('#modalData').empty();
+    $('#divWarning').text('');
 }

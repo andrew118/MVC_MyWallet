@@ -33,6 +33,46 @@ class Settings extends Authenticated
     }
   }
   
+  public function updateEmailAction()
+  { 
+    if (isset($_POST['submit'])) {
+      $email = $_POST['email'];
+      $emailIsCorrect = true;
+      
+      if (empty($email)) {
+        
+        echo 'Email nie może być pusty';
+        $emailIsCorrect = false;
+        
+      } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        
+        echo 'Podaj poprawny email';
+        $emailIsCorrect = false;
+        
+      } elseif (User::emailExists($email)) {
+        
+        echo 'Podany email jest zajęty';
+        $emailIsCorrect = false;
+        
+      }
+
+      if ($emailIsCorrect) {
+        
+        $success = User::updateUserEmail($email, $_SESSION['user_id']);
+        
+        if ($success) {
+          
+          echo 'Uaktualniono';
+          
+        } else {
+          
+          echo 'Wystąpił problem';
+          
+        }
+      }
+    }
+  }
+  
   private function loadUserIncomeCategories()
   {
     return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
