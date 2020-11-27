@@ -1,5 +1,6 @@
 const infoSuccess = 'Zapisano pomyślnie';
 const infoError = 'Wystąpił błąd';
+var emailExists;
 var propertyID;
 
 $(document).ready(function() {
@@ -9,6 +10,7 @@ $(document).ready(function() {
   prepareModalContent();
   cancelModal();
   applyChanges();
+  checkEmail();
 
 });
 
@@ -58,6 +60,10 @@ function applyChanges() {
         case 'userEmail':
           updateEmail();
           break;
+          
+          case 'userPassword':
+          updatePassword();
+          break;
       }
       
     });
@@ -81,9 +87,53 @@ function updateName() {
         showErrorMessage();
       }
     });
+    
   } else {
     
     showWarining();
+  }
+}
+
+function checkEmail() {
+  
+  $('#modalData').on('keyup', '#user_email', function() {
+    
+    var newEmail = $(this).val();
+    
+    $.post('/settings/check-email-existance', {
+      
+        email: newEmail
+        
+    }, function(exists) {
+
+      if (exists) {
+        $('#divWarning').text('Email jest zajęty');
+      } else {
+        $('#divWarning').text('');
+      }
+    });
+    
+  });
+}
+
+function validateEmail(typedEmail) {
+  
+  let regexEmail = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  
+  if (typedEmail == '') {
+    
+    showWarining();
+    return false;
+    
+  } else if (!regexEmail.test(typedEmail)) {
+    
+    $('#divWarning').text('Podaj poprawny email');
+    return false;
+    
+  } else {
+   
+    return true;
+    
   }
 }
 
@@ -92,22 +142,94 @@ function updateEmail() {
   let newEmail = $('#user_email').val();
   let submit = $('#modalSubmit').val();
   
-  $('#divWarning').load('/settings/update-email', {
+  if (validateEmail(newEmail)) {
+    
+    $('#divWarning').load('/settings/update-email', {
     
           email: newEmail,
           submit: submit
           
       }, function(responseText) {
         
+        if (responseText === 'Uaktualniono') {
+          
+          $('#divWarning').addClass('item-hidden');
+          $('#userEmail td').first().text(newEmail);
+          hideModal();
+          showSuccessMessage();
+          alert('Teraz logujesz się nowym emailem! \n\n' + newEmail);
+          
+        } else {
+          
+          $('#divWarning').addClass('item-hidden');
+          hideModal();
+          showErrorMessage(responseText);
+          
+        }
+      }
+    );
+  }
+}
+
+function validatePassword(typedPassword) {
+    
+  if (typedPassword == '') {
+    
+    showWarining();
+    return false;
+    
+  } else if (typedPassword.match(/.*[a-z]+.*/i) == null) {
+    
+    $('#divWarning').text('Hasło musi zawierać conajmniej 1 literę');
+    return false;
+    
+  } else if (typedPassword.match(/.*\d+.*/) == null) {
+    
+    $('#divWarning').text('Hasło musi zawierać conajmniej 1 cyfrę');
+    return false;
+    
+  } else if (typedPassword.length < 6) {
+    
+    $('#divWarning').text('Hasło musi mieć conajmniej 6 znaków');
+    return false;
+    
+  } else {
+    
+    return true;
+    
+  }
+}
+
+function updatePassword() {
+  
+  let newPassword = $('#user_password').val();
+  let submit = $('#modalSubmit').val();
+  
+  if (validatePassword(newPassword)) {
+    
+    $('#divWarning').load('/settings/update-password', {
+    
+          password: newPassword,
+          submit: submit
+          
+      }, function(responseText) {
+        
           if (responseText === 'Uaktualniono') {
+            
             $('#divWarning').addClass('item-hidden');
-            $('#userEmail td').first().text(newEmail);
             hideModal();
             showSuccessMessage();
-            alert('Teraz logujesz się nowym emailem! \n\n' + newEmail);
+            
+          } else {
+            
+            $('#divWarning').addClass('item-hidden');
+            hideModal();
+            showErrorMessage(responseText);
+            
           }
       }
-      );
+    );
+  }
 }
 
 function showSuccessMessage() {
@@ -124,9 +246,14 @@ function showSuccessMessage() {
   );
 }
 
-function showErrorMessage() {
+function showErrorMessage(errorMsg = 0) {
   
-  $('#requestInfo').text(infoError);
+  if (errorMsg != 0) {
+    $('#requestInfo').text(errorMsg);
+  } else {
+    $('#requestInfo').text(infoError);
+  }
+  
   $('#requestInfo').addClass('alert-danger');
   $('#requestInfo').toggleClass('d-none');
   

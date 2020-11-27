@@ -159,4 +159,19 @@ class User extends \Core\Model
       
       return $stmt->execute();
   }
+  
+  public static function updateUserPassword($newPassword, $userID)
+  {
+    $password_hash = password_hash($newPassword, PASSWORD_DEFAULT);
+    
+    $sql = 'UPDATE users SET password_hash = :password_hash WHERE id = :userID';
+  
+    $db = static::getDB();
+    $stmt = $db->prepare($sql);
+    
+    $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+    $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+  }
 }

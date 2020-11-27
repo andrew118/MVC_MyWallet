@@ -33,27 +33,28 @@ class Settings extends Authenticated
     }
   }
   
+  public function checkEmailExistanceAction()
+  {
+    $email = $_POST['email'];
+    $is_valid = User::EmailExists($email);
+		
+		echo $is_valid;
+    
+  }
+  
   public function updateEmailAction()
   { 
     if (isset($_POST['submit'])) {
+      
       $email = $_POST['email'];
       $emailIsCorrect = true;
       
       if (empty($email)) {
-        
-        echo 'Email nie może być pusty';
-        $emailIsCorrect = false;
-        
+          $emailIsCorrect = false;
       } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        
-        echo 'Podaj poprawny email';
-        $emailIsCorrect = false;
-        
+          $emailIsCorrect = false;
       } elseif (User::emailExists($email)) {
-        
-        echo 'Podany email jest zajęty';
-        $emailIsCorrect = false;
-        
+          $emailIsCorrect = false;
       }
 
       if ($emailIsCorrect) {
@@ -61,14 +62,49 @@ class Settings extends Authenticated
         $success = User::updateUserEmail($email, $_SESSION['user_id']);
         
         if ($success) {
-          
-          echo 'Uaktualniono';
-          
+          echo 'Uaktualniono'; 
         } else {
-          
           echo 'Wystąpił problem';
-          
         }
+      } else {
+        
+        echo 'Email jest niepoprawny';
+        
+      }
+    }
+  }
+  
+  public function updatePasswordAction()
+  {
+    if (isset($_POST['submit'])) {
+      
+      $newPassword = $_POST['password'];
+      $passwordCorrect = true;
+      
+      if (strlen($newPassword) < 6) {
+        $passwordCorrect = false;
+      }
+      
+      if (preg_match('/.*[a-z]+.*/i', $newPassword) == 0) {
+        $passwordCorrect = false;
+      }
+      
+      if (preg_match('/.*\d+.*/i', $newPassword) == 0) {
+        $passwordCorrect = false;
+      }
+      
+      if ($passwordCorrect) {
+        $success = User::updateUserPassword($newPassword, $_SESSION['user_id']);
+        
+        if ($success) {
+          echo 'Uaktualniono'; 
+        } else {
+          echo 'Wystąpił problem';
+        }
+      } else {
+        
+        echo 'Hasło nie spełnia wymagań';
+        
       }
     }
   }
