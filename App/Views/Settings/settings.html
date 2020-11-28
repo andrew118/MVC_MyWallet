@@ -16,36 +16,41 @@
 		<div class="row">
 		
 			<div class="col">
-				<table class="table table-hover table-sm text-light">
+				<table class="table table-sm text-light">
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Kategorie przychodów</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="income-category"></i></th>
+							<th colspan="2" style="width: 10%;" class="text-right"><i class="icon-dot" id="income-category"></i></th>
 						</tr>
 					</thead>
 					<tbody>
 {% for incCat in userSettings.incomeCategories %}
-						<tr class="font-weight-bold bg-secondary item-hidden income-category-row" style="width: 90%;" id={{ incCat.id }}><td>{{ incCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden income-category-row" style="width: 80%;" id={{ incCat.id }}><td>{{ incCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash remove"></i></tr>
 {% endfor %}
+						<tr class="font-weight-bold bg-secondary item-hidden income-category-row">
+							<td colspan="3"><a class="btn btn-light btn-block" id="newIncomeCategory">Dodaj nową kategorię przychodów</a></td>
+						</tr>
 					</tbody>
-
 				</table>
 			</div>
 		</div>
 		
 		<div class="row">
 			<div class="col">
-				<table class="table table-hover table-sm text-light">
+				<table class="table table-sm text-light">
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Kategorie wydatków</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="expense-category"></i></th>
+							<th colspan="2" style="width: 10%;" class="text-right"><i class="icon-dot" id="expense-category"></i></th>
 						</tr>
 					</thead>
 					<tbody>
 {% for expCat in userSettings.expenseCategories %}
-						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row" style="width: 90%;" id={{ expCat.id }}><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row" style="width: 80%;" id={{ expCat.id }}><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash remove"></i></tr>
 {% endfor %}
+						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row">
+							<td colspan="3"><a class="btn btn-light btn-block" id="newExpenseCategory">Dodaj nową kategorię wydatków</a></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -53,25 +58,29 @@
 		
 		<div class="row">		
 			<div class="col">
-				<table class="table table-hover table-sm text-light">
+				<table class="table table-sm text-light">
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Metody płatności</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="payment-method"></i></th>
+							<th colspan="2" style="width: 10%;" class="text-right"><i class="icon-dot" id="payment-method"></i></th>
 						</tr>
 					</thead>
 					<tbody>
 {% for payment in userSettings.paymentMethods %}
-						<tr class="font-weight-bold bg-secondary item-hidden payment-method-row" style="width: 90%;" id={{ payment.id }}><td>{{ payment.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden payment-method-row" style="width: 80%;" id={{ payment.id }}><td>{{ payment.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil edit" title="Edytuj kategorię"></i></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash remove"></i></td></tr>
 {% endfor %}
+						<tr class="font-weight-bold bg-secondary item-hidden payment-method-row">
+							<td colspan="3"><a class="btn btn-light btn-block" id="newPaymentMethod">Dodaj nową metodę płatności</a></td>
+						</tr>
 					</tbody>
 				</table>
+				
 			</div>
 		</div>
 		
 		<div class="row">
 			<div class="col">
-				<table class="table table-hover table-sm text-light">
+				<table class="table table-sm text-light">
 					<thead class="table thead-dark">
 						<tr>
 							<th style="width: 90%;">Ustawienia użytkownika</th>
@@ -79,9 +88,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userName"><td>{{ userData.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil account"></i></td></tr>
-						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userEmail"><td>{{ userData.email }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil account"></i></td></tr>
-						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userPassword"><td>*** Zmień hasło ***</td><td style="width: 10%;" class="text-right"><i class="icon-pencil account"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userName"><td>{{ userData.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil edit account" title="Zmień nazwę uzytkownika"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userEmail"><td>{{ userData.email }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil edit account" title="Zmień e-mail"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden user-account-row" style="width: 90%;" id="userPassword"><td>*** Zmień hasło ***</td><td style="width: 10%;" class="text-right" title="Zmień hasło"><i class="icon-pencil edit account"></i></td></tr>
 					</tbody>
 				</table>
 			</div>
