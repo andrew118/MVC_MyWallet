@@ -1,5 +1,8 @@
 const infoSuccess = 'Zapisano pomyślnie';
 const infoError = 'Wystąpił błąd';
+var userIncomeCategories;
+var userExpenseCategories;
+var userPaymentMethods;
 var emailExists;
 var propertyID;
 
@@ -11,8 +14,32 @@ $(document).ready(function() {
   cancelModal();
   applyChanges();
   checkEmail();
+  loadUserCategoriesAndMethods();
+  addNewPaymentMethod();
 
 });
+
+function loadUserCategoriesAndMethods() {
+  
+  $.get('/settings/get-all-user-categories-and-methods', function(data) {
+    
+    userIncomeCategories = data.incomeCategories;
+    userExpenseCategories = data.expenseCategories;
+    userPaymentMethods = data.paymentMethods;
+    
+    for (i = 0; i < userIncomeCategories.length; i++) {
+      console.log(userIncomeCategories[i]);
+    }
+    for (i = 0; i < userExpenseCategories.length; i++) {
+      console.log(userExpenseCategories[i]);
+    }
+    for (i = 0; i < userPaymentMethods.length; i++) {
+      console.log(userPaymentMethods[i]);
+    }
+    
+  });
+  
+}
 
 function showHideDetails() {
   
@@ -45,6 +72,19 @@ function editAccountData() {
     $('#updateModal').modal('toggle');
     
   });
+}
+
+function addNewPaymentMethod() {
+  
+  $('#newPaymentMethod').click(function() {
+    
+    let selector = this.id;
+    
+    prepareModalContent(selector);
+    $('#updateModal').modal('toggle');
+    
+  });
+  
 }
 
 function applyChanges() {
@@ -270,7 +310,7 @@ function showWarining() {
   $('#divWarning').text('Pole nie moze być puste');
 }
 
-function prepareModalContent(selector, text) {
+function prepareModalContent(selector, text=0) {
   
   switch(selector) {
     
@@ -291,6 +331,11 @@ function prepareModalContent(selector, text) {
       $('#modalTitle').text('Edycja adresu e-mail');
       $('#modalData').append(fieldsHtmlPassword);
       break;
+    
+    case 'newPaymentMethod':
+      let fieldsHtmlPayment = '<h6 class="h6">Podaj nazwę nowej metody płatności</h6><input type="text" class="mb-3 rounded form-control" name="payment" id="user_payment" required >';
+      $('#modalTitle').text('Dodaj nową metodę płatności');
+      $('#modalData').append(fieldsHtmlPayment);
   }
   
 }

@@ -14,7 +14,7 @@ class Settings extends Authenticated
     $args['incomeCategories'] = $this->loadUserIncomeCategories();
     $args['expenseCategories'] = $this->loadUserExpenseCategories();
     $args['paymentMethods'] = $this->loadUserPaymentMethods();
-    $user = $this->loadUserData();
+    $user = $this->loadUserDetails();
   
     View::RenderTemplate('Settings/settings.html', [
           'userSettings' => $args,
@@ -109,6 +109,16 @@ class Settings extends Authenticated
     }
   }
   
+  public function getAllUserCategoriesAndMethodsAction()
+  {
+    $data['incomeCategories'] = $this->loadUserIncomeCategories();
+    $data['expenseCategories'] = $this->loadUserExpenseCategories();
+    $data['paymentMethods'] = $this->loadUserPaymentMethods();
+    
+    header('Content-Type: application/json');
+    echo json_encode($data);
+  }
+  
   private function loadUserIncomeCategories()
   {
     return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
@@ -124,7 +134,7 @@ class Settings extends Authenticated
     return CashFlow::getPaymentMethods($_SESSION['user_id']);
   }
   
-  private function loadUserData()
+  private function loadUserDetails()
   {
     return User::findByID($_SESSION['user_id']);
   }
