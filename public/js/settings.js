@@ -17,6 +17,7 @@ $(document).ready(function() {
   loadUserCategoriesAndMethods();
   addNewPaymentMethod();
 
+
 });
 
 function loadUserCategoriesAndMethods() {
@@ -26,16 +27,6 @@ function loadUserCategoriesAndMethods() {
     userIncomeCategories = data.incomeCategories;
     userExpenseCategories = data.expenseCategories;
     userPaymentMethods = data.paymentMethods;
-    
-    for (i = 0; i < userIncomeCategories.length; i++) {
-      console.log(userIncomeCategories[i]);
-    }
-    for (i = 0; i < userExpenseCategories.length; i++) {
-      console.log(userExpenseCategories[i]);
-    }
-    for (i = 0; i < userPaymentMethods.length; i++) {
-      console.log(userPaymentMethods[i]);
-    }
     
   });
   
@@ -74,13 +65,73 @@ function editAccountData() {
   });
 }
 
+function checkPaymentExists(userInput) {
+    
+  let inputLowerCase = userInput.toLowerCase();
+  let inputWithoutSpaces = inputLowerCase.replace(/\s/g, '');
+  let paymentExists = false;
+  let similarMethodName = '';
+
+  for (const method of userPaymentMethods) {
+    
+    let methodLowerCase = method.name.toLowerCase();
+    let methodWithoutSpaces = methodLowerCase.replace(/\s/g, '');
+    
+    if ((methodLowerCase == inputLowerCase) || (methodWithoutSpaces == inputWithoutSpaces)) {
+      
+      similarMethodName = method.name;
+      paymentExists = true;
+      break;
+      
+    }
+  }
+
+  if(paymentExists) {
+    
+    $('#divWarning').text('Masz już metodę płatności o nazwie "' + similarMethodName + '"');
+    return paymentExists;
+      
+  } else {
+    
+    $('#divWarning').text('');
+    return paymentExists;
+    
+  }
+}
+
+function validatePaymentMethod() {
+  
+  let userInputPayment = $('#user_payment').val();
+  
+  if (userInputPayment == '') {
+    
+    showWarining();
+    return false;
+    
+  } else if (checkPaymentExists(userInputPayment)) {
+      
+      return false;
+      
+  } else {
+    
+    return true;
+    
+  }
+}
+
+function savePaymentMethod() {
+  
+  console.log(validatePaymentMethod());
+  
+}
+
 function addNewPaymentMethod() {
   
   $('#newPaymentMethod').click(function() {
     
-    let selector = this.id;
+    propertyID = this.id;
     
-    prepareModalContent(selector);
+    prepareModalContent(propertyID);
     $('#updateModal').modal('toggle');
     
   });
@@ -101,8 +152,12 @@ function applyChanges() {
           updateEmail();
           break;
           
-          case 'userPassword':
+        case 'userPassword':
           updatePassword();
+          break;
+          
+        case 'newPaymentMethod':
+          savePaymentMethod();
           break;
       }
       
