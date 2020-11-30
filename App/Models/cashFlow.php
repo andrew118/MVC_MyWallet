@@ -61,6 +61,46 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
+  public static function addPaymentMethod($userID, $paymentName)
+  {
+    $nameCorrect = static::validatePaymentMethod($userID, $paymentName);
+    
+    if ($nameCorrect) {
+      
+      $sql = 'INSERT INTO payment_methods_assigned_to_users (user_id, name) VALUES (:userID, :paymentName)';
+      
+      $db = static::getDB();
+      
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindParam(':paymentName', $paymentName, PDO::PARAM_STR);
+      
+      return $stmt->execute();
+      
+    }
+  }
+  
+  public static function validatePaymentMethod($userID, $paymentName)
+  {
+    $existingUserMethods = static::getPaymentMethods($userID);
+    $methodNameLowerCase = strtolower($paymentName);
+    $methodNameNoSpaces = preg_replace('/\s+/', '', $methodNameLowerCase);
+    
+    foreach ($existingUserMethods as $existingMethod) {
+      
+      $existingMethodLowerCase = strtolower($existingMethod['name']);
+      $existingMethodNoSpaces = preg_replace('/\s+/', '', $existingMethodLowerCase);
+      
+      if (($methodNameLowerCase == $existingMethodLowerCase) || ($methodNameNoSpaces == $existingMethodNoSpaces)) {
+        
+        return false;
+        
+      }
+    }
+    
+    return true;
+  }
+  
   public function saveIncome($userID)
   {
     $this->validate();

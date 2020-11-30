@@ -99,16 +99,14 @@ function checkPaymentExists(userInput) {
   }
 }
 
-function validatePaymentMethod() {
+function validatePaymentMethod(userInput) {
   
-  let userInputPayment = $('#user_payment').val();
-  
-  if (userInputPayment == '') {
+  if (userInput == '') {
     
     showWarining();
     return false;
     
-  } else if (checkPaymentExists(userInputPayment)) {
+  } else if (checkPaymentExists(userInput)) {
       
       return false;
       
@@ -121,7 +119,31 @@ function validatePaymentMethod() {
 
 function savePaymentMethod() {
   
-  console.log(validatePaymentMethod());
+  let submit = $('#modalSubmit').val();
+  let userInputPayment = $('#user_payment').val();
+  
+  if (validatePaymentMethod(userInputPayment)) {
+    
+    $.post('/settings/add-payment-method', {
+      
+        submit: submit,
+        name: userInputPayment
+        
+    }, function(response) {
+      
+        if (response) {
+          hideModal();
+          showSuccessMessage();
+          setTimeout(function() {
+            window.location.reload();
+          }, 1500 );
+        } else {
+          showErrorMessage();
+        }
+      
+    });
+    
+  }
   
 }
 

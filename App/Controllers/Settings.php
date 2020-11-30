@@ -109,6 +109,22 @@ class Settings extends Authenticated
     }
   }
   
+  public function addPaymentMethodAction()
+  {
+    if (isset($_POST['submit'])) {
+      
+      $methodName = $_POST['name'];
+
+      
+      if (!empty($methodName)) {
+        
+        $success = CashFlow::addPaymentMethod($_SESSION['user_id'], $methodName);
+        echo $success;
+        
+      }
+    }
+  }
+  
   public function getAllUserCategoriesAndMethodsAction()
   {
     $data['incomeCategories'] = $this->loadUserIncomeCategories();
