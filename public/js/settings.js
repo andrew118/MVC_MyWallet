@@ -4,6 +4,7 @@ var userIncomeCategories;
 var userExpenseCategories;
 var userPaymentMethods;
 var emailExists;
+var propertyName;
 var propertyID;
 
 $(document).ready(function() {
@@ -16,7 +17,7 @@ $(document).ready(function() {
   checkEmail();
   loadUserCategoriesAndMethods();
   addNewPaymentMethod();
-
+  deletePaymentMethodModal();
 
 });
 
@@ -56,10 +57,10 @@ function editAccountData() {
   
   $('.account').click(function () {
     
-    propertyID = $(this).closest('tr').attr('id');
+    propertyName = $(this).closest('tr').attr('id');
     var propertyValue = $(this).closest('td').siblings().text();
 
-    prepareModalContent(propertyID, propertyValue);
+    prepareModalContent(propertyName, propertyValue);
     $('#updateModal').modal('toggle');
     
   });
@@ -151,11 +152,47 @@ function addNewPaymentMethod() {
   
   $('#newPaymentMethod').click(function() {
     
-    propertyID = this.id;
+    propertyName = this.id;
     
-    prepareModalContent(propertyID);
+    prepareModalContent(propertyName);
     $('#updateModal').modal('toggle');
     
+  });
+  
+}
+
+function deletePaymentMethodModal() {
+  
+  $('.payment').click(function() {
+    
+    let paymentID = $(this).closest('tr').attr('id');
+    let paymentIdSeparated = paymentID.split('-');
+    propertyName = paymentIdSeparated[0];
+    propertyID = paymentIdSeparated[1];
+    let propertyValue = $(this).closest('td').siblings().text();
+
+    prepareModalContent(propertyName, propertyValue);
+    $('#updateModal').modal('toggle');
+    
+  });
+}
+
+function deletePayment() {
+  
+  $.post('/settings/delete-payment-method', {
+    
+    paymentID: propertyID
+    
+  }, function(response) {
+    
+      if (response) {
+        $('#payment-' + propertyID).remove();
+        hideModal();
+        showSuccessMessage();
+        loadUserCategoriesAndMethods();
+      } else {
+        showErrorMessage();
+      }
   });
   
 }
@@ -164,7 +201,7 @@ function applyChanges() {
   
     $('#modalSubmit').click(function() {
 
-      switch (propertyID) {
+      switch (propertyName) {
     
         case 'userName':
           updateName();
@@ -180,6 +217,10 @@ function applyChanges() {
           
         case 'newPaymentMethod':
           savePaymentMethod();
+          break;
+        
+        case 'payment':
+          deletePayment();
           break;
       }
       
@@ -413,6 +454,13 @@ function prepareModalContent(selector, text=0) {
       let fieldsHtmlPayment = '<h6 class="h6">Podaj nazwę nowej metody płatności</h6><input type="text" class="mb-3 rounded form-control" name="payment" id="user_payment" required >';
       $('#modalTitle').text('Dodaj nową metodę płatności');
       $('#modalData').append(fieldsHtmlPayment);
+      break;
+    
+    case 'payment':
+      let paymentDeleteConfirmHtml = '<h6 class="h6">Czy na pewno chesz usunąć "' + text + '"?</h6>';
+      $('#modalTitle').text('Usuwanie metody płatności');
+      $('#modalData').append(paymentDeleteConfirmHtml);
+      break;
   }
   
 }

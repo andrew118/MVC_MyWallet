@@ -114,14 +114,19 @@ class Settings extends Authenticated
     if (isset($_POST['submit'])) {
       
       $methodName = $_POST['name'];
-
       
       if (!empty($methodName)) {
         
-        $success = CashFlow::addPaymentMethod($_SESSION['user_id'], $methodName);
-        echo $success;
+        echo CashFlow::addPaymentMethod($_SESSION['user_id'], $methodName);
         
       }
+    }
+  }
+  
+  public static function deletePaymentMethodAction()
+  {
+    if (isset($_POST['paymentID'])) {
+      echo CashFlow::deletePaymentMethod($_SESSION['user_id'], $_POST['paymentID']);
     }
   }
   

@@ -67,7 +67,7 @@
 					</thead>
 					<tbody>
 {% for payment in userSettings.paymentMethods %}
-						<tr class="font-weight-bold bg-secondary item-hidden payment-method-row" style="width: 90%;" id={{ payment.id }}><td>{{ payment.name }}</td><td style="width: 10%;" class="text-right" title="Usuń metodę"><i class="icon-trash remove"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden payment-method-row" style="width: 90%;" id="payment-{{ payment.id }}"><td>{{ payment.name }}</td><td style="width: 10%;" class="text-right" title="Usuń metodę"><i class="icon-trash payment"></i></td></tr>
 {% endfor %}
 						<tr class="font-weight-bold bg-secondary item-hidden payment-method-row">
 							<td colspan="3"><a class="btn btn-light btn-block" id="newPaymentMethod">Dodaj nową metodę płatności</a></td>

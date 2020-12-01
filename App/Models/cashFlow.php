@@ -77,7 +77,24 @@ class cashFlow extends \Core\Model
       
       return $stmt->execute();
       
+    } else {
+      
+      return false;
+      
     }
+  }
+  
+  public static function deletePaymentMethod($userID, $paymentID)
+  {
+    $sql = 'DELETE FROM payment_methods_assigned_to_users WHERE id = :paymentID AND user_id = :userID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':paymentID', $paymentID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
   }
   
   public static function validatePaymentMethod($userID, $paymentName)
