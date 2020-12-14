@@ -18,6 +18,7 @@ $(document).ready(function() {
   loadUserCategoriesAndMethods();
   addNewPaymentMethod();
   deletePaymentMethodModal();
+  addNewIncomeCategory();
 
 });
 
@@ -51,6 +52,19 @@ function showHideDetails() {
       $(classKey).toggleClass('item-hidden seen');
     }
   });
+}
+
+function addNewIncomeCategory() {
+  
+  $('#newIncomeCategory').click(function() {
+    
+    propertyName = this.id;
+    
+    prepareModalContent(propertyName);
+    $('#updateModal').modal('toggle');
+    
+  });
+  
 }
 
 function editAccountData() {
@@ -460,6 +474,12 @@ function prepareModalContent(selector, text=0) {
       let paymentDeleteConfirmHtml = '<h6 class="h6">Czy na pewno chesz usunąć "' + text + '"?</h6>';
       $('#modalTitle').text('Usuwanie metody płatności');
       $('#modalData').append(paymentDeleteConfirmHtml);
+      break;
+    
+    case 'newIncomeCategory':
+      let fieldsHtmlIncomeCategory = '<h6 class="h6">Podaj nazwę nowej kategorii</h6><input type="text" class="mb-3 rounded form-control" name="income_category" id="user_income_caegory" required >';
+      $('#modalTitle').text('Dodawanie nowej kategorii przychodów');
+      $('#modalData').append(fieldsHtmlIncomeCategory);
       break;
   }
   
