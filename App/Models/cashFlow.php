@@ -61,6 +61,51 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
+  public static function addIncomeCategory($userID, $incomeCategoryName)
+  {
+    $categoryCorrect = static::validateCategoryName($userID, $incomeCategoryName, 'incomes');
+    
+    if ($categoryCorrect) {
+      
+      $sql = 'INSERT INTO incomes_category_assigned_to_users (user_id, name) VALUES (:userID, :incomeName)';
+      
+      $db = static::getDB();
+      
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindParam(':incomeName', $incomeCategoryName, PDO::PARAM_STR);
+      
+      return $stmt->execute();
+      
+    } else {
+      
+      return false;
+      
+    }
+  }
+  
+  public static function validateCategoryName($userID, $categoryName, $tableIndicator)
+  {
+    $existingUserCategories = static::getCategories($userID, $tableIndicator);
+    
+    $categoryNameLowerCase = strtolower($categoryName);
+    $categoryNameNoSpaces = preg_replace('/\s+/', '', $categoryNameLowerCase);
+    
+    foreach ($existingUserCategories as $existingCategory) {
+      
+      $existingCategoryLowerCase = strtolower($existingCategory['name']);
+      $existingCategoryNoSpaces = preg_replace('/\s+/', '', $existingCategoryLowerCase);
+      
+      if (($categoryNameLowerCase == $existingCategoryLowerCase) || ($categoryNameNoSpaces == $existingCategoryNoSpaces)) {
+        
+        return false;
+        
+      }
+    }
+    
+    return true;
+  }
+  
   public static function addPaymentMethod($userID, $paymentName)
   {
     $nameCorrect = static::validatePaymentMethod($userID, $paymentName);

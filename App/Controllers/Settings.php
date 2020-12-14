@@ -109,6 +109,20 @@ class Settings extends Authenticated
     }
   }
   
+  public function addIncomeCategoryAction()
+  {
+    if (isset($_POST['inputCategoryName'])) {
+      
+      $categoryName = $_POST['inputCategoryName'];
+      
+      if (!empty($categoryName)) {
+        
+        echo CashFlow::addIncomeCategory($_SESSION['user_id'], $categoryName);
+        
+      }
+    }
+  }
+  
   public function addPaymentMethodAction()
   {
     if (isset($_POST['submit'])) {

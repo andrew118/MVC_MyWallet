@@ -114,7 +114,23 @@ function saveIncomeCategory() {
   
   if (validateIncomeCategory(userInputIncomeCategory)) {
     
-    alert('prawda');
+    $.post('/settings/add-income-category', {
+      
+        inputCategoryName: userInputIncomeCategory
+        
+    }, function(response) {
+      
+        if (response) {
+          hideModal();
+          showSuccessMessage();
+          setTimeout(function() {
+            window.location.reload();
+          }, 1500 );
+        } else {
+          showErrorMessage();
+        }
+      
+    });
     
   }
   
