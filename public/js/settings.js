@@ -54,6 +54,72 @@ function showHideDetails() {
   });
 }
 
+function checkIncomeExists(userInput) {
+  
+  let inputLowerCase = userInput.toLowerCase();
+  let inputWithoutSpaces = inputLowerCase.replace(/\s/g, '');
+  let paymentExists = false;
+  let similarIncomeName = '';
+
+  for (const income of userIncomeCategories) {
+    
+    let categoryLowerCase = income.name.toLowerCase();
+    let categoryWithoutSpaces = categoryLowerCase.replace(/\s/g, '');
+    
+    if ((categoryLowerCase == inputLowerCase) || (categoryWithoutSpaces == inputWithoutSpaces)) {
+      
+      similarIncomeName = income.name;
+      paymentExists = true;
+      break;
+      
+    }
+  }
+
+  if(paymentExists) {
+    
+    $('#divWarning').text('Masz już kategorię płatności o nazwie "' + similarIncomeName + '"');
+    return paymentExists;
+      
+  } else {
+    
+    $('#divWarning').text('');
+    return paymentExists;
+    
+  }
+  
+}
+
+function validateIncomeCategory(userInput) {
+  
+  if (userInput == '') {
+    
+    showWarining();
+    return false;
+    
+  } else if (checkIncomeExists(userInput)) {
+      
+      return false;
+      
+  } else {
+    
+    return true;
+    
+  }
+  
+}
+
+function saveIncomeCategory() {
+  
+  let userInputIncomeCategory = $('#user_income_caegory').val();
+  
+  if (validateIncomeCategory(userInputIncomeCategory)) {
+    
+    alert('prawda');
+    
+  }
+  
+}
+
 function addNewIncomeCategory() {
   
   $('#newIncomeCategory').click(function() {
@@ -217,6 +283,10 @@ function applyChanges() {
 
       switch (propertyName) {
     
+        case 'newIncomeCategory':
+          saveIncomeCategory();
+          break;
+        
         case 'userName':
           updateName();
           break;
