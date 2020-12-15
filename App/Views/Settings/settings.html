@@ -25,7 +25,7 @@
 					</thead>
 					<tbody>
 {% for incCat in userSettings.incomeCategories %}
-						<tr class="font-weight-bold bg-secondary item-hidden income-category-row" style="width: 80%;" id={{ incCat.id }}><td>{{ incCat.name }}</td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash income"></i></td></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden income-category-row" style="width: 80%;" id="income-{{ incCat.id }}"><td>{{ incCat.name }}</td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash income"></i></td></tr>
 {% endfor %}
 						<tr class="font-weight-bold bg-secondary item-hidden income-category-row">
 							<td colspan="3"><a class="btn btn-light btn-block" id="newIncomeCategory">Dodaj nową kategorię przychodów</a></td>
@@ -46,7 +46,7 @@
 					</thead>
 					<tbody>
 {% for expCat in userSettings.expenseCategories %}
-						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row" style="width: 80%;" id={{ expCat.id }}><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash expense"></i></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row" style="width: 80%;" id="epense-{{ expCat.id }}"><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash expense"></i></tr>
 {% endfor %}
 						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row">
 							<td colspan="3"><a class="btn btn-light btn-block" id="newExpenseCategory">Dodaj nową kategorię wydatków</a></td>

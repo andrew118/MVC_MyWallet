@@ -123,6 +123,13 @@ class Settings extends Authenticated
     }
   }
   
+  public function findIncomesAssignedToCategoryAction()
+  {
+    if (isset($_POST['categoryID'])) {
+      echo true;
+    }
+  }
+  
   public function addPaymentMethodAction()
   {
     if (isset($_POST['submit'])) {

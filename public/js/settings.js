@@ -19,6 +19,7 @@ $(document).ready(function() {
   addNewPaymentMethod();
   deletePaymentMethodModal();
   addNewIncomeCategory();
+  deleteIncomeCategoryModal();
 
 });
 
@@ -52,6 +53,42 @@ function showHideDetails() {
       $(classKey).toggleClass('item-hidden seen');
     }
   });
+}
+
+function deleteIncomeCategoryModal() {
+  
+  $('.income').click(function() {
+    
+    let incomeID = $(this).closest('tr').attr('id');
+    let incomeIdSeparated = incomeID.split('-');
+    propertyName = incomeIdSeparated[0];
+    propertyID = incomeIdSeparated[1];
+    let propertyValue = $(this).closest('td').siblings().text();
+    
+    
+    $.post('/settings/find-incomes-assigned-to-category', {
+  
+      categoryID : propertyID
+      
+    }, function(response) {
+      
+        if (response) {
+
+          propertyName = propertyName + '_warning';
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+          
+        } else {
+          
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+          
+        }
+      
+    });
+    
+  });
+  
 }
 
 function checkIncomeExists(userInput) {
@@ -110,7 +147,7 @@ function validateIncomeCategory(userInput) {
 
 function saveIncomeCategory() {
   
-  let userInputIncomeCategory = $('#user_income_caegory').val();
+  let userInputIncomeCategory = $('#user_income_category').val();
   
   if (validateIncomeCategory(userInputIncomeCategory)) {
     
@@ -322,6 +359,10 @@ function applyChanges() {
         case 'payment':
           deletePayment();
           break;
+        
+        case 'income_warning':
+          console.log($('#change_category option:selected').val());
+          break;
       }
       
     });
@@ -528,18 +569,37 @@ function showWarining() {
   $('#divWarning').text('Pole nie moze być puste');
 }
 
-function prepareModalContent(selector, text=0) {
+function prepareSelectPart(selector) {
+  
+  let optionsData = '<div><label for="change_category" class="mr-sm-2 h6">Wybierz inną kategorię</label><select class="custom-select mr-sm-2" id="change_category" name="updatedCategory">';
+  
+  if (selector == 'income_warning') {
+    
+    for (const incomeCategory of userIncomeCategories) {
+      
+      optionsData += '<option value="' + incomeCategory.id + '">' + incomeCategory.name + '</option>';
+      
+    }
+    
+    optionsData += '</select></div>'
+    
+    return optionsData;
+  }
+  
+}
+
+function prepareModalContent(selector, description=0) {
   
   switch(selector) {
     
     case 'userName':
-      let fieldsHtmlName = '<h6 class="h6">Podaj nową nazwę użytkownika</h6><input type="text" class="mb-3 rounded form-control" name="name" id="user_name" value="' + text + '" required >';
+      let fieldsHtmlName = '<h6 class="h6">Podaj nową nazwę użytkownika</h6><input type="text" class="mb-3 rounded form-control" name="name" id="user_name" value="' + description + '" required >';
       $('#modalTitle').text('Edycja nazwy użytkownika');
       $('#modalData').append(fieldsHtmlName);
       break;
     
     case 'userEmail':
-      let fieldsHtmlEmail = '<h6 class="h6">Podaj nowy email</h6><input type="email" class="mb-3 rounded form-control" name="email" id="user_email" value="' + text + '" required >';
+      let fieldsHtmlEmail = '<h6 class="h6">Podaj nowy email</h6><input type="email" class="mb-3 rounded form-control" name="email" id="user_email" value="' + description + '" required >';
       $('#modalTitle').text('Edycja adresu e-mail');
       $('#modalData').append(fieldsHtmlEmail);
       break;
@@ -557,15 +617,29 @@ function prepareModalContent(selector, text=0) {
       break;
     
     case 'payment':
-      let paymentDeleteConfirmHtml = '<h6 class="h6">Czy na pewno chesz usunąć "' + text + '"?</h6>';
+      let fieldsHtmlPaymentDeleteConfirm = '<h6 class="h6">Czy na pewno chesz usunąć "' + description + '"?</h6>';
       $('#modalTitle').text('Usuwanie metody płatności');
-      $('#modalData').append(paymentDeleteConfirmHtml);
+      $('#modalData').append(fieldsHtmlPaymentDeleteConfirm);
       break;
     
     case 'newIncomeCategory':
-      let fieldsHtmlIncomeCategory = '<h6 class="h6">Podaj nazwę nowej kategorii</h6><input type="text" class="mb-3 rounded form-control" name="income_category" id="user_income_caegory" required >';
+      let fieldsHtmlIncomeCategory = '<h6 class="h6">Podaj nazwę nowej kategorii</h6><input type="text" class="mb-3 rounded form-control" name="income_category" id="user_income_category" required >';
       $('#modalTitle').text('Dodawanie nowej kategorii przychodów');
       $('#modalData').append(fieldsHtmlIncomeCategory);
+      break;
+    
+    case 'income':
+      let fieldsHtmlIncomeCategoryDeleteConfirm = '<h6 class="h6">Czy na pewno chesz usunąć "' + description + '"?</h6>';
+      $('#modalTitle').text('Usuwanie kategorii przychodu');
+      $
+      ('#modalData').append(fieldsHtmlIncomeCategoryDeleteConfirm);
+      break;
+    
+    case 'income_warning':
+      letfieldsHtmlIncomeCategoryWarning = '<div><h6 class="h6 font-bold text-warning">Do kategorii, którą chcesz usunąć są przypisane przychody!</h6></div>';
+      let selectIncomeCategory = prepareSelectPart(selector);
+      $('#modalTitle').text('Nie można usunąć tej kategorii');
+      $('#modalData').append(letfieldsHtmlIncomeCategoryWarning, selectIncomeCategory);
       break;
   }
   
