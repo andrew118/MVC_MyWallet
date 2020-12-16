@@ -55,6 +55,29 @@ function showHideDetails() {
   });
 }
 
+function updateIncomesCategory(newIncomeCategory) {
+  
+  $.post('/settings/update-incomes-category', {
+    
+    newCategoryID : newIncomeCategory,
+    categoryToReplace : propertyID
+    
+  }, function(response) {
+    
+    if (response) {
+      
+      deleteIncomeCategory();
+      
+    } else {
+      
+      showErrorMessage();
+      
+    }
+    
+  });
+  
+}
+
 function deleteIncomeCategory() {
   
   $.post('settings/delete-income-category', {
@@ -64,13 +87,17 @@ function deleteIncomeCategory() {
   }, function(response) {
     
       if (response) {
+        
           hideModal();
           showSuccessMessage();
           setTimeout(function() {
             window.location.reload();
           }, 1500 );
+          
         } else {
+          
           showErrorMessage();
+          
         }
     
   });
@@ -405,7 +432,8 @@ function applyChanges() {
           break;
         
         case 'income_warning':
-          let selected = $('#change_category option:selected').val();	
+          let selectedNewCategory = $('#change_category option:selected').val();
+          updateIncomesCategory(selectedNewCategory);
           break;
       }
       
