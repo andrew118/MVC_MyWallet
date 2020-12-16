@@ -361,7 +361,7 @@ function applyChanges() {
           break;
         
         case 'income_warning':
-          console.log($('#change_category option:selected').val());
+          console.log($('#change_category option:selected').val());	
           break;
       }
       
@@ -571,14 +571,17 @@ function showWarining() {
 
 function prepareSelectPart(selector) {
   
-  let optionsData = '<div><label for="change_category" class="mr-sm-2 h6">Wybierz inną kategorię</label><select class="custom-select mr-sm-2" id="change_category" name="updatedCategory">';
+  let optionsData = '<div><label for="change_category" class="mr-sm-2 h6">Wybierz inną kategorię, żeby je przypisać</label><select class="custom-select mr-sm-2" id="change_category" name="updatedCategory">';
   
   if (selector == 'income_warning') {
     
     for (const incomeCategory of userIncomeCategories) {
       
-      optionsData += '<option value="' + incomeCategory.id + '">' + incomeCategory.name + '</option>';
+      if (incomeCategory.id != propertyID) {
+        
+        optionsData += '<option value="' + incomeCategory.id + '">' + incomeCategory.name + '</option>';
       
+      }
     }
     
     optionsData += '</select></div>'
