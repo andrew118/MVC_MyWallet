@@ -178,6 +178,23 @@ class cashFlow extends \Core\Model
     }
   }
   
+  public static function checkPaymentMethodAssignedToExpense($userID, $paymentID)
+  {
+    
+    $sql = 'SELECT * FROM expenses WHERE user_id = :userID AND payment_method_assigned_to_user_id = :paymentID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':paymentID', $paymentID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->fetch() !== false;
+    
+  }
+  
   public static function deletePaymentMethod($userID, $paymentID)
   {
     $sql = 'DELETE FROM payment_methods_assigned_to_users WHERE id = :paymentID AND user_id = :userID';

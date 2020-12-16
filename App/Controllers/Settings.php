@@ -159,7 +159,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['paymentID'])) {
       
-      echo true;
+      echo CashFlow::checkPaymentMethodAssignedToExpense($_SESSION['user_id'], $_POST['paymentID']);
       
     }
     

@@ -377,6 +377,29 @@ function deletePaymentMethodModal() {
   });
 }
 
+function updatePaymentMethod(selectedNewMethod) {
+  
+  $.post('/settings/update-payment-method', {
+    
+    newPaymentID : selectedNewMethod,
+    paymentToReplace : propertyID
+    
+  }, function(response) {
+      
+      if (response) {
+      
+      deletePayment();
+      
+    } else {
+      
+      showErrorMessage();
+      
+    }
+      
+  });
+  
+}
+
 function deletePayment() {
   
   $.post('/settings/delete-payment-method', {
@@ -425,6 +448,11 @@ function applyChanges() {
         
         case 'payment':
           deletePayment();
+          break;
+        
+        case 'payment_warning':
+          let selectedNewMethod = $('#change_category option:selected').val();
+          updatePaymentMethod(selectedNewMethod);
           break;
         
         case 'income':
