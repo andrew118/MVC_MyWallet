@@ -139,6 +139,22 @@ class cashFlow extends \Core\Model
     
   }
   
+  public static function updateIncomesCategory($userID, $newCategoryID, $replacingCategory)
+  {
+    
+    $sql = 'UPDATE incomes SET income_category_assigned_to_user_id = :newCategoryID WHERE user_id = :userID AND income_category_assigned_to_user_id = :replacingCategory';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':newCategoryID', $newCategoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':replacingCategory', $replacingCategory, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+    
+  }
+  
   public static function addPaymentMethod($userID, $paymentName)
   {
     $nameCorrect = static::validatePaymentMethod($userID, $paymentName);
