@@ -179,7 +179,18 @@ class Settings extends Authenticated
     }
   }
   
-  public static function deletePaymentMethodAction()
+  public function updatePaymentMethodAction()
+  {
+    
+    if (isset($_POST['newPaymentID']) && isset($_POST['paymentToReplace'])) {
+      
+      echo CashFlow::updatePaymentMethod($_SESSION['user_id'], $_POST['newPaymentID'], $_POST['paymentToReplace']);
+      
+    }
+    
+  }
+  
+  public function deletePaymentMethodAction()
   {
     if (isset($_POST['paymentID'])) {
       echo CashFlow::deletePaymentMethod($_SESSION['user_id'], $_POST['paymentID']);

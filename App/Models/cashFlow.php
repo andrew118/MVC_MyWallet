@@ -139,17 +139,17 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function updateIncomesCategory($userID, $newCategoryID, $replacingCategory)
+  public static function updateIncomesCategory($userID, $newCategoryID, $replacingCategoryID)
   {
     
-    $sql = 'UPDATE incomes SET income_category_assigned_to_user_id = :newCategoryID WHERE user_id = :userID AND income_category_assigned_to_user_id = :replacingCategory';
+    $sql = 'UPDATE incomes SET income_category_assigned_to_user_id = :newCategoryID WHERE user_id = :userID AND income_category_assigned_to_user_id = :replacingCategoryID';
     
     $db = static::getDB();
     
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':newCategoryID', $newCategoryID, PDO::PARAM_INT);
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
-    $stmt->bindParam(':replacingCategory', $replacingCategory, PDO::PARAM_INT);
+    $stmt->bindParam(':replacingCategoryID', $replacingCategoryID, PDO::PARAM_INT);
     
     return $stmt->execute();
     
@@ -192,6 +192,22 @@ class cashFlow extends \Core\Model
     $stmt->execute();
     
     return $stmt->fetch() !== false;
+    
+  }
+  
+  public static function updatePaymentMethod($userID, $newPaymentID, $replacingPaymentID)
+  {
+    
+    $sql = 'UPDATE expenses SET payment_method_assigned_to_user_id = :newPaymentID WHERE user_id = :userID AND payment_method_assigned_to_user_id = :replacingPaymentID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':newPaymentID', $newPaymentID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':replacingPaymentID', $replacingPaymentID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
     
   }
   
