@@ -106,6 +106,22 @@ class cashFlow extends \Core\Model
     return true;
   }
   
+  public static function checkIncomesAssignedToCategory($userID, $categoryID) {
+    
+    $sql = 'SELECT * FROM incomes WHERE user_id = :userID AND income_category_assigned_to_user_id = :categoryID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->fetch() !== false;
+    
+  }
+  
   public static function addPaymentMethod($userID, $paymentName)
   {
     $nameCorrect = static::validatePaymentMethod($userID, $paymentName);

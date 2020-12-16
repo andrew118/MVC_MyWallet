@@ -126,7 +126,9 @@ class Settings extends Authenticated
   public function findIncomesAssignedToCategoryAction()
   {
     if (isset($_POST['categoryID'])) {
-      echo true;
+      
+      echo CashFlow::checkIncomesAssignedToCategory($_SESSION['user_id'], $_POST['categoryID']);
+      
     }
   }
   
