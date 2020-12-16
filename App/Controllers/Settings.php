@@ -143,6 +143,17 @@ class Settings extends Authenticated
     
   }
   
+  public function findExpensesAssociatedToPaymentMethodAction()
+  {
+    
+    if (isset($_POST['paymentID'])) {
+      
+      echo true;
+      
+    }
+    
+  }
+  
   public function addPaymentMethodAction()
   {
     if (isset($_POST['submit'])) {

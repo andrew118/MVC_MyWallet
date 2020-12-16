@@ -325,9 +325,27 @@ function deletePaymentMethodModal() {
     propertyName = paymentIdSeparated[0];
     propertyID = paymentIdSeparated[1];
     let propertyValue = $(this).closest('td').siblings().text();
+    
+    $.post('settings/find-expenses-associated-to-payment-method', {
+      
+      paymentID : propertyID
+      
+    }, function(response) {
+        
+        if (response) {
 
-    prepareModalContent(propertyName, propertyValue);
-    $('#updateModal').modal('toggle');
+          propertyName = propertyName + '_warning';
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+          
+        } else {
+          
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+          
+        }
+        
+    });
     
   });
 }
@@ -387,7 +405,7 @@ function applyChanges() {
           break;
         
         case 'income_warning':
-          console.log($('#change_category option:selected').val());	
+          let selected = $('#change_category option:selected').val();	
           break;
       }
       
@@ -597,7 +615,7 @@ function showWarining() {
 
 function prepareSelectPart(selector) {
   
-  let optionsData = '<div><label for="change_category" class="mr-sm-2 h6">Wybierz inną kategorię, żeby je przypisać</label><select class="custom-select mr-sm-2" id="change_category" name="updatedCategory">';
+  let optionsData = '<div><label for="change_category" class="mr-sm-2 h6">Wybierz inną, żeby je przypisać</label><select class="custom-select mr-sm-2" id="change_category" name="updatedCategory">';
   
   if (selector == 'income_warning') {
     
@@ -613,6 +631,24 @@ function prepareSelectPart(selector) {
     optionsData += '</select></div>'
     
     return optionsData;
+    
+  }
+  
+  if (selector == 'payment_warning') {
+    
+    for (const paymentMethod of userPaymentMethods) {
+      
+      if (paymentMethod.id != propertyID) {
+        
+        optionsData += '<option value="' + paymentMethod.id + '">' + paymentMethod.name + '</option>';
+      
+      }
+    }
+    
+    optionsData += '</select></div>'
+    
+    return optionsData;
+    
   }
   
 }
@@ -649,6 +685,13 @@ function prepareModalContent(selector, description=0) {
       let fieldsHtmlPaymentDeleteConfirm = '<h6 class="h6">Czy na pewno chesz usunąć "' + description + '"?</h6>';
       $('#modalTitle').text('Usuwanie metody płatności');
       $('#modalData').append(fieldsHtmlPaymentDeleteConfirm);
+      break;
+    
+    case 'payment_warning':
+      letfieldsHtmlPaymentMethodWarning = '<div><h6 class="h6 font-bold text-warning">Do metody, którą chcesz usunąć są przypisane wydatki!</h6></div>';
+      let selectPaymentMethod = prepareSelectPart(selector);
+      $('#modalTitle').text('Nie można usunąć tej metody płatności');
+      $('#modalData').append(letfieldsHtmlPaymentMethodWarning, selectPaymentMethod);
       break;
     
     case 'newIncomeCategory':
