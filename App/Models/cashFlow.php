@@ -122,6 +122,23 @@ class cashFlow extends \Core\Model
     
   }
   
+  public static function removeIncomeCategory($userID, $categoryID)
+  {
+    
+    $sql = 'DELETE FROM incomes_category_assigned_to_users WHERE id = :categoryID AND user_id = :userID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->rowCount();
+    
+  }
+  
   public static function addPaymentMethod($userID, $paymentName)
   {
     $nameCorrect = static::validatePaymentMethod($userID, $paymentName);

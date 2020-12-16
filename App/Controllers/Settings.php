@@ -132,6 +132,17 @@ class Settings extends Authenticated
     }
   }
   
+  public function deleteIncomeCategoryAction()
+  {
+    
+    if (isset($_POST['categoryID'])) {
+      
+      echo CashFlow::removeIncomeCategory($_SESSION['user_id'], $_POST['categoryID']);
+      
+    }
+    
+  }
+  
   public function addPaymentMethodAction()
   {
     if (isset($_POST['submit'])) {

@@ -55,6 +55,28 @@ function showHideDetails() {
   });
 }
 
+function deleteIncomeCategory() {
+  
+  $.post('settings/delete-income-category', {
+    
+    categoryID : propertyID
+    
+  }, function(response) {
+    
+      if (response) {
+          hideModal();
+          showSuccessMessage();
+          setTimeout(function() {
+            window.location.reload();
+          }, 1500 );
+        } else {
+          showErrorMessage();
+        }
+    
+  });
+  
+}
+
 function deleteIncomeCategoryModal() {
   
   $('.income').click(function() {
@@ -358,6 +380,10 @@ function applyChanges() {
         
         case 'payment':
           deletePayment();
+          break;
+        
+        case 'income':
+          deleteIncomeCategory();
           break;
         
         case 'income_warning':
