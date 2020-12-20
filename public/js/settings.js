@@ -165,7 +165,7 @@ function checkIncomeExists(userInput) {
 
   if(paymentExists) {
     
-    $('#divWarning').text('Masz już kategorię płatności o nazwie "' + similarIncomeName + '"');
+    $('#divWarning').text('Masz już kategorię przychodów o nazwie "' + similarIncomeName + '"');
     return paymentExists;
       
   } else {
@@ -252,6 +252,81 @@ function enableExpanseLimit() {
       
     }
   });
+  
+}
+
+function checkExpenseExists(userExpenseName) {
+  
+  let nameLowerCase = userExpenseName.toLowerCase();
+  let nameWithoutSpaces = nameLowerCase.replace(/\s/g, '');
+  let expenseExists = false;
+  let similarExpenseName = '';
+  
+  for (const expense of userExpenseCategories) {
+    
+    let categoryNameLowerCase = expense.name.toLowerCase();
+    let categoryNameWithoutSpaces = categoryNameLowerCase.replace(/\s/g, '');
+    
+    if ((categoryNameLowerCase == nameLowerCase) || (categoryNameWithoutSpaces == nameWithoutSpaces)) {
+      
+      similarExpenseName = expense.name;
+      expenseExists = true;
+      break;
+      
+    }
+  }
+  
+  if(expenseExists) {
+    
+    $('#divWarning').text('Masz już kategorię wydatków o nazwie "' + similarExpenseName + '"');
+    return expenseExists;
+      
+  } else {
+    
+    $('#divWarning').text('');
+    return expenseExists;
+    
+  }
+  
+}
+
+function validateExpenseCategory(userInput) {
+  
+  if (userInput == '') {
+    
+    showWarining();
+    return false;
+    
+  } else if (checkExpenseExists(userInput)) {
+      
+      return false;
+      
+  } else {
+    
+    return true;
+    
+  }
+  
+}
+
+function saveExpenseMethod() {
+  
+  let userInputExpenseCategoryName = $('#user_expense_category').val();
+  let userExpenseCategoryLimit = $('#user_limit').val();
+  
+  if (validateExpenseCategory(userInputExpenseCategoryName)) {
+    
+    if ($('input[name="limit_box"]').is(':checked') && userExpenseCategoryLimit <= 0) {
+      
+      $('#divWarning').text('Ustaw limit wydatków');
+      
+    } else {
+      
+      
+      
+    }
+    
+  }
   
 }
 
@@ -496,6 +571,10 @@ function applyChanges() {
           let selectedNewCategory = $('#change_category option:selected').val();
           updateIncomesCategory(selectedNewCategory);
           break;
+        
+        case 'newExpenseCategory':
+        saveExpenseMethod();
+        break;
       }
       
     });
