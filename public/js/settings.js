@@ -20,6 +20,8 @@ $(document).ready(function() {
   deletePaymentMethodModal();
   addNewIncomeCategory();
   deleteIncomeCategoryModal();
+  addNewExpenseCategory();
+  enableExpanseLimit();
 
 });
 
@@ -225,6 +227,37 @@ function saveIncomeCategory() {
 function addNewIncomeCategory() {
   
   $('#newIncomeCategory').click(function() {
+    
+    propertyName = this.id;
+    
+    prepareModalContent(propertyName);
+    $('#updateModal').modal('toggle');
+    
+  });
+  
+}
+
+function enableExpanseLimit() {
+  
+  $('#modalData').on('change', 'input[name="limit_box"]', function() {
+    let box = $(this);
+   
+    if (box.is(':checked')) {
+      
+      $('#user_limit').prop("disabled", false);
+      
+    } else {
+      
+      $('#user_limit').prop("disabled", true);
+      
+    }
+  });
+  
+}
+
+function addNewExpenseCategory() {
+  
+  $('#newExpenseCategory').click(function() {
     
     propertyName = this.id;
     
@@ -711,6 +744,8 @@ function prepareSelectPart(selector) {
 
 function prepareModalContent(selector, description=0) {
   
+  let expenseSetLimitHtml = '<div><input type="checkbox" id="limit_box" name="limit_box"><label for="limit_box" class="h6">Ustaw miesięczny limit transakcji dla kategorii</label></div><div><input type="number" class="mb-3 rounded form-control" id="user_limit" min="0" step="0.01" disabled></div>';
+  
   switch(selector) {
     
     case 'userName':
@@ -769,6 +804,11 @@ function prepareModalContent(selector, description=0) {
       $('#modalTitle').text('Nie można usunąć tej kategorii');
       $('#modalData').append(letfieldsHtmlIncomeCategoryWarning, selectIncomeCategory);
       break;
+    
+    case 'newExpenseCategory':
+      let fieldsHtmlExpenseCategory = '<div><h6 class="h6">Podaj nazwę nowej kategorii</h6><input type="text" class="mb-3 rounded form-control" name="expense_category" id="user_expense_category" required ></div>' + expenseSetLimitHtml;
+      $('#modalTitle').text('Dodawanie nowej kategorii wydatków');
+      $('#modalData').append(fieldsHtmlExpenseCategory);
   }
   
 }
