@@ -309,24 +309,35 @@ function validateExpenseCategory(userInput) {
   
 }
 
+function validateTransactionsLimit(limit) {
+  
+  if (limit <= 0) {
+      
+      $('#divWarning').text('Ustaw limit wydatków');
+      return false;
+      
+  }  else {
+    
+    return true;
+    
+  }
+}
+
 function saveExpenseMethod() {
   
   let userInputExpenseCategoryName = $('#user_expense_category').val();
-  let userExpenseCategoryLimit = $('#user_limit').val();
+  let transactionsLimitChecked = $('input[name="limit_box"]').is(':checked');
+  let expenseValid = true;
   
-  if (validateExpenseCategory(userInputExpenseCategoryName)) {
+  expenseValid = validateExpenseCategory(userInputExpenseCategoryName);
     
-    if ($('input[name="limit_box"]').is(':checked') && userExpenseCategoryLimit <= 0) {
-      
-      $('#divWarning').text('Ustaw limit wydatków');
-      
-    } else {
-      
-      
-      
-    }
+  if (transactionsLimitChecked) {
     
+    var userExpenseCategoryLimit = $('#user_limit').val();
+    expenseValid = validateTransactionsLimit(userExpenseCategoryLimit);
+  
   }
+  
   
 }
 
