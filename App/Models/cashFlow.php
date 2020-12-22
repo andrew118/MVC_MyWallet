@@ -34,7 +34,7 @@ class cashFlow extends \Core\Model
     if ($tableIndicator == 'incomes') {
       $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
     } else if ($tableIndicator == 'expenses') {
-      $sql = 'SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = :userID';
+      $sql = 'SELECT * FROM expenses_category_assigned_to_users WHERE user_id = :userID';
     }
     
     $db = static::getDB();
@@ -162,7 +162,7 @@ class cashFlow extends \Core\Model
     
     if ($categoryCorrect) {
       
-      if ($categoryLimit <= 0) {
+      if ($categoryLimit <= 0 || $categoryLimit == '') {
         
         $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name) VALUES (:userID, :expenseName)';
         
@@ -193,6 +193,38 @@ class cashFlow extends \Core\Model
       
     }
     
+  }
+  
+  public static function updateExpenseCategory($userID, $categoryLimit, $categoryID)
+  {
+    
+    if ($categoryLimit > 0) {
+      
+      $sql = 'UPDATE expenses_category_assigned_to_users SET limit_enabled = true, user_limit = :categoryLimit WHERE id = :categoryID AND user_id = :userID';
+      
+      $db = static::getDB();
+    
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':categoryLimit', $categoryLimit, PDO::PARAM_STR);
+      $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      
+      return $stmt->execute();
+      
+    } else if ($categoryLimit <= 0) {
+      
+     $sql = 'UPDATE expenses_category_assigned_to_users SET limit_enabled = false, user_limit = NULL WHERE id = :categoryID AND user_id = :userID';
+      
+      $db = static::getDB();
+    
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      
+      return $stmt->execute();
+      
+    }
+
   }
   
   public static function addPaymentMethod($userID, $paymentName)

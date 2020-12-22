@@ -21,7 +21,7 @@ $(document).ready(function() {
   addNewIncomeCategory();
   deleteIncomeCategoryModal();
   editExpenseCategoryModal();
-  addNewExpenseCategory();
+  addNewExpenseCategoryModal();
   enableExpanseLimit();
 
 });
@@ -328,12 +328,12 @@ function validateTransactionsLimit(limit) {
   }
 }
 
-function saveExpenseMethod() {
+function saveExpenseCategory() {
   
   let userInputExpenseCategoryName = $('#user_expense_category').val();
   let transactionsLimitChecked = $('input[name="limit_box"]').is(':checked');
   let userExpenseCategoryLimit = 0; 
-  let expenseValid = true;
+  let expenseIsValid = true;
   
   expenseIsValid = validateExpenseCategory(userInputExpenseCategoryName);
     
@@ -370,7 +370,7 @@ function saveExpenseMethod() {
   }
 }
 
-function addNewExpenseCategory() {
+function addNewExpenseCategoryModal() {
   
   $('#newExpenseCategory').click(function() {
     
@@ -381,6 +381,53 @@ function addNewExpenseCategory() {
     
   });
   
+}
+
+function updateExpenseCategory() {
+  
+  let transactionsLimitChecked = $('input[name="limit_box"]').is(':checked');
+  let userExpenseCategoryLimit = $('#user_limit').val();
+  let expenseIsValid = true;
+
+  if (transactionsLimitChecked) {
+    
+    userExpenseCategoryLimit = $('#user_limit').val();
+    expenseIsValid = validateTransactionsLimit(userExpenseCategoryLimit);
+
+  } else {
+    
+    userExpenseCategoryLimit = 0;
+    
+  }
+  
+  if (expenseIsValid) {
+    
+    $.post('/settings/update-expense-category', {
+      
+        inputCategoryLimit: userExpenseCategoryLimit,
+        categoryID: propertyID
+        
+    }, function(response) {
+      
+        if (response) {
+          
+          hideModal();
+          showSuccessMessage();
+          setTimeout(function() {
+            window.location.reload();
+          }, 1500 );
+          
+        } else {
+          
+          showErrorMessage();
+          
+        }
+    });
+  } else {
+    
+    $('#divWarning').text('Nie wprowadziłeś żadnych zmian');
+    
+  }
 }
 
 function editExpenseCategoryModal() {
@@ -630,8 +677,13 @@ function applyChanges() {
           break;
         
         case 'newExpenseCategory':
-        saveExpenseMethod();
-        break;
+          saveExpenseCategory();
+          break;
+        
+        case 'expense':
+          updateExpenseCategory();
+          break;
+        
       }
       
     });
@@ -878,9 +930,24 @@ function prepareSelectPart(selector) {
   
 }
 
+function checkExistingLimit(expenseName) {
+  
+  for (const expenseCategory of userExpenseCategories) {
+    
+    if (expenseCategory.name == expenseName) {
+      
+      let limitDetails = [expenseCategory.limit_enabled, expenseCategory.user_limit];
+      
+      return limitDetails;
+      
+    }
+    
+  }
+}
+
 function prepareModalContent(selector, description=0) {
   
-  let expenseSetLimitHtml = '<div><input type="checkbox" id="limit_box" name="limit_box"><label for="limit_box" class="h6">Ustaw miesięczny limit transakcji dla kategorii</label></div><div><input type="number" class="mb-3 rounded form-control" id="user_limit" min="0" step="0.01" disabled></div>';
+  let expenseSetLimitHtml = '<div><input type="checkbox" id="limit_box" name="limit_box"><label for="limit_box" class="h6">Ustaw miesięczny limit transakcji dla kategorii</label></div><div><input type="number" class="mb-3 rounded form-control" id="user_limit" name="user_limit" min="0" step="0.01" disabled></div>';
   
   switch(selector) {
     
@@ -948,10 +1015,15 @@ function prepareModalContent(selector, description=0) {
       break;
       
     case 'expense':
-      let fieldsHtmlEditExpenseCategory = '<div><label for="user_expense_category" class="h6">Wprowadź zmiany</label><input type="text" class="mb-3 rounded form-control" name="expense_category" id="user_expense_category" required ></div>' + expenseSetLimitHtml;
+      let fieldsHtmlEditExpenseCategory = '<div><h6 class="h5">Wybrana kategoria: <span class="font-weight-bold">' + description + '</span></h5></div>' + expenseSetLimitHtml;
       $('#modalTitle').text('Edycja kategorii wydatków');
       $('#modalData').append(fieldsHtmlEditExpenseCategory);
-      $('#user_expense_category').val(description);
+      let limit = checkExistingLimit(description);
+      if (limit[0] == true) {
+        $('#limit_box').prop('checked', true);
+        $('#user_limit').prop('disabled', false);
+        $('#user_limit').val(limit[1]);
+      }
       break;
   }
   
