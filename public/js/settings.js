@@ -20,6 +20,7 @@ $(document).ready(function() {
   deletePaymentMethodModal();
   addNewIncomeCategory();
   deleteIncomeCategoryModal();
+  editExpenseCategoryModal();
   addNewExpenseCategory();
   enableExpanseLimit();
 
@@ -376,6 +377,23 @@ function addNewExpenseCategory() {
     propertyName = this.id;
     
     prepareModalContent(propertyName);
+    $('#updateModal').modal('toggle');
+    
+  });
+  
+}
+
+function editExpenseCategoryModal() {
+  
+  $('.expense-edit').click(function() {
+    
+    let expenseID = $(this).closest('tr').attr('id');
+    let expenseIdSeparated = expenseID.split('-');
+    propertyName = expenseIdSeparated[0];
+    propertyID = expenseIdSeparated[1]; 
+    let propertyValue = $(this).closest('td').siblings().text();
+    
+    prepareModalContent(propertyName, propertyValue);
     $('#updateModal').modal('toggle');
     
   });
@@ -924,9 +942,17 @@ function prepareModalContent(selector, description=0) {
       break;
     
     case 'newExpenseCategory':
-      let fieldsHtmlExpenseCategory = '<div><h6 class="h6">Podaj nazwę nowej kategorii</h6><input type="text" class="mb-3 rounded form-control" name="expense_category" id="user_expense_category" required ></div>' + expenseSetLimitHtml;
+      let fieldsHtmlExpenseCategory = '<div><label for="user_expense_category" class="h6">Podaj nazwę nowej kategorii</label><input type="text" class="mb-3 rounded form-control" name="expense_category" id="user_expense_category" required ></div>' + expenseSetLimitHtml;
       $('#modalTitle').text('Dodawanie nowej kategorii wydatków');
       $('#modalData').append(fieldsHtmlExpenseCategory);
+      break;
+      
+    case 'expense':
+      let fieldsHtmlEditExpenseCategory = '<div><label for="user_expense_category" class="h6">Wprowadź zmiany</label><input type="text" class="mb-3 rounded form-control" name="expense_category" id="user_expense_category" required ></div>' + expenseSetLimitHtml;
+      $('#modalTitle').text('Edycja kategorii wydatków');
+      $('#modalData').append(fieldsHtmlEditExpenseCategory);
+      $('#user_expense_category').val(description);
+      break;
   }
   
 }
