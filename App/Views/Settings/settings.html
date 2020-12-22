@@ -46,7 +46,7 @@
 					</thead>
 					<tbody>
 {% for expCat in userSettings.expenseCategories %}
-						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row" style="width: 80%;" id="expense-{{ expCat.id }}"><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil expense-edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash expense"></i></tr>
+						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row" style="width: 80%;" id="expense-{{ expCat.id }}"><td>{{ expCat.name }}</td><td style="width: 10%;" class="text-right"><i class="icon-pencil expense-edit edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash expense"></i></tr>
 {% endfor %}
 						<tr class="font-weight-bold bg-secondary item-hidden expense-category-row">
 							<td colspan="3"><a class="btn btn-light btn-block" id="newExpenseCategory">Dodaj nową kategorię wydatków</a></td>
