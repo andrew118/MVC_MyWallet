@@ -23,6 +23,7 @@ $(document).ready(function() {
   editExpenseCategoryModal();
   addNewExpenseCategoryModal();
   enableExpanseLimit();
+  deleteExpenseCategoryModal();
 
 });
 
@@ -437,6 +438,23 @@ function editExpenseCategoryModal() {
     let expenseID = $(this).closest('tr').attr('id');
     let expenseIdSeparated = expenseID.split('-');
     propertyName = expenseIdSeparated[0];
+    propertyID = expenseIdSeparated[1]; 
+    let propertyValue = $(this).closest('td').siblings().text();
+    
+    prepareModalContent(propertyName, propertyValue);
+    $('#updateModal').modal('toggle');
+    
+  });
+  
+}
+
+function deleteExpenseCategoryModal() {
+  
+  $('.icon-trash.expense').click(function() {
+    
+    let expenseID = $(this).closest('tr').attr('id');
+    let expenseIdSeparated = expenseID.split('-');
+    propertyName = expenseIdSeparated[0] + '_delete';
     propertyID = expenseIdSeparated[1]; 
     let propertyValue = $(this).closest('td').siblings().text();
     
@@ -1024,6 +1042,12 @@ function prepareModalContent(selector, description=0) {
         $('#user_limit').prop('disabled', false);
         $('#user_limit').val(limit[1]);
       }
+      break;
+      
+    case 'expense_delete':
+      let fieldsHtmlExpenseDeleteConfirm = '<h6 class="h6">Czy na pewno chesz usunąć "' + description + '"?</h6>';
+      $('#modalTitle').text('Usuwanie kategorii wydatków');
+      $('#modalData').append(fieldsHtmlExpenseDeleteConfirm);
       break;
   }
   
