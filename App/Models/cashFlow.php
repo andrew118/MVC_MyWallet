@@ -223,6 +223,10 @@ class cashFlow extends \Core\Model
       
       return $stmt->execute();
       
+    } else {
+      
+      return false;
+      
     }
 
   }
