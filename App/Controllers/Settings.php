@@ -154,6 +154,17 @@ class Settings extends Authenticated
     
   }
   
+  public function addExpenseCategoryAction()
+  {
+    
+    if (isset($_POST['inputCategoryName'])) {
+      
+      echo CashFlow::addExpenseCategory($_SESSION['user_id'], $_POST['inputCategoryName'], $_POST['inputCategoryLimit']);
+      
+    }
+    
+  }
+  
   public function findExpensesAssociatedToPaymentMethodAction()
   {
     

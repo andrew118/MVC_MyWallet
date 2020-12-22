@@ -209,13 +209,17 @@ function saveIncomeCategory() {
     }, function(response) {
       
         if (response) {
+          
           hideModal();
           showSuccessMessage();
           setTimeout(function() {
             window.location.reload();
           }, 1500 );
+          
         } else {
+          
           showErrorMessage();
+          
         }
       
     });
@@ -327,18 +331,42 @@ function saveExpenseMethod() {
   
   let userInputExpenseCategoryName = $('#user_expense_category').val();
   let transactionsLimitChecked = $('input[name="limit_box"]').is(':checked');
+  let userExpenseCategoryLimit = 0; 
   let expenseValid = true;
   
-  expenseValid = validateExpenseCategory(userInputExpenseCategoryName);
+  expenseIsValid = validateExpenseCategory(userInputExpenseCategoryName);
     
   if (transactionsLimitChecked) {
     
-    var userExpenseCategoryLimit = $('#user_limit').val();
-    expenseValid = validateTransactionsLimit(userExpenseCategoryLimit);
+    userExpenseCategoryLimit = $('#user_limit').val();
+    expenseIsValid = validateTransactionsLimit(userExpenseCategoryLimit);
   
   }
   
-  
+  if (expenseIsValid) {
+    
+    $.post('/settings/add-expense-category', {
+      
+        inputCategoryName: userInputExpenseCategoryName,
+        inputCategoryLimit: userExpenseCategoryLimit
+        
+    }, function(response) {
+      
+        if (response) {
+          
+          hideModal();
+          showSuccessMessage();
+          setTimeout(function() {
+            window.location.reload();
+          }, 1500 );
+          
+        } else {
+          
+          showErrorMessage();
+          
+        }
+    });
+  }
 }
 
 function addNewExpenseCategory() {

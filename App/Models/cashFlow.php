@@ -155,6 +155,46 @@ class cashFlow extends \Core\Model
     
   }
   
+  public static function addExpenseCategory($userID, $categoryName, $categoryLimit)
+  {
+    
+    $categoryCorrect = static::validateCategoryName($userID, $categoryName, 'expenses');
+    
+    if ($categoryCorrect) {
+      
+      if ($categoryLimit <= 0) {
+        
+        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name) VALUES (:userID, :expenseName)';
+        
+        $db = static::getDB();
+      
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+        $stmt->bindParam(':expenseName', $categoryName, PDO::PARAM_STR);
+        
+      } else {
+        
+        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name, limit_enabled, user_limit) VALUES (:userID, :expenseName, true, :categoryLimit)';
+        
+        $db = static::getDB();
+      
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+        $stmt->bindParam(':expenseName', $categoryName, PDO::PARAM_STR);
+        $stmt->bindParam(':categoryLimit', $categoryLimit, PDO::PARAM_STR);
+        
+      }
+      
+      return $stmt->execute();
+      
+    } else {
+      
+      return false;
+      
+    }
+    
+  }
+  
   public static function addPaymentMethod($userID, $paymentName)
   {
     $nameCorrect = static::validatePaymentMethod($userID, $paymentName);
