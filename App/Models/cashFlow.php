@@ -231,6 +231,38 @@ class cashFlow extends \Core\Model
 
   }
   
+  public static function checkExpensesAssignedToDeletedCategory($userID, $expenseCategoryID)
+  {
+    
+    $sql = 'SELECT * FROM expenses WHERE user_id = :userID AND expense_category_assigned_to_user_id = :categoryID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $expenseCategoryID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->fetch() !== false;
+    
+  }
+  
+  public static function removeExpenseCategory($userID, $expenseCategoryID)
+  {
+    
+    $sql = 'DELETE FROM expenses_category_assigned_to_users WHERE id = :categoryID AND user_id = :userID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':categoryID', $expenseCategoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+    
+  }
+  
   public static function addPaymentMethod($userID, $paymentName)
   {
     $nameCorrect = static::validatePaymentMethod($userID, $paymentName);

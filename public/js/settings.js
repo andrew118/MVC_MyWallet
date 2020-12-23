@@ -441,9 +441,51 @@ function editExpenseCategoryModal() {
     propertyID = expenseIdSeparated[1]; 
     let propertyValue = $(this).closest('td').siblings().text();
     
-    prepareModalContent(propertyName, propertyValue);
-    $('#updateModal').modal('toggle');
+    $.post('/settings/find-incomes-assigned-to-category', {
+  
+      categoryID : propertyID
+      
+    }, function(response) {
+      
+        if (response) {
+
+          propertyName = propertyName + '_warning';
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+          
+        } else {
+          
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+          
+        }
+      
+    });
     
+  });
+  
+}
+
+function deleteExpenseCategory() {
+  
+    $.post('/settings/delete-expense-category', {
+    
+    expenseCategoryID: propertyID
+    
+  }, function(response) {
+    
+      if (response) {
+        
+        $('#expense-' + propertyID).remove();
+        hideModal();
+        showSuccessMessage();
+        loadUserCategoriesAndMethods();
+        
+      } else {
+        
+        showErrorMessage();
+        
+      }
   });
   
 }
@@ -457,9 +499,27 @@ function deleteExpenseCategoryModal() {
     propertyName = expenseIdSeparated[0] + '_delete';
     propertyID = expenseIdSeparated[1]; 
     let propertyValue = $(this).closest('td').siblings().text();
-    
-    prepareModalContent(propertyName, propertyValue);
-    $('#updateModal').modal('toggle');
+
+    $.post('/settings/find-expenses-associated-to-expense-category', {
+      
+      expenseCategoryID : propertyID
+      
+    }, function(response) {
+        
+        if (response) {
+
+          propertyName = propertyName + '_warning';
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+
+        } else {
+
+          prepareModalContent(propertyName, propertyValue);
+          $('#updateModal').modal('toggle');
+          
+        }
+        
+    });
     
   });
   
@@ -583,7 +643,7 @@ function deletePaymentMethodModal() {
     propertyID = paymentIdSeparated[1];
     let propertyValue = $(this).closest('td').siblings().text();
     
-    $.post('settings/find-expenses-associated-to-payment-method', {
+    $.post('/settings/find-expenses-associated-to-payment-method', {
       
       paymentID : propertyID
       
@@ -702,6 +762,12 @@ function applyChanges() {
           updateExpenseCategory();
           break;
         
+        case 'expense_delete':
+          deleteExpenseCategory();
+          break;
+        
+        case 'expense_delete_warning':
+          break;
       }
       
     });
@@ -946,6 +1012,23 @@ function prepareSelectPart(selector) {
     
   }
   
+  if (selector == 'expense_delete_warning') {
+    
+    for (const expenseCategory of userExpenseCategories) {
+      
+      if (expenseCategory.id != propertyID) {
+        
+        optionsData += '<option value="' + expenseCategory.id + '">' + expenseCategory.name + '</option>';
+      
+      }
+    }
+    
+    optionsData += '</select></div>'
+    
+    return optionsData;
+    
+  }
+  
 }
 
 function checkExistingLimit(expenseName) {
@@ -1048,6 +1131,13 @@ function prepareModalContent(selector, description=0) {
       let fieldsHtmlExpenseDeleteConfirm = '<h6 class="h6">Czy na pewno chesz usunąć "' + description + '"?</h6>';
       $('#modalTitle').text('Usuwanie kategorii wydatków');
       $('#modalData').append(fieldsHtmlExpenseDeleteConfirm);
+      break;
+    
+    case 'expense_delete_warning':
+      letfieldsHtmlExpenseCategoryWarning = '<div><h6 class="h6 font-bold text-warning">Do kategorii, którą chcesz usunąć są przypisane przychody!</h6></div>';
+      let selectExpenseCategory = prepareSelectPart(selector);
+      $('#modalTitle').text('Nie można usunąć tej kategorii');
+      $('#modalData').append(letfieldsHtmlExpenseCategoryWarning, selectExpenseCategory);
       break;
   }
   

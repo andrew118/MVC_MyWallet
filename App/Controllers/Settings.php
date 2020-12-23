@@ -154,6 +154,28 @@ class Settings extends Authenticated
     
   }
   
+  public function deleteExpenseCategoryAction()
+  {
+    
+    if (isset($_POST['expenseCategoryID'])) {
+      
+      echo CashFlow::removeExpenseCategory($_SESSION['user_id'], $_POST['expenseCategoryID']);
+      
+    }
+    
+  }
+  
+  public function findExpensesAssociatedToExpenseCategoryAction()
+  {
+    
+    if (isset($_POST['expenseCategoryID'])) {
+      
+      echo CashFlow::checkExpensesAssignedToDeletedCategory($_SESSION['user_id'], $_POST['expenseCategoryID']);
+      
+    }
+    
+  }
+  
   public function updateExpenseCategoryAction() {
     
     if (isset($_POST['categoryID'])) {
