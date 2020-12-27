@@ -18,7 +18,7 @@ $(document).ready(function() {
   loadUserCategoriesAndMethods();
   addNewPaymentMethod();
   deletePaymentMethodModal();
-  addNewIncomeCategory();
+  addNewIncomeCategoryModal();
   deleteIncomeCategoryModal();
   editExpenseCategoryModal();
   addNewExpenseCategoryModal();
@@ -29,7 +29,9 @@ $(document).ready(function() {
 
 function loadUserCategoriesAndMethods() {
   
-  $.get('/settings/get-all-user-categories-and-methods', function(data) {
+  $.get('/settings/get-all-user-categories-and-methods',
+  
+    function(data) {
     
     userIncomeCategories = data.incomeCategories;
     userExpenseCategories = data.expenseCategories;
@@ -91,12 +93,11 @@ function deleteIncomeCategory() {
   }, function(response) {
     
       if (response) {
-        
+          
+          $('#income-' + propertyID).remove();
           hideModal();
           showSuccessMessage();
-          setTimeout(function() {
-            window.location.reload();
-          }, 1500 );
+          loadUserCategoriesAndMethods();
           
         } else {
           
@@ -214,6 +215,8 @@ function saveIncomeCategory() {
           
           hideModal();
           showSuccessMessage();
+          loadUserCategoriesAndMethods();
+          
           setTimeout(function() {
             window.location.reload();
           }, 1500 );
@@ -230,9 +233,9 @@ function saveIncomeCategory() {
   
 }
 
-function addNewIncomeCategory() {
+function addNewIncomeCategoryModal() {
   
-  $('#newIncomeCategory').click(function() {
+  $('#newIncomeCategory').on('click', function() {
     
     propertyName = this.id;
     
@@ -414,9 +417,7 @@ function updateExpenseCategory() {
           
           hideModal();
           showSuccessMessage();
-          setTimeout(function() {
-            window.location.reload();
-          }, 1500 );
+          loadUserCategoriesAndMethods();
           
         } else {
           
@@ -502,6 +503,7 @@ function updateExpensesCategory(selectedNewExpenseCategoryID) {
     if (response) {
 
       deleteExpenseCategory();
+      loadUserCategoriesAndMethods();
       
     } else {
 
@@ -1072,7 +1074,7 @@ function checkExistingLimit(expenseName) {
 }
 
 function prepareModalContent(selector, description=0) {
-  
+
   let expenseSetLimitHtml = '<div><input type="checkbox" id="limit_box" name="limit_box"><label for="limit_box" class="h6">Ustaw miesięczny limit transakcji dla kategorii</label></div><div><input type="number" class="mb-3 rounded form-control" id="user_limit" name="user_limit" min="0" step="0.01" disabled></div>';
   
   switch(selector) {

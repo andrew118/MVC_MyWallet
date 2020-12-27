@@ -32,7 +32,7 @@ class cashFlow extends \Core\Model
   public static function getCategories($userID, $tableIndicator)
   {  
     if ($tableIndicator == 'incomes') {
-      $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
+      $sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE user_id = :userID';
     } else if ($tableIndicator == 'expenses') {
       $sql = 'SELECT * FROM expenses_category_assigned_to_users WHERE user_id = :userID';
     }
