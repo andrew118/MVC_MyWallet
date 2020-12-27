@@ -135,9 +135,9 @@ class Settings extends Authenticated
   public function updateIncomesCategoryAction()
   {
     
-    if (isset($_POST['newCategoryID']) && isset($_POST['categoryToReplace'])) {
+    if (isset($_POST['newCategoryID']) && isset($_POST['categoryToReplaceID'])) {
       
-      echo CashFlow::updateIncomesCategory($_SESSION['user_id'], $_POST['newCategoryID'], $_POST['categoryToReplace']);
+      echo CashFlow::updateIncomesCategory($_SESSION['user_id'], $_POST['newCategoryID'], $_POST['categoryToReplaceID']);
       
     }
     
@@ -176,7 +176,18 @@ class Settings extends Authenticated
     
   }
   
-  public function updateExpenseCategoryAction() {
+  public function changeCategoryForExpensesAction()
+  {
+    
+    if (isset($_POST['newCategoryID']) && isset($_POST['categoryToReplaceID'])) {
+      
+      echo CashFlow::changeCategoryForExpenses($_SESSION['user_id'], $_POST['newCategoryID'], $_POST['categoryToReplaceID']);
+
+    }
+    
+  }
+  
+  public function updateExpenseCategoryLimitAction() {
     
     if (isset($_POST['categoryID'])) {
       

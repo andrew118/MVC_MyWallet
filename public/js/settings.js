@@ -59,12 +59,12 @@ function showHideDetails() {
   });
 }
 
-function updateIncomesCategory(newIncomeCategory) {
+function updateIncomesCategory(newIncomeCategoryID) {
   
   $.post('/settings/update-incomes-category', {
     
-    newCategoryID : newIncomeCategory,
-    categoryToReplace : propertyID
+    newCategoryID : newIncomeCategoryID,
+    categoryToReplaceID : propertyID
     
   }, function(response) {
     
@@ -403,7 +403,7 @@ function updateExpenseCategory() {
   
   if (expenseIsValid) {
     
-    $.post('/settings/update-expense-category', {
+    $.post('/settings/update-expense-category-limit', {
       
         inputCategoryLimit: userExpenseCategoryLimit,
         categoryID: propertyID
@@ -441,7 +441,7 @@ function editExpenseCategoryModal() {
     propertyID = expenseIdSeparated[1]; 
     let propertyValue = $(this).closest('td').siblings().text();
     
-    $.post('/settings/find-incomes-assigned-to-category', {
+    $.post('/settings/find-expenses-associated-to-expense-category', {
   
       categoryID : propertyID
       
@@ -467,7 +467,7 @@ function editExpenseCategoryModal() {
 }
 
 function deleteExpenseCategory() {
-  
+
     $.post('/settings/delete-expense-category', {
     
     expenseCategoryID: propertyID
@@ -486,6 +486,29 @@ function deleteExpenseCategory() {
         showErrorMessage();
         
       }
+  });
+  
+}
+
+function updateExpensesCategory(selectedNewExpenseCategoryID) {
+  
+    $.post('/settings/change-category-for-expenses', {
+    
+    newCategoryID : selectedNewExpenseCategoryID,
+    categoryToReplaceID : propertyID
+    
+  }, function(response) {
+    
+    if (response) {
+
+      deleteExpenseCategory();
+      
+    } else {
+
+      showErrorMessage();
+      
+    }
+    
   });
   
 }
@@ -741,8 +764,8 @@ function applyChanges() {
           break;
         
         case 'payment_warning':
-          let selectedNewMethod = $('#change_category option:selected').val();
-          updatePaymentMethod(selectedNewMethod);
+          let selectedNewMethodID = $('#change_category option:selected').val();
+          updatePaymentMethod(selectedNewMethodID);
           break;
         
         case 'income':
@@ -750,8 +773,8 @@ function applyChanges() {
           break;
         
         case 'income_warning':
-          let selectedNewCategory = $('#change_category option:selected').val();
-          updateIncomesCategory(selectedNewCategory);
+          let selectedNewIncomeCategoryID = $('#change_category option:selected').val();
+          updateIncomesCategory(selectedNewIncomeCategoryID);
           break;
         
         case 'newExpenseCategory':
@@ -767,6 +790,8 @@ function applyChanges() {
           break;
         
         case 'expense_delete_warning':
+          let selectedNewExpenseCategoryID = $('#change_category option:selected').val();
+          updateExpensesCategory(selectedNewExpenseCategoryID);
           break;
       }
       
