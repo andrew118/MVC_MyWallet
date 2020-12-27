@@ -44,7 +44,7 @@ class User extends \Core\Model
 		if ($this->name == '') {
 			$this->errors[] = 'Imię jest wymagane';
 		}
-		
+  
 		if (filter_var($this->email, FILTER_VALIDATE_EMAIL) === false) {
 			$this->errors[] = 'Niepoprawny e-mail';
 		}
@@ -52,7 +52,7 @@ class User extends \Core\Model
 		if (static::emailExists($this->email)) {
 			$this->errors[] = 'E-mail jest już zajęty';
 		}
-		
+
 		if (strlen($this->password) < 6) {
 			$this->errors[] = 'Hasło musi mieć conajmniej 6 znaków';
 		}
@@ -133,4 +133,45 @@ class User extends \Core\Model
 		
 		return $stmt->execute();
 	}
+  
+  public static function updateUserName($newName, $userID)
+  {
+      $sql = 'UPDATE users SET name = :newName WHERE id = :userID';
+    
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
+      
+      $stmt->bindValue(':newName', $newName, PDO::PARAM_STR);
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      
+      return $stmt->execute();
+  }
+  
+  public static function updateUserEmail($newEmail, $userID)
+  {
+    $sql = 'UPDATE users SET email = :newEmail WHERE id = :userID';
+    
+      $db = static::getDB();
+      $stmt = $db->prepare($sql);
+      
+      $stmt->bindValue(':newEmail', $newEmail, PDO::PARAM_STR);
+      $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+      
+      return $stmt->execute();
+  }
+  
+  public static function updateUserPassword($newPassword, $userID)
+  {
+    $password_hash = password_hash($newPassword, PASSWORD_DEFAULT);
+    
+    $sql = 'UPDATE users SET password_hash = :password_hash WHERE id = :userID';
+  
+    $db = static::getDB();
+    $stmt = $db->prepare($sql);
+    
+    $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+    $stmt->bindValue(':userID', $userID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+  }
 }

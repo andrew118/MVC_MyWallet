@@ -1,13 +1,11 @@
-@charset "UTF-8";
-
- @font-face {
+@font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?23539446');
-  src: url('../font/fontello.eot?23539446#iefix') format('embedded-opentype'),
-       url('../font/fontello.woff2?23539446') format('woff2'),
-       url('../font/fontello.woff?23539446') format('woff'),
-       url('../font/fontello.ttf?23539446') format('truetype'),
-       url('../font/fontello.svg?23539446#fontello') format('svg');
+  src: url('../font/fontello.eot?8131097');
+  src: url('../font/fontello.eot?8131097#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff2?8131097') format('woff2'),
+       url('../font/fontello.woff?8131097') format('woff'),
+       url('../font/fontello.ttf?8131097') format('truetype'),
+       url('../font/fontello.svg?8131097#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -17,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('../font/fontello.svg?23539446#fontello') format('svg');
+    src: url('../font/fontello.svg?8131097#fontello') format('svg');
   }
 }
 */
@@ -57,10 +55,11 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
  
-.icon-conf:before { content: '\26ef'; } /* '⛯' */
-.icon-pencil:before { content: '\2710'; } /* '✐' */
-.icon-money:before { content: '\e020'; } /* '' */
-.icon-basket:before { content: '\e0d2'; } /* '' */
-.icon-logout:before { content: '\e741'; } /* '' */
-.icon-dot:before { content: '\e78d'; } /* '' */
-.icon-calendar:before { content: '📅'; } /* '\1f4c5' */
+.icon-basket:before { content: '\e800'; } /* '' */
+.icon-money:before { content: '\e801'; } /* '' */
+.icon-calendar:before { content: '\e802'; } /* '' */
+.icon-conf:before { content: '\e803'; } /* '' */
+.icon-logout:before { content: '\e804'; } /* '' */
+.icon-dot:before { content: '\e805'; } /* '' */
+.icon-pencil:before { content: '\e806'; } /* '' */
+.icon-trash:before { content: '\e807'; } /* '' */

@@ -57,6 +57,14 @@ label.error {
   display: none !important;
 }
 
+.edit:hover {
+  color: #212529;
+}
+
+.icon-trash:hover {
+  color: #8a4945;
+}
+
 @media (max-width: 767px) {
 	.navbar-nav {
 		display: flex;

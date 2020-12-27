@@ -34,7 +34,7 @@ class cashFlow extends \Core\Model
     if ($tableIndicator == 'incomes') {
       $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID';
     } else if ($tableIndicator == 'expenses') {
-      $sql = 'SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = :userID';
+      $sql = 'SELECT * FROM expenses_category_assigned_to_users WHERE user_id = :userID';
     }
     
     $db = static::getDB();
@@ -46,6 +46,7 @@ class cashFlow extends \Core\Model
 		
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
+  
   public static function getPaymentMethods($userID)
   {
     $sql = 'SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = :userID';
@@ -58,6 +59,314 @@ class cashFlow extends \Core\Model
     $stmt->execute();
 		
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+  
+  public static function addIncomeCategory($userID, $incomeCategoryName)
+  {
+    $categoryCorrect = static::validateCategoryName($userID, $incomeCategoryName, 'incomes');
+    
+    if ($categoryCorrect) {
+      
+      $sql = 'INSERT INTO incomes_category_assigned_to_users (user_id, name) VALUES (:userID, :incomeName)';
+      
+      $db = static::getDB();
+      
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindParam(':incomeName', $incomeCategoryName, PDO::PARAM_STR);
+      
+      return $stmt->execute();
+      
+    } else {
+      
+      return false;
+      
+    }
+  }
+  
+  public static function validateCategoryName($userID, $categoryName, $tableIndicator)
+  {
+    $existingUserCategories = static::getCategories($userID, $tableIndicator);
+    
+    $categoryNameLowerCase = strtolower($categoryName);
+    $categoryNameNoSpaces = preg_replace('/\s+/', '', $categoryNameLowerCase);
+    
+    foreach ($existingUserCategories as $existingCategory) {
+      
+      $existingCategoryLowerCase = strtolower($existingCategory['name']);
+      $existingCategoryNoSpaces = preg_replace('/\s+/', '', $existingCategoryLowerCase);
+      
+      if (($categoryNameLowerCase == $existingCategoryLowerCase) || ($categoryNameNoSpaces == $existingCategoryNoSpaces)) {
+        
+        return false;
+        
+      }
+    }
+    
+    return true;
+  }
+  
+  public static function checkIncomesAssignedToCategory($userID, $categoryID) {
+    
+    $sql = 'SELECT * FROM incomes WHERE user_id = :userID AND income_category_assigned_to_user_id = :categoryID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->fetch() !== false;
+    
+  }
+  
+  public static function removeIncomeCategory($userID, $categoryID)
+  {
+    
+    $sql = 'DELETE FROM incomes_category_assigned_to_users WHERE id = :categoryID AND user_id = :userID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->rowCount();
+    
+  }
+  
+  public static function updateIncomesCategory($userID, $newCategoryID, $replacingCategoryID)
+  {
+    
+    $sql = 'UPDATE incomes SET income_category_assigned_to_user_id = :newCategoryID WHERE user_id = :userID AND income_category_assigned_to_user_id = :replacingCategoryID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':newCategoryID', $newCategoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':replacingCategoryID', $replacingCategoryID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+    
+  }
+  
+  public static function addExpenseCategory($userID, $categoryName, $categoryLimit)
+  {
+    
+    $categoryCorrect = static::validateCategoryName($userID, $categoryName, 'expenses');
+    
+    if ($categoryCorrect) {
+      
+      if ($categoryLimit <= 0 || $categoryLimit == '') {
+        
+        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name) VALUES (:userID, :expenseName)';
+        
+        $db = static::getDB();
+      
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+        $stmt->bindParam(':expenseName', $categoryName, PDO::PARAM_STR);
+        
+      } else {
+        
+        $sql = 'INSERT INTO expenses_category_assigned_to_users (user_id, name, limit_enabled, user_limit) VALUES (:userID, :expenseName, true, :categoryLimit)';
+        
+        $db = static::getDB();
+      
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+        $stmt->bindParam(':expenseName', $categoryName, PDO::PARAM_STR);
+        $stmt->bindParam(':categoryLimit', $categoryLimit, PDO::PARAM_STR);
+        
+      }
+      
+      return $stmt->execute();
+      
+    } else {
+      
+      return false;
+      
+    }
+    
+  }
+  
+  public static function updateExpenseCategory($userID, $categoryLimit, $categoryID)
+  {
+    
+    if ($categoryLimit > 0) {
+      
+      $sql = 'UPDATE expenses_category_assigned_to_users SET limit_enabled = true, user_limit = :categoryLimit WHERE id = :categoryID AND user_id = :userID';
+      
+      $db = static::getDB();
+    
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':categoryLimit', $categoryLimit, PDO::PARAM_STR);
+      $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      
+      return $stmt->execute();
+      
+    } else if ($categoryLimit <= 0) {
+      
+     $sql = 'UPDATE expenses_category_assigned_to_users SET limit_enabled = false, user_limit = NULL WHERE id = :categoryID AND user_id = :userID';
+      
+      $db = static::getDB();
+    
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      
+      return $stmt->execute();
+      
+    } else {
+      
+      return false;
+      
+    }
+
+  }
+  
+  public static function checkExpensesAssignedToDeletedCategory($userID, $expenseCategoryID)
+  {
+    
+    $sql = 'SELECT * FROM expenses WHERE user_id = :userID AND expense_category_assigned_to_user_id = :categoryID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $expenseCategoryID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->fetch() !== false;
+    
+  }
+  
+  public static function removeExpenseCategory($userID, $expenseCategoryID)
+  {
+    
+    $sql = 'DELETE FROM expenses_category_assigned_to_users WHERE id = :categoryID AND user_id = :userID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':categoryID', $expenseCategoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+    
+  }
+  
+  public static function changeCategoryForExpenses($userID, $newCategoryID, $currentCategoryID)
+  {
+    
+    $sql = 'UPDATE expenses SET expense_category_assigned_to_user_id = :newCategoryID WHERE expense_category_assigned_to_user_id = :currentCategoryID AND user_id = :userID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':newCategoryID', $newCategoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':currentCategoryID', $currentCategoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+    
+  }
+  
+  public static function addPaymentMethod($userID, $paymentName)
+  {
+    $nameCorrect = static::validatePaymentMethod($userID, $paymentName);
+    
+    if ($nameCorrect) {
+      
+      $sql = 'INSERT INTO payment_methods_assigned_to_users (user_id, name) VALUES (:userID, :paymentName)';
+      
+      $db = static::getDB();
+      
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+      $stmt->bindParam(':paymentName', $paymentName, PDO::PARAM_STR);
+      
+      return $stmt->execute();
+      
+    } else {
+      
+      return false;
+      
+    }
+  }
+  
+  public static function checkPaymentMethodAssignedToExpense($userID, $paymentID)
+  {
+    
+    $sql = 'SELECT * FROM expenses WHERE user_id = :userID AND payment_method_assigned_to_user_id = :paymentID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':paymentID', $paymentID, PDO::PARAM_INT);
+    
+    $stmt->execute();
+    
+    return $stmt->fetch() !== false;
+    
+  }
+  
+  public static function updatePaymentMethod($userID, $newPaymentID, $replacingPaymentID)
+  {
+    
+    $sql = 'UPDATE expenses SET payment_method_assigned_to_user_id = :newPaymentID WHERE user_id = :userID AND payment_method_assigned_to_user_id = :replacingPaymentID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':newPaymentID', $newPaymentID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':replacingPaymentID', $replacingPaymentID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+    
+  }
+  
+  public static function deletePaymentMethod($userID, $paymentID)
+  {
+    $sql = 'DELETE FROM payment_methods_assigned_to_users WHERE id = :paymentID AND user_id = :userID';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':paymentID', $paymentID, PDO::PARAM_INT);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    
+    return $stmt->execute();
+  }
+  
+  public static function validatePaymentMethod($userID, $paymentName)
+  {
+    $existingUserMethods = static::getPaymentMethods($userID);
+    $methodNameLowerCase = strtolower($paymentName);
+    $methodNameNoSpaces = preg_replace('/\s+/', '', $methodNameLowerCase);
+    
+    foreach ($existingUserMethods as $existingMethod) {
+      
+      $existingMethodLowerCase = strtolower($existingMethod['name']);
+      $existingMethodNoSpaces = preg_replace('/\s+/', '', $existingMethodLowerCase);
+      
+      if (($methodNameLowerCase == $existingMethodLowerCase) || ($methodNameNoSpaces == $existingMethodNoSpaces)) {
+        
+        return false;
+        
+      }
+    }
+    
+    return true;
   }
   
   public function saveIncome($userID)
