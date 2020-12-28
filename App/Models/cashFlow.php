@@ -155,6 +155,24 @@ class cashFlow extends \Core\Model
     
   }
   
+  public static function getSumForExpenseCategoryThisMonth($userID, $categoryID, $beginDate, $endDate)
+  {
+    $sql = 'SELECT SUM(amount) AS sum FROM expenses WHERE user_id = :userID AND expense_category_assigned_to_user_id = :categoryID AND date_of_expense BETWEEN :beginDate AND :endDate';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':beginDate', $beginDate, PDO::PARAM_STR);
+    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+    
+    $stmt->execute();
+    
+    return $stmt->fetch();
+    
+  }
+  
   public static function addExpenseCategory($userID, $categoryName, $categoryLimit)
   {
     

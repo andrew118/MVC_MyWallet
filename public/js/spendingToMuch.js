@@ -49,7 +49,15 @@ function showLimitMessage() {
       
       if (userExpensesCategories[i].user_limit != null) {
         
-        console.log("jest limit " + userExpensesCategories[i].user_limit);
+        $.post('/expenses/get-sum-of-expenses-in-category', {
+          
+          categoryID : selectedCategory
+          
+        }, function(response) {
+          
+          console.log(response);
+          
+        });
         
       }
       
