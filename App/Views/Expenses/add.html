@@ -25,7 +25,24 @@
 			</div>
 		</div>
 	{% endif %}
-<div class="col-10 col-sm-8 col-md-6 col-lg-4 mx-auto alert alert-warning alert-dismissible fade show item-hidden" id="infoDiv" role="alert"></div>
+<div class="col-10 mx-auto alert alert-dismissible fade show item-hidden" id="infoDiv" role="alert">
+	<table class="table-sm text-center mx-auto" style="font-size: 15px;">
+		<thead>
+			<tr class="font-weight-bold">
+				<td style="width: 25%;">Limit</td>
+				<td style="width: 25%;">Wydana kwota</td>
+				<td style="width: 25%;">Pozostało</td>
+				<td style="width: 25%;">Wydatki + podana kwota</td>
+			</tr>
+		</thead>
+		<tbody>
+			<td id="userLimit"></td>
+			<td id="moneySpent"></td>
+			<td id="leftAmount"></td>
+			<td id="currentlySpent"></td>
+		</tbody>
+	</table>
+</div>
 	<article>
 		<h1 class="h4 my-3 font-weight-bold text-center">Dodaj swoje wydatki</h1>
 		

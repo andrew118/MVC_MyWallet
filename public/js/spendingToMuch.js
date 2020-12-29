@@ -1,11 +1,13 @@
 var userExpensesCategories = [];
 var selectedCategory;
+var userInputAmount = 0;
 
 $(document).ready(function() {
   
   loadExpensesLimits();
   checkCategorySelectedByDefault();
   checkSelectedCategoryByUser();
+  getUserInputAmount();
   
 });
 
@@ -26,7 +28,7 @@ function loadExpensesLimits() {
 function checkCategorySelectedByDefault() {
   
   selectedCategory = $('#expenseCategory').val();
-  showLimitMessage();
+  getSpentMoney();
 
 }
 
@@ -35,13 +37,13 @@ function checkSelectedCategoryByUser() {
   $('#expenseCategory').change(function() {
     
     selectedCategory = $('#expenseCategory option:selected').val();
-    showLimitMessage();
+    getSpentMoney();
 
   });
   
 }
 
-function showLimitMessage() {
+function getSpentMoney() {
 
   for (i = 0; i < userExpensesCategories.length; i++) {
     
@@ -49,20 +51,64 @@ function showLimitMessage() {
       
       if (userExpensesCategories[i].user_limit != null) {
         
+        var limit = userExpensesCategories[i].user_limit;
+        $('#userLimit').text(limit);
+        
         $.post('/expenses/get-sum-of-expenses-in-category', {
           
           categoryID : selectedCategory
           
-        }, function(response) {
+        }, function(spentAmount) {
           
-          console.log(response);
+          if (spentAmount > 0) {
+            
+            $('#moneySpent').text(spentAmount);
+            
+          } else {
+            
+            $('#moneySpent').text('0');
+            
+          }
+          
+          let leftAmount =  (limit * 100 - spentAmount * 100)/100;
+          $('#leftAmount').text(leftAmount.toFixed(2));
+          
+          let curentAmountSpent = (spentAmount * 100 + userInputAmount * 100)/100;
+          $('#currentlySpent').text(curentAmountSpent.toFixed(2));
+          
+          if (limit > curentAmountSpent) {
+            
+            $('#infoDiv').addClass('alert-success');
+            
+          } else {
+            
+            $('#infoDiv').addClass('alert-danger');
+            
+          }
+          
+          $('#infoDiv').removeClass('item-hidden');
           
         });
+
+      } else {
+        
+        $('#infoDiv').addClass('item-hidden');
+        $('#infoDiv').removeClass('alert-success alert-danger');
         
       }
       
     }
     
   }
+  
+}
+
+function getUserInputAmount() {
+  
+  $('#userMoney').change(function() {
+    
+    userInputAmount = $(this).val();
+
+  });
   
 }
