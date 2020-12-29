@@ -5,6 +5,7 @@ namespace App\Controllers;
 use \Core\View;
 use \App\Models\CashFlow;
 use \App\Flash;
+use \DateTime;
 
 class Expenses extends Authenticated
 {
@@ -47,6 +48,29 @@ class Expenses extends Authenticated
       $this->redirect('/balance/show');
     }
     
+  }
+  
+  public function getExpensesLimitsAction()
+  {
+    $limits = CashFlow::getCategories($_SESSION['user_id'], 'expenses');
+    
+    header('Content-Type: application/json');
+    echo json_encode($limits);
+  }
+  
+  public function getSumOfExpensesInCategoryAction()
+  {
+    if (isset($_POST['categoryID'])) {
+      
+      $firstMonthDay = new DateTime();
+      $firstMonthDay->modify('first day of this month');
+      $lastMonthDay = new DateTime();
+      $lastMonthDay->modify('last day of this month');
+      
+      $respond = CashFlow::getSumForExpenseCategoryThisMonth($_SESSION['user_id'], $_POST['categoryID'], $firstMonthDay->format('Y-m-d'), $lastMonthDay->format('Y-m-d'));
+      
+      echo $respond['sum'];
+    }
   }
   
   private function loadUserCategories()
