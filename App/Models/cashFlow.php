@@ -32,7 +32,6 @@ class cashFlow extends \Core\Model
   public static function getCategories($tableIndicator)
   {  
     $userID = $_SESSION['user_id'];
-    $sql = '';
   
     if ($tableIndicator == 'incomes') {
       $sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE user_id = :userID';
@@ -50,8 +49,10 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public static function getPaymentMethods($userID)
+  public static function getPaymentMethods()
   {
+    $userID = $_SESSION['user_id'];
+    
     $sql = 'SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = :userID';
     
     $db = static::getDB();
@@ -158,8 +159,10 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function getSumForExpenseCategoryThisMonth($userID, $categoryID, $beginDate, $endDate)
+  public static function getSumForExpenseCategoryThisMonth($categoryID, $beginDate, $endDate)
   {
+    $userID = $_SESSION['user_id'];
+    
     $sql = 'SELECT SUM(amount) AS sum FROM expenses WHERE user_id = :userID AND expense_category_assigned_to_user_id = :categoryID AND date_of_expense BETWEEN :beginDate AND :endDate';
     
     $db = static::getDB();
@@ -412,8 +415,10 @@ class cashFlow extends \Core\Model
     }
   }
   
-  public function saveExpense($userID)
+  public function saveExpense()
   {
+    $userID = $_SESSION['user_id'];
+    
     $this->validate();
     
     if (empty($this->errors)) {

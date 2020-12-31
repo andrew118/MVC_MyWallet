@@ -21,7 +21,7 @@ class Expenses extends Authenticated
   {
     $moneyFlow = new CashFlow($_POST);
     
-    if ($moneyFlow->saveExpense($_SESSION['user_id'])) {
+    if ($moneyFlow->saveExpense()) {
       Flash::addMessage('Wydatek dodany');
       
       $this->redirect('/expenses/add-expense');
@@ -67,7 +67,7 @@ class Expenses extends Authenticated
       $lastMonthDay = new DateTime();
       $lastMonthDay->modify('last day of this month');
       
-      $respond = CashFlow::getSumForExpenseCategoryThisMonth($_SESSION['user_id'], $_POST['categoryID'], $firstMonthDay->format('Y-m-d'), $lastMonthDay->format('Y-m-d'));
+      $respond = CashFlow::getSumForExpenseCategoryThisMonth($_POST['categoryID'], $firstMonthDay->format('Y-m-d'), $lastMonthDay->format('Y-m-d'));
       
       echo $respond['sum'];
     }
@@ -80,6 +80,6 @@ class Expenses extends Authenticated
   
   private function loadPaymentMethods()
   {
-    return CashFlow::getPaymentMethods($_SESSION['user_id']);
+    return CashFlow::getPaymentMethods();
   }
 }
