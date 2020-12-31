@@ -17,7 +17,7 @@ class Incomes extends Authenticated
 	{ 
     $moneyFlow = new CashFlow($_POST);
     
-    if ($moneyFlow->saveIncome($_SESSION['user_id'])) {
+    if ($moneyFlow->saveIncome()) {
       Flash::addMessage('Przychód dodany');
       
       $this->redirect('/incomes/add-income');
@@ -28,7 +28,7 @@ class Incomes extends Authenticated
   
   private function loadUserCategories()
   {
-    return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
+    return CashFlow::getCategories('incomes');
   }
   
   public function updateRecordAction()

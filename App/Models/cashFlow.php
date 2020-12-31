@@ -29,8 +29,11 @@ class cashFlow extends \Core\Model
     return false;
   }
   
-  public static function getCategories($userID, $tableIndicator)
+  public static function getCategories($tableIndicator)
   {  
+    $userID = $_SESSION['user_id'];
+    $sql = '';
+  
     if ($tableIndicator == 'incomes') {
       $sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE user_id = :userID';
     } else if ($tableIndicator == 'expenses') {
@@ -86,7 +89,7 @@ class cashFlow extends \Core\Model
   
   public static function validateCategoryName($userID, $categoryName, $tableIndicator)
   {
-    $existingUserCategories = static::getCategories($userID, $tableIndicator);
+    $existingUserCategories = static::getCategories($tableIndicator);
     
     $categoryNameLowerCase = strtolower($categoryName);
     $categoryNameNoSpaces = preg_replace('/\s+/', '', $categoryNameLowerCase);
@@ -387,11 +390,13 @@ class cashFlow extends \Core\Model
     return true;
   }
   
-  public function saveIncome($userID)
+  public function saveIncome()
   {
     $this->validate();
     
     if (empty($this->errors)) {
+      $userID = $_SESSION['user_id'];
+      
       $sql = 'INSERT INTO incomes (user_id, income_category_assigned_to_user_id, amount, date_of_income, income_comment) VALUES (:userID, :incomeID, :money, :date, :comment)';
       
       $db = static::getDB();

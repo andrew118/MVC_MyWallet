@@ -52,7 +52,7 @@ class Expenses extends Authenticated
   
   public function getExpensesLimitsAction()
   {
-    $limits = CashFlow::getCategories($_SESSION['user_id'], 'expenses');
+    $limits = CashFlow::getCategories('expenses');
     
     header('Content-Type: application/json');
     echo json_encode($limits);
@@ -75,7 +75,7 @@ class Expenses extends Authenticated
   
   private function loadUserCategories()
   {
-    return CashFlow::getCategories($_SESSION['user_id'], 'expenses');
+    return CashFlow::getCategories('expenses');
   }
   
   private function loadPaymentMethods()
