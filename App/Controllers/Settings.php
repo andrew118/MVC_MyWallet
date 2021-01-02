@@ -50,11 +50,17 @@ class Settings extends Authenticated
       $emailIsCorrect = true;
       
       if (empty($email)) {
+        
           $emailIsCorrect = false;
+          
       } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        
           $emailIsCorrect = false;
+          
       } elseif (User::emailExists($email)) {
+        
           $emailIsCorrect = false;
+          
       }
 
       if ($emailIsCorrect) {
@@ -97,9 +103,13 @@ class Settings extends Authenticated
         $success = User::updateUserPassword($newPassword, $_SESSION['user_id']);
         
         if ($success) {
-          echo 'Uaktualniono'; 
+          
+          echo 'Uaktualniono';  // flash mssages
+          
         } else {
+          
           echo 'Wystąpił problem';
+          
         }
       } else {
         
@@ -117,7 +127,7 @@ class Settings extends Authenticated
       
       if (!empty($categoryName)) {
         
-        echo CashFlow::addIncomeCategory($_SESSION['user_id'], $categoryName);
+        echo CashFlow::addIncomeCategory($categoryName);
         
       }
     }
@@ -127,7 +137,7 @@ class Settings extends Authenticated
   {
     if (isset($_POST['categoryID'])) {
       
-      echo CashFlow::checkIncomesAssignedToCategory($_SESSION['user_id'], $_POST['categoryID']);
+      echo CashFlow::checkIncomesAssignedToCategory($_POST['categoryID']);
       
     }
   }
@@ -137,7 +147,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['newCategoryID']) && isset($_POST['categoryToReplaceID'])) {
       
-      echo CashFlow::updateIncomesCategory($_SESSION['user_id'], $_POST['newCategoryID'], $_POST['categoryToReplaceID']);
+      echo CashFlow::updateIncomesCategory($_POST['newCategoryID'], $_POST['categoryToReplaceID']);
       
     }
     
@@ -148,7 +158,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['categoryID'])) {
       
-      echo CashFlow::removeIncomeCategory($_SESSION['user_id'], $_POST['categoryID']);
+      echo CashFlow::removeIncomeCategory($_POST['categoryID']);
       
     }
     
@@ -159,7 +169,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['expenseCategoryID'])) {
       
-      echo CashFlow::removeExpenseCategory($_SESSION['user_id'], $_POST['expenseCategoryID']);
+      echo CashFlow::removeExpenseCategory($_POST['expenseCategoryID']);
       
     }
     
@@ -170,7 +180,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['expenseCategoryID'])) {
       
-      echo CashFlow::checkExpensesAssignedToDeletedCategory($_SESSION['user_id'], $_POST['expenseCategoryID']);
+      echo CashFlow::checkExpensesAssignedToDeletedCategory($_POST['expenseCategoryID']);
       
     }
     
@@ -181,7 +191,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['newCategoryID']) && isset($_POST['categoryToReplaceID'])) {
       
-      echo CashFlow::changeCategoryForExpenses($_SESSION['user_id'], $_POST['newCategoryID'], $_POST['categoryToReplaceID']);
+      echo CashFlow::changeCategoryForExpenses($_POST['newCategoryID'], $_POST['categoryToReplaceID']);
 
     }
     
@@ -191,7 +201,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['categoryID'])) {
       
-      echo CashFlow::updateExpenseCategory($_SESSION['user_id'], $_POST['inputCategoryLimit'], $_POST['categoryID']);
+      echo CashFlow::updateExpenseCategory($_POST['inputCategoryLimit'], $_POST['categoryID']);
       
     }
     
@@ -202,7 +212,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['inputCategoryName'])) {
       
-      echo CashFlow::addExpenseCategory($_SESSION['user_id'], $_POST['inputCategoryName'], $_POST['inputCategoryLimit']);
+      echo CashFlow::addExpenseCategory($_POST['inputCategoryName'], $_POST['inputCategoryLimit']);
       
     }
     
@@ -213,7 +223,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['paymentID'])) {
       
-      echo CashFlow::checkPaymentMethodAssignedToExpense($_SESSION['user_id'], $_POST['paymentID']);
+      echo CashFlow::checkPaymentMethodAssignedToExpense($_POST['paymentID']);
       
     }
     
@@ -227,7 +237,7 @@ class Settings extends Authenticated
       
       if (!empty($methodName)) {
         
-        echo CashFlow::addPaymentMethod($_SESSION['user_id'], $methodName);
+        echo CashFlow::addPaymentMethod($methodName);
         
       }
     }
@@ -238,7 +248,7 @@ class Settings extends Authenticated
     
     if (isset($_POST['newPaymentID']) && isset($_POST['paymentToReplace'])) {
       
-      echo CashFlow::updatePaymentMethod($_SESSION['user_id'], $_POST['newPaymentID'], $_POST['paymentToReplace']);
+      echo CashFlow::updatePaymentMethod($_POST['newPaymentID'], $_POST['paymentToReplace']);
       
     }
     
@@ -247,7 +257,7 @@ class Settings extends Authenticated
   public function deletePaymentMethodAction()
   {
     if (isset($_POST['paymentID'])) {
-      echo CashFlow::deletePaymentMethod($_SESSION['user_id'], $_POST['paymentID']);
+      echo CashFlow::deletePaymentMethod($_POST['paymentID']);
     }
   }
   
@@ -263,17 +273,17 @@ class Settings extends Authenticated
   
   private function loadUserIncomeCategories()
   {
-    return CashFlow::getCategories($_SESSION['user_id'], 'incomes');
+    return CashFlow::getCategories('incomes');
   }
   
   private function loadUserExpenseCategories()
   {
-    return CashFlow::getCategories($_SESSION['user_id'], 'expenses');
+    return CashFlow::getCategories('expenses');
   }
   
   private function loadUserPaymentMethods()
   {
-    return CashFlow::getPaymentMethods($_SESSION['user_id']);
+    return CashFlow::getPaymentMethods();
   }
   
   private function loadUserDetails()
