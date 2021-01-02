@@ -1,5 +1,3 @@
-const infoSuccess = 'Zapisano pomyślnie';
-const infoError = 'Wystąpił błąd';
 var userIncomeCategories;
 var userExpenseCategories;
 var userPaymentMethods;

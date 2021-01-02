@@ -23,7 +23,7 @@ class Auth
 	public static function logout()
 	{
 		// Unset all of the session variables.
-		$_SESSION = array();
+		$_SESSION = [];
 
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
