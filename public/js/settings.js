@@ -11,6 +11,7 @@ $(document).ready(function() {
 
   showHideDetails();
   editAccountData();
+  preventModalSubmitWithEnterKey();
   prepareModalContent();
   cancelModal();
   applyChanges();
@@ -26,6 +27,21 @@ $(document).ready(function() {
   deleteExpenseCategoryModal();
 
 });
+
+function preventModalSubmitWithEnterKey() {
+  
+  $(window).keydown(function(keyEvent) {
+    
+    if (keyEvent.keyCode == 13) {
+      
+      keyEvent.preventDefault();
+      return false;
+      
+    }
+    
+  });
+  
+}
 
 function loadUserCategoriesAndMethods() {
   
