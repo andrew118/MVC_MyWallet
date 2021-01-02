@@ -21,11 +21,14 @@ class Login extends \Core\Controller
 		$remember_me = isset($_POST['remember_me']);
 		
 		if ($user) {
+      
 			Auth::login($user, $remember_me);
 			
 			$this->redirect(Auth::getReturnToPage());
+      
 		} else {
-			Flash::addMessage('Niepoprawny email lub hasło');
+      
+			Flash::addMessage('Niepoprawny email lub hasło', Flash::DANGER);
 			
 			View::renderTemplate('Login/new.html', [
 				'email' => $_POST['email'],
@@ -43,7 +46,7 @@ class Login extends \Core\Controller
 	
 	public function showLogoutMessageAction()
 	{
-		Flash::addMessage('Wylogowałeś się');
+		Flash::addMessage('Wylogowałeś się'), Flash::INFOj;
 		
 		$this->redirect('/');
 	}

@@ -25,12 +25,17 @@ class Expenses extends Authenticated
       Flash::addMessage('Wydatek dodany');
       
       $this->redirect('/expenses/add-expense');
+      
     } else {
+      
+      Flash::addMessage('Błąd! Wydatek nie został dodany', Flash::WARNING);
+      
       View::RenderTemplate('Expenses/add.html', [
         'expense' => $moneyFlow,
         'categories' => $this->loadUserCategories(),
         'payments' => $this->loadPaymentMethods()
       ]);
+      
     }
   }
   
@@ -39,13 +44,17 @@ class Expenses extends Authenticated
     $moneyFlow = new CashFlow($_POST);
     
     if ($moneyFlow->updateExpense()) {
+      
       Flash::addMessage('Wydatek poprawiony');
       
       $this->redirect('/balance/show');
+      
     } else {
-      Flash::addMessage('Nie udało się poprawić wydatku');
+      
+      Flash::addMessage('Nie udało się poprawić wydatku', Flash::WARNING);
       
       $this->redirect('/balance/show');
+      
     }
     
   }
