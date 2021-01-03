@@ -57,7 +57,7 @@ function loadUserCategoriesAndMethods() {
 
 function showHideDetails() {
   
-  $('.icon-dot').click(function() {
+  $('thead').click(function() {
 	
     var classKey = '.' + this.id + '-row';
     

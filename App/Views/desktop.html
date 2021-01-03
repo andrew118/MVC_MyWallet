@@ -55,27 +55,27 @@
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content bg-dark">
 				<div class="modal-header">
-					<h5 class="modal-title font-weight-bold" id="dateRangeInput">Podaj zakres dat</h5>
+					<h5 class="modal-title font-weight-bold" id="dateRangeInput">Wprowadź interesujący cię okres</h5>
 				</div>
 				<form action="/balance/show" method="post">
 					<div class="modal-body">
 						<div class="row">
 							
-								<div class="col-sm-6">
-									<h6 class="h6">Podaj datę początkową</h6>
-									<input type="date" class="mb-3 rounded" name="begin_date" id="begin_date">
+								<div class="col-12">
+									<div><label for="begin_date" class="h6 font-weight-bold">Podaj datę początkową</label></div>
+									<div><input type="date" class="form-control mb-3 rounded" name="begin_date" id="begin_date"></div>
 								</div>
 								
-								<div class="col-sm-6">
-									<h6 class="h6">Podaj datę końcową</h6>
-									<input type="date" class="mb-2 rounded" name="end_date" id="end_date">
+								<div class="col">
+									<div><label for="end_date" class="h6 font-weight-bold">Podaj datę końcową</label></div>
+									<div><input type="date" class="form-control mb-2 rounded" name="end_date" id="end_date"></div>
 								</div>
 							
 						</div>
 					</div>
 					
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-success" id="modal_submit">Zastosuj</button>
+						<button type="submit" class="btn btn-success" id="modal_submit">Pokaż</button>
 						<button type="button" class="btn btn-outline-danger" data-dismiss="modal">Porzuć pomysł</button>
 					</div>
 				</form>
