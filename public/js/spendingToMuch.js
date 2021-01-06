@@ -1,24 +1,26 @@
-var userExpensesCategories = [];
+var categoriesAndLimits = [];
 var selectedCategory;
 var userInputAmount = 0;
+var currentDate = new Date();
 
 $(document).ready(function() {
   
-  loadExpensesLimits();
+  loadCategoriesAndLimits();
   checkCategorySelectedByDefault();
   checkSelectedCategoryByUser();
+  checkUserDate();
   getUserInputAmount();
-  
+
 });
 
-function loadExpensesLimits() {
+function loadCategoriesAndLimits() {
   
-  $.get('/expenses/get-expenses-limits',
+  $.get('/expenses/get-limits-and-sum-for-expenses-by-category',
   
     function(data) {
 
       for (i=0; i < data.length; i++) {
-        userExpensesCategories.push(data[i]);
+        categoriesAndLimits.push(data[i]);
       }
       
   });
@@ -28,7 +30,7 @@ function loadExpensesLimits() {
 function checkCategorySelectedByDefault() {
   
   selectedCategory = $('#expenseCategory').val();
-  getSpentMoney();
+  showLimitmessage();
 
 }
 
@@ -37,78 +39,90 @@ function checkSelectedCategoryByUser() {
   $('#expenseCategory').change(function() {
     
     selectedCategory = $('#expenseCategory option:selected').val();
-    getSpentMoney();
+    userInputAmount = $('#userMoney').val();
+    showLimitmessage();
 
   });
-  
-}
-
-function getSpentMoney() {
-
-  for (i = 0; i < userExpensesCategories.length; i++) {
-    
-    if (selectedCategory == userExpensesCategories[i].id) {
-      
-      if (userExpensesCategories[i].user_limit != null) {
-        
-        var limit = userExpensesCategories[i].user_limit;
-        $('#userLimit').text(limit);
-        
-        $.post('/expenses/get-sum-of-expenses-in-category', {
-          
-          categoryID : selectedCategory
-          
-        }, function(spentAmount) {
-          
-          if (spentAmount > 0) {
-            
-            $('#moneySpent').text(spentAmount);
-            
-          } else {
-            
-            $('#moneySpent').text('0');
-            
-          }
-          
-          let leftAmount =  (limit * 100 - spentAmount * 100)/100;
-          $('#leftAmount').text(leftAmount.toFixed(2));
-          
-          let curentAmountSpent = (spentAmount * 100 + userInputAmount * 100)/100;
-          $('#currentlySpent').text(curentAmountSpent.toFixed(2));
-          
-          if (limit > curentAmountSpent) {
-            
-            $('#infoDiv').addClass('alert-success');
-            
-          } else {
-            
-            $('#infoDiv').addClass('alert-danger');
-            
-          }
-          
-          $('#infoDiv').removeClass('item-hidden');
-          
-        });
-
-      } else {
-        
-        $('#infoDiv').addClass('item-hidden');
-        $('#infoDiv').removeClass('alert-success alert-danger');
-        
-      }
-      
-    }
-    
-  }
   
 }
 
 function getUserInputAmount() {
   
-  $('#userMoney').change(function() {
+  $('#userMoney').on('keyup change', function() {
     
     userInputAmount = $(this).val();
+    showLimitmessage();
 
   });
   
 }
+
+function checkUserDate() {
+  
+  $('#date').on('change', function() {
+    
+    let currentMonth = currentDate.getMonth();
+    let userDate = new Date($('#userDate').val());
+    
+    if (currentMonth == userDate.getMonth()) {
+      
+      showLimitmessage();
+      
+    } else {
+      
+      $('#infoDiv').addClass('item-hidden');
+      $('#infoDiv').removeClass('alert-success alert-danger');
+      
+    }
+    
+  });
+  
+}
+
+function showLimitmessage() {
+
+  for (i = 0; i < categoriesAndLimits.length; i++) {
+    
+    if (selectedCategory == categoriesAndLimits[i].id) {
+
+        let limit = categoriesAndLimits[i].user_limit;
+        let spentAmount = categoriesAndLimits[i].spent_money;
+        
+        if (spentAmount == null) {
+          spentAmount = 0;
+        }
+        
+        let leftAmount =  (limit * 100 - spentAmount * 100)/100;
+        let curentAmountSpent = (spentAmount * 100 + userInputAmount * 100)/100;
+        
+        $('#userLimit').text(limit);
+        $('#moneySpent').text(spentAmount);
+        $('#leftAmount').text(leftAmount.toFixed(2));
+        $('#currentlySpent').text(curentAmountSpent.toFixed(2));
+
+        if (limit > curentAmountSpent) {
+          
+          $('#infoDiv').removeClass('alert-success alert-danger');
+          $('#infoDiv').addClass('alert-success');
+          
+        } else {
+          
+          $('#infoDiv').removeClass('alert-success alert-danger');
+          $('#infoDiv').addClass('alert-danger');
+          
+        }
+          
+          $('#infoDiv').removeClass('item-hidden');
+          break;
+
+    } else {
+      
+      $('#infoDiv').addClass('item-hidden');
+      $('#infoDiv').removeClass('alert-success alert-danger');
+      
+    }
+  
+  }
+      
+}
+  

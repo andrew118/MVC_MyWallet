@@ -59,27 +59,17 @@ class Expenses extends Authenticated
     
   }
   
-  public function getExpensesLimitsAction()
-  {
-    $limits = CashFlow::getCategories('expenses');
-    
-    header('Content-Type: application/json');
-    echo json_encode($limits);
-  }
-  
-  public function getSumOfExpensesInCategoryAction()
-  {
-    if (isset($_POST['categoryID'])) {
-      
+  public function getLimitsAndSumForExpensesByCategoryAction()
+  {   
       $firstMonthDay = new DateTime();
       $firstMonthDay->modify('first day of this month');
       $lastMonthDay = new DateTime();
       $lastMonthDay->modify('last day of this month');
       
-      $respond = CashFlow::getSumForExpenseCategoryThisMonth($_POST['categoryID'], $firstMonthDay->format('Y-m-d'), $lastMonthDay->format('Y-m-d'));
+      $limitsAndSum = CashFlow::getLimitsAndSumForExpensesByCategoryThisMonth($firstMonthDay->format('Y-m-d'), $lastMonthDay->format('Y-m-d'));
       
-      echo $respond['sum'];
-    }
+    header('Content-Type: application/json');
+    echo json_encode($limitsAndSum);
   }
   
   private function loadUserCategories()

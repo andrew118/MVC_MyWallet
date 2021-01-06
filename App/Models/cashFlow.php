@@ -172,7 +172,7 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function getSumForExpenseCategoryThisMonth($categoryID, $beginDate, $endDate)
+  public static function getSumForExpenseCategoryThisMonth($beginDate, $endDate)
   {
     $userID = $_SESSION['user_id'];
     
@@ -190,6 +190,24 @@ class cashFlow extends \Core\Model
     
     return $stmt->fetch();
     
+  }
+  
+  public static function getLimitsAndSumForExpensesByCategoryThisMonth($beginDate, $endDate)
+  {
+    $userID = $_SESSION['user_id'];
+    
+    $sql = 'SELECT id, user_limit, (SELECT SUM(amount) FROM expenses WHERE expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id AND date_of_expense BETWEEN :beginDate AND :endDate) AS spent_money FROM expenses_category_assigned_to_users WHERE user_id = :userID AND user_limit > 0';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':beginDate', $beginDate, PDO::PARAM_STR);
+    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+    
+    $stmt->execute();
+		
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
   public static function addExpenseCategory($categoryName, $categoryLimit)
