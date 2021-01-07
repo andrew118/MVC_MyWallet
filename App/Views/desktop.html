@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 
+{% block my_script %}
+<link rel="stylesheet" href="/mtr-datepicker-gh-pages/dist/mtr-datepicker.min.css">
+<link rel="stylesheet" href="/mtr-datepicker-gh-pages/dist/mtr-datepicker.clutterboard-theme.min.css">
+{% endblock %}
+
+{% block additional %}
+<script src="/mtr-datepicker-gh-pages/dist/mtr-datepicker.min.js"></script>
+<script src="/js/datePicker.js"></script>
+{% endblock %}
+
 {% block title %}{% endblock %}
 
 {% block body %}
@@ -61,14 +71,16 @@
 					<div class="modal-body">
 						<div class="row">
 							
-								<div class="col-12">
-									<div><label for="begin_date" class="h6 font-weight-bold">Podaj datę początkową</label></div>
-									<div><input type="date" class="form-control mb-3 rounded" name="begin_date" id="begin_date"></div>
+								<div class="col">
+									<div class="h6 font-weight-bold">Podaj datę początkową</div>
+									<div id="begin_date"></div>
+									<div><input type="text" name="begin_date" id="hiden_begin_date" class="item-hidden"></div>
 								</div>
 								
 								<div class="col">
-									<div><label for="end_date" class="h6 font-weight-bold">Podaj datę końcową</label></div>
-									<div><input type="date" class="form-control mb-2 rounded" name="end_date" id="end_date"></div>
+									<div class="h6 font-weight-bold">Podaj datę końcową</div>
+									<div name="end_date" id="end_date"></div>
+									<div><input type="text" name="end_date" id="hiden_end_date" class="item-hidden"></div>
 								</div>
 							
 						</div>
