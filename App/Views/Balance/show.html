@@ -21,7 +21,7 @@
 			<div class="row mb-4">
 				<div class="col text-center">
 					<h2 class="h4 d-inline-block"><span class="" id="comment">{{ args.comment.balanceComment }} Bilans  tym okresie to:</span></h2>
-					<h2 class="h2 d-inline-block"><span class="{{ comment.balanceInfo }}" id="balance">{{ args.sumIncomes - args.sumExpenses }} zł</span></h2>
+					<h2 class="h2 d-inline-block"><span class="{{ args.comment.balanceInfo }}" id="balance">{{ args.sumIncomes - args.sumExpenses }} zł</span></h2>
 				</div>
 			</div>
 			
@@ -75,7 +75,7 @@
 						</thead>
 						<tbody id="myExpenses">
 						{% for expense in args.expenses %}
-							<tr style="width: 50%;" class="font-weight-bold bg-secondary category" id="ex-{{ expense.id }}"><td>{{ expense.ex_name }}</td><td style="width: 40%;">{{ expense.ex_amount }}</td><td style="width: 10%;" class="text-right"><i class="icon-dot"></i></td></tr>
+							<tr style="width: 50%;" class="font-weight-bold bg-secondary expense-category category" id="ex-{{ expense.id }}"><td>{{ expense.ex_name }}</td><td style="width: 40%;">{{ expense.ex_amount }}</td><td style="width: 10%;" class="text-right"><i class="icon-dot"></i></td></tr>
 							{% for record in args.allExpenses %}
 								{% if expense.id == record.catID %}
 								<tr class="font-italic item-hidden ex-{{ expense.id }} expense-detailed-row" id="{{ record.id }}"><td colspan="2"><span class="expense-date">{{ record.date }}</span> -- <span class="expense-amount">{{ record.amount }}</span> -- <span class="expense-comment">{{ record.comment }}</span> -- <span class="expense-pay-method" id="pay-{{ record.payId }}">{{ record.payName }}</span></td><td style="width: 10%;" class="text-right"><i class="icon-pencil"></i></td></tr>
