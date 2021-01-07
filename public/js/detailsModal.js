@@ -71,9 +71,6 @@ function showHideDetails() {
       $('.seen').removeClass('seen');
       $(classKey).toggleClass('item-hidden seen');
     }
-  
-  //incomeDetails.filter(classKey).toggleClass('item-hidden');
- // expenseDetails.filter(classKey).toggleClass('item-hidden');
 
 });
 }
