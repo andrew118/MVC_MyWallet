@@ -1,5 +1,3 @@
-const infoSuccess = 'Zapisano pomyślnie';
-const infoError = 'Wystąpił błąd';
 var userIncomeCategories;
 var userExpenseCategories;
 var userPaymentMethods;
@@ -11,6 +9,7 @@ $(document).ready(function() {
 
   showHideDetails();
   editAccountData();
+  preventModalSubmitWithEnterKey();
   prepareModalContent();
   cancelModal();
   applyChanges();
@@ -26,6 +25,21 @@ $(document).ready(function() {
   deleteExpenseCategoryModal();
 
 });
+
+function preventModalSubmitWithEnterKey() {
+  
+  $(window).keydown(function(keyEvent) {
+    
+    if (keyEvent.keyCode == 13) {
+      
+      keyEvent.preventDefault();
+      return false;
+      
+    }
+    
+  });
+  
+}
 
 function loadUserCategoriesAndMethods() {
   
@@ -43,7 +57,7 @@ function loadUserCategoriesAndMethods() {
 
 function showHideDetails() {
   
-  $('.icon-dot').click(function() {
+  $('thead').click(function() {
 	
     var classKey = '.' + this.id + '-row';
     
@@ -63,6 +77,8 @@ function showHideDetails() {
 
 function updateIncomesCategory(newIncomeCategoryID) {
   
+  deleteIncomeCategory();
+  
   $.post('/settings/update-incomes-category', {
     
     newCategoryID : newIncomeCategoryID,
@@ -70,15 +86,8 @@ function updateIncomesCategory(newIncomeCategoryID) {
     
   }, function(response) {
     
-    if (response) {
-      
-      deleteIncomeCategory();
-      
-    } else {
-      
-      showErrorMessage();
-      
-    }
+      hideModal();
+      reloadPage();
     
   });
   
@@ -92,18 +101,8 @@ function deleteIncomeCategory() {
     
   }, function(response) {
     
-      if (response) {
-          
-          $('#income-' + propertyID).remove();
-          hideModal();
-          showSuccessMessage();
-          loadUserCategoriesAndMethods();
-          
-        } else {
-          
-          showErrorMessage();
-          
-        }
+      hideModal();
+      reloadPage();
     
   });
   
@@ -211,21 +210,8 @@ function saveIncomeCategory() {
         
     }, function(response) {
       
-        if (response) {
-          
-          hideModal();
-          showSuccessMessage();
-          loadUserCategoriesAndMethods();
-          
-          setTimeout(function() {
-            window.location.reload();
-          }, 1500 );
-          
-        } else {
-          
-          showErrorMessage();
-          
-        }
+      hideModal();
+      reloadPage();
       
     });
     
@@ -357,19 +343,9 @@ function saveExpenseCategory() {
         
     }, function(response) {
       
-        if (response) {
-          
-          hideModal();
-          showSuccessMessage();
-          setTimeout(function() {
-            window.location.reload();
-          }, 1500 );
-          
-        } else {
-          
-          showErrorMessage();
-          
-        }
+      hideModal();
+      reloadPage();
+      
     });
   }
 }
@@ -413,17 +389,9 @@ function updateExpenseCategory() {
         
     }, function(response) {
       
-        if (response) {
-          
-          hideModal();
-          showSuccessMessage();
-          loadUserCategoriesAndMethods();
-          
-        } else {
-          
-          showErrorMessage();
-          
-        }
+      hideModal();
+      reloadPage();
+      
     });
   } else {
     
@@ -475,41 +443,26 @@ function deleteExpenseCategory() {
     
   }, function(response) {
     
-      if (response) {
-        
-        $('#expense-' + propertyID).remove();
-        hideModal();
-        showSuccessMessage();
-        loadUserCategoriesAndMethods();
-        
-      } else {
-        
-        showErrorMessage();
-        
-      }
+      hideModal();
+      reloadPage();
+      
   });
   
 }
 
 function updateExpensesCategory(selectedNewExpenseCategoryID) {
   
-    $.post('/settings/change-category-for-expenses', {
+  deleteExpenseCategory();
+  
+  $.post('/settings/change-category-for-expenses', {
     
     newCategoryID : selectedNewExpenseCategoryID,
     categoryToReplaceID : propertyID
     
   }, function(response) {
-    
-    if (response) {
 
-      deleteExpenseCategory();
-      loadUserCategoriesAndMethods();
-      
-    } else {
-
-      showErrorMessage();
-      
-    }
+      hideModal();
+      reloadPage();
     
   });
   
@@ -629,15 +582,8 @@ function savePaymentMethod() {
         
     }, function(response) {
       
-        if (response) {
-          hideModal();
-          showSuccessMessage();
-          setTimeout(function() {
-            window.location.reload();
-          }, 1500 );
-        } else {
-          showErrorMessage();
-        }
+         hideModal();
+         reloadPage();
       
     });
     
@@ -694,6 +640,8 @@ function deletePaymentMethodModal() {
 
 function updatePaymentMethod(selectedNewMethod) {
   
+  deletePayment();
+  
   $.post('/settings/update-payment-method', {
     
     newPaymentID : selectedNewMethod,
@@ -701,15 +649,8 @@ function updatePaymentMethod(selectedNewMethod) {
     
   }, function(response) {
       
-      if (response) {
-      
-      deletePayment();
-      
-    } else {
-      
-      showErrorMessage();
-      
-    }
+      hideModal();
+      reload();
       
   });
   
@@ -723,14 +664,9 @@ function deletePayment() {
     
   }, function(response) {
     
-      if (response) {
-        $('#payment-' + propertyID).remove();
-        hideModal();
-        showSuccessMessage();
-        loadUserCategoriesAndMethods();
-      } else {
-        showErrorMessage();
-      }
+      hideModal();
+      reloadPage();
+      
   });
   
 }
@@ -810,13 +746,9 @@ function updateName() {
         name: newName
     }, function(response) {
       
-      if (response) {
-        $('#userName td').first().text(newName);
-        hideModal();
-        showSuccessMessage();
-      } else {
-        showErrorMessage();
-      }
+      hideModal();
+      reloadPage();
+      
     });
     
   } else {
@@ -838,9 +770,13 @@ function checkEmail() {
     }, function(exists) {
 
       if (exists) {
+        
         $('#divWarning').text('Email jest zajęty');
+        
       } else {
+        
         $('#divWarning').text('');
+        
       }
     });
     
@@ -875,30 +811,16 @@ function updateEmail() {
   
   if (validateEmail(newEmail)) {
     
-    $('#divWarning').load('/settings/update-email', {
+    $.post('/settings/update-email', {
     
           email: newEmail,
-          submit: submit
           
-      }, function(responseText) {
-        
-        if (responseText === 'Uaktualniono') {
+      }, function(response) {
           
-          $('#divWarning').addClass('item-hidden');
-          $('#userEmail td').first().text(newEmail);
           hideModal();
-          showSuccessMessage();
-          alert('Teraz logujesz się nowym emailem! \n\n' + newEmail);
+          reloadPage();
           
-        } else {
-          
-          $('#divWarning').addClass('item-hidden');
-          hideModal();
-          showErrorMessage(responseText);
-          
-        }
-      }
-    );
+      });
   }
 }
 
@@ -943,57 +865,14 @@ function updatePassword() {
           password: newPassword,
           submit: submit
           
-      }, function(responseText) {
+      }, function(response) {
         
-          if (responseText === 'Uaktualniono') {
+          hideModal();
+          reloadPage();
             
-            $('#divWarning').addClass('item-hidden');
-            hideModal();
-            showSuccessMessage();
-            
-          } else {
-            
-            $('#divWarning').addClass('item-hidden');
-            hideModal();
-            showErrorMessage(responseText);
-            
-          }
-      }
+        }
     );
   }
-}
-
-function showSuccessMessage() {
-  
-  $('#requestInfo').text(infoSuccess);
-  $('#requestInfo').addClass('alert-success');
-  $('#requestInfo').toggleClass('d-none');
-  
-  setTimeout(function() {
-    $('#requestInfo').removeClass('alert-success');
-    $('#requestInfo').toggleClass('d-none');
-    },
-    1500
-  );
-}
-
-function showErrorMessage(errorMsg = 0) {
-  
-  if (errorMsg != 0) {
-    $('#requestInfo').text(errorMsg);
-  } else {
-    $('#requestInfo').text(infoError);
-  }
-  
-  $('#requestInfo').addClass('alert-danger');
-  $('#requestInfo').toggleClass('d-none');
-  
-  setTimeout(function() {
-    $('#requestInfo').removeClass('alert-danger');
-    $('#requestInfo').toggleClass('d-none');
-    },
-    1500
-  );
 }
 
 function showWarining() {
@@ -1178,8 +1057,14 @@ function cancelModal() {
 
 function hideModal() {
   
-    $('#updateModal').modal('hide');
-    $('#modalTitle').text('');
-    $('#modalData').empty();
-    $('#divWarning').text('');
+  $('#updateModal').modal('hide');
+  $('#modalTitle').text('');
+  $('#modalData').empty();
+  $('#divWarning').text('');
+}
+
+function reloadPage() {
+  
+  window.location.reload();
+  
 }

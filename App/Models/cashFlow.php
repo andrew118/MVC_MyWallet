@@ -29,12 +29,19 @@ class cashFlow extends \Core\Model
     return false;
   }
   
-  public static function getCategories($userID, $tableIndicator)
-  {  
+  public static function getCategories($tableIndicator)
+  {
+    $userID = $_SESSION['user_id'];
+    $sql = '';
+  
     if ($tableIndicator == 'incomes') {
+      
       $sql = 'SELECT * FROM incomes_category_assigned_to_users WHERE user_id = :userID';
+      
     } else if ($tableIndicator == 'expenses') {
+      
       $sql = 'SELECT * FROM expenses_category_assigned_to_users WHERE user_id = :userID';
+      
     }
     
     $db = static::getDB();
@@ -47,8 +54,10 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public static function getPaymentMethods($userID)
+  public static function getPaymentMethods()
   {
+    $userID = $_SESSION['user_id'];
+    
     $sql = 'SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = :userID';
     
     $db = static::getDB();
@@ -61,9 +70,11 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public static function addIncomeCategory($userID, $incomeCategoryName)
+  public static function addIncomeCategory($incomeCategoryName)
   {
-    $categoryCorrect = static::validateCategoryName($userID, $incomeCategoryName, 'incomes');
+    $userID = $_SESSION['user_id'];
+    
+    $categoryCorrect = static::validateCategoryName($incomeCategoryName, 'incomes');
     
     if ($categoryCorrect) {
       
@@ -84,9 +95,11 @@ class cashFlow extends \Core\Model
     }
   }
   
-  public static function validateCategoryName($userID, $categoryName, $tableIndicator)
+  public static function validateCategoryName($categoryName, $tableIndicator)
   {
-    $existingUserCategories = static::getCategories($userID, $tableIndicator);
+    $userID = $_SESSION['user_id'];
+    
+    $existingUserCategories = static::getCategories($tableIndicator);
     
     $categoryNameLowerCase = strtolower($categoryName);
     $categoryNameNoSpaces = preg_replace('/\s+/', '', $categoryNameLowerCase);
@@ -106,7 +119,9 @@ class cashFlow extends \Core\Model
     return true;
   }
   
-  public static function checkIncomesAssignedToCategory($userID, $categoryID) {
+  public static function checkIncomesAssignedToCategory($categoryID)
+  {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'SELECT * FROM incomes WHERE user_id = :userID AND income_category_assigned_to_user_id = :categoryID';
     
@@ -122,8 +137,9 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function removeIncomeCategory($userID, $categoryID)
+  public static function removeIncomeCategory($categoryID)
   {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'DELETE FROM incomes_category_assigned_to_users WHERE id = :categoryID AND user_id = :userID';
     
@@ -139,8 +155,9 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function updateIncomesCategory($userID, $newCategoryID, $replacingCategoryID)
+  public static function updateIncomesCategory($newCategoryID, $replacingCategoryID)
   {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'UPDATE incomes SET income_category_assigned_to_user_id = :newCategoryID WHERE user_id = :userID AND income_category_assigned_to_user_id = :replacingCategoryID';
     
@@ -155,8 +172,10 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function getSumForExpenseCategoryThisMonth($userID, $categoryID, $beginDate, $endDate)
+  public static function getSumForExpenseCategoryThisMonth($beginDate, $endDate)
   {
+    $userID = $_SESSION['user_id'];
+    
     $sql = 'SELECT SUM(amount) AS sum FROM expenses WHERE user_id = :userID AND expense_category_assigned_to_user_id = :categoryID AND date_of_expense BETWEEN :beginDate AND :endDate';
     
     $db = static::getDB();
@@ -173,10 +192,29 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function addExpenseCategory($userID, $categoryName, $categoryLimit)
+  public static function getLimitsAndSumForExpensesByCategoryThisMonth($beginDate, $endDate)
   {
+    $userID = $_SESSION['user_id'];
     
-    $categoryCorrect = static::validateCategoryName($userID, $categoryName, 'expenses');
+    $sql = 'SELECT id, user_limit, (SELECT SUM(amount) FROM expenses WHERE expense_category_assigned_to_user_id = expenses_category_assigned_to_users.id AND date_of_expense BETWEEN :beginDate AND :endDate) AS spent_money FROM expenses_category_assigned_to_users WHERE user_id = :userID AND user_limit > 0';
+    
+    $db = static::getDB();
+    
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
+    $stmt->bindParam(':beginDate', $beginDate, PDO::PARAM_STR);
+    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+    
+    $stmt->execute();
+		
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+  
+  public static function addExpenseCategory($categoryName, $categoryLimit)
+  {
+    $userID = $_SESSION['user_id'];
+    
+    $categoryCorrect = static::validateCategoryName($categoryName, 'expenses');
     
     if ($categoryCorrect) {
       
@@ -213,9 +251,10 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function updateExpenseCategory($userID, $categoryLimit, $categoryID)
+  public static function updateExpenseCategory($categoryLimit, $categoryID)
   {
-    
+   $userID = $_SESSION['user_id'];
+   
     if ($categoryLimit > 0) {
       
       $sql = 'UPDATE expenses_category_assigned_to_users SET limit_enabled = true, user_limit = :categoryLimit WHERE id = :categoryID AND user_id = :userID';
@@ -249,8 +288,9 @@ class cashFlow extends \Core\Model
 
   }
   
-  public static function checkExpensesAssignedToDeletedCategory($userID, $expenseCategoryID)
+  public static function checkExpensesAssignedToDeletedCategory($expenseCategoryID)
   {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'SELECT * FROM expenses WHERE user_id = :userID AND expense_category_assigned_to_user_id = :categoryID';
     
@@ -266,8 +306,9 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function removeExpenseCategory($userID, $expenseCategoryID)
+  public static function removeExpenseCategory($expenseCategoryID)
   {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'DELETE FROM expenses_category_assigned_to_users WHERE id = :categoryID AND user_id = :userID';
     
@@ -281,8 +322,9 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function changeCategoryForExpenses($userID, $newCategoryID, $currentCategoryID)
+  public static function changeCategoryForExpenses($newCategoryID, $currentCategoryID)
   {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'UPDATE expenses SET expense_category_assigned_to_user_id = :newCategoryID WHERE expense_category_assigned_to_user_id = :currentCategoryID AND user_id = :userID';
     
@@ -294,12 +336,13 @@ class cashFlow extends \Core\Model
     $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
     
     return $stmt->execute();
-    
   }
   
-  public static function addPaymentMethod($userID, $paymentName)
+  public static function addPaymentMethod($paymentName)
   {
-    $nameCorrect = static::validatePaymentMethod($userID, $paymentName);
+    $userID = $_SESSION['user_id'];
+    
+    $nameCorrect = static::validatePaymentMethod($paymentName);
     
     if ($nameCorrect) {
       
@@ -320,8 +363,9 @@ class cashFlow extends \Core\Model
     }
   }
   
-  public static function checkPaymentMethodAssignedToExpense($userID, $paymentID)
+  public static function checkPaymentMethodAssignedToExpense($paymentID)
   {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'SELECT * FROM expenses WHERE user_id = :userID AND payment_method_assigned_to_user_id = :paymentID';
     
@@ -337,8 +381,9 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function updatePaymentMethod($userID, $newPaymentID, $replacingPaymentID)
+  public static function updatePaymentMethod($newPaymentID, $replacingPaymentID)
   {
+    $userID = $_SESSION['user_id'];
     
     $sql = 'UPDATE expenses SET payment_method_assigned_to_user_id = :newPaymentID WHERE user_id = :userID AND payment_method_assigned_to_user_id = :replacingPaymentID';
     
@@ -353,8 +398,10 @@ class cashFlow extends \Core\Model
     
   }
   
-  public static function deletePaymentMethod($userID, $paymentID)
+  public static function deletePaymentMethod($paymentID)
   {
+    $userID = $_SESSION['user_id'];
+    
     $sql = 'DELETE FROM payment_methods_assigned_to_users WHERE id = :paymentID AND user_id = :userID';
     
     $db = static::getDB();
@@ -366,8 +413,10 @@ class cashFlow extends \Core\Model
     return $stmt->execute();
   }
   
-  public static function validatePaymentMethod($userID, $paymentName)
+  public static function validatePaymentMethod($paymentName)
   {
+    $userID = $_SESSION['user_id'];
+    
     $existingUserMethods = static::getPaymentMethods($userID);
     $methodNameLowerCase = strtolower($paymentName);
     $methodNameNoSpaces = preg_replace('/\s+/', '', $methodNameLowerCase);
@@ -387,11 +436,13 @@ class cashFlow extends \Core\Model
     return true;
   }
   
-  public function saveIncome($userID)
+  public function saveIncome()
   {
     $this->validate();
     
     if (empty($this->errors)) {
+      $userID = $_SESSION['user_id'];
+      
       $sql = 'INSERT INTO incomes (user_id, income_category_assigned_to_user_id, amount, date_of_income, income_comment) VALUES (:userID, :incomeID, :money, :date, :comment)';
       
       $db = static::getDB();
@@ -407,8 +458,10 @@ class cashFlow extends \Core\Model
     }
   }
   
-  public function saveExpense($userID)
+  public function saveExpense()
   {
+    $userID = $_SESSION['user_id'];
+    
     $this->validate();
     
     if (empty($this->errors)) {
@@ -458,12 +511,18 @@ class cashFlow extends \Core\Model
     return checkdate($separated_date[1], $separated_date[2], $separated_date[0]); //format M-D-Y
   }
   
-  public static function getSumIncomesExpenses($userID, $beginDate, $endDate, $incomeExpenseIndicator)
+  public static function getSumIncomesExpenses($beginDate, $endDate, $incomeExpenseIndicator)
   {
+    $userID = $_SESSION['user_id'];
+    
     if ($incomeExpenseIndicator == 'incomes') {
+      
       $sql = 'SELECT SUM(amount) AS summary FROM incomes WHERE user_id = :userID AND date_of_income BETWEEN :begin AND :end';
+      
     } else if ($incomeExpenseIndicator == 'expenses') {
+      
       $sql = 'SELECT SUM(amount) AS summary FROM expenses WHERE user_id = :userID AND date_of_expense BETWEEN :begin AND :end';
+      
     }
       
       $db = static::getDB();
@@ -478,8 +537,10 @@ class cashFlow extends \Core\Model
       return $stmt->fetch(PDO::FETCH_ASSOC);
   }
   
-  public function getIncomesExpensesByCategories($userID, $beginDate, $endDate, $incomeExpenseIndicator)
+  public function getIncomesExpensesByCategories($beginDate, $endDate, $incomeExpenseIndicator)
   {
+    $userID = $_SESSION['user_id'];
+    
     if ($incomeExpenseIndicator == 'incomes') {
       $sql = 'SELECT cat.name AS inc_name, cat.id AS id, SUM(inc.amount) AS inc_amount FROM incomes AS inc, incomes_category_assigned_to_users AS cat WHERE inc.user_id = :userID AND cat.user_id = :userID AND inc.income_category_assigned_to_user_id = cat.id AND inc.date_of_income BETWEEN :beginDate AND :endDate GROUP BY inc_name ORDER BY inc_amount DESC';
     }
@@ -501,8 +562,10 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public function getAllByCategory($userID, $beginDate, $endDate, $incomeExpenseIndicator)
+  public function getAllByCategory($beginDate, $endDate, $incomeExpenseIndicator)
   {
+    $userID = $_SESSION['user_id'];
+    
     if($incomeExpenseIndicator == 'incomes') {
       $sql = 'SELECT inc.id AS id, inc.amount AS amount, inc.date_of_income AS date, inc.income_comment AS comment, income_category_assigned_to_user_id AS catID FROM incomes AS inc WHERE inc.user_id = :userID AND inc.date_of_income BETWEEN :beginDate AND :endDate ORDER BY catID';
     }

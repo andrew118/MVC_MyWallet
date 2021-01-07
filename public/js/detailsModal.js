@@ -56,12 +56,24 @@ function showHideDetails() {
   var incomeDetails = $('.income-detailed-row');
   var expenseDetails = $('.expense-detailed-row');
   
-  $('.icon-dot').click(function() {
+  $('.category').click(function() {
 	
   var classKey = '.' + this.id;
   
-  incomeDetails.filter(classKey).toggleClass('item-hidden');
-  expenseDetails.filter(classKey).toggleClass('item-hidden');
+  if ($(classKey).hasClass('seen')) {
+      
+      $(classKey).toggleClass('item-hidden');
+      $(classKey).removeClass('seen');
+      
+    } else {
+      
+      $('.seen').toggleClass('item-hidden');
+      $('.seen').removeClass('seen');
+      $(classKey).toggleClass('item-hidden seen');
+    }
+  
+  //incomeDetails.filter(classKey).toggleClass('item-hidden');
+ // expenseDetails.filter(classKey).toggleClass('item-hidden');
 
 });
 }

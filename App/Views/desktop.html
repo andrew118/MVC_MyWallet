@@ -1,5 +1,15 @@
 {% extends "base.html" %}
 
+{% block my_script %}
+<link rel="stylesheet" href="/mtr-datepicker-gh-pages/dist/mtr-datepicker.min.css">
+<link rel="stylesheet" href="/mtr-datepicker-gh-pages/dist/mtr-datepicker.clutterboard-theme.min.css">
+{% endblock %}
+
+{% block additional %}
+<script src="/mtr-datepicker-gh-pages/dist/mtr-datepicker.min.js"></script>
+<script src="/js/datePicker.js"></script>
+{% endblock %}
+
 {% block title %}{% endblock %}
 
 {% block body %}
@@ -55,27 +65,29 @@
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content bg-dark">
 				<div class="modal-header">
-					<h5 class="modal-title font-weight-bold" id="dateRangeInput">Podaj zakres dat</h5>
+					<h5 class="modal-title font-weight-bold" id="dateRangeInput">Wprowadź interesujący cię okres</h5>
 				</div>
 				<form action="/balance/show" method="post">
 					<div class="modal-body">
 						<div class="row">
 							
-								<div class="col-sm-6">
-									<h6 class="h6">Podaj datę początkową</h6>
-									<input type="date" class="mb-3 rounded" name="begin_date" id="begin_date">
+								<div class="col">
+									<div class="h6 font-weight-bold">Podaj datę początkową</div>
+									<div id="begin_date"></div>
+									<div><input type="text" name="begin_date" id="hiden_begin_date" class="item-hidden"></div>
 								</div>
 								
-								<div class="col-sm-6">
-									<h6 class="h6">Podaj datę końcową</h6>
-									<input type="date" class="mb-2 rounded" name="end_date" id="end_date">
+								<div class="col">
+									<div class="h6 font-weight-bold">Podaj datę końcową</div>
+									<div name="end_date" id="end_date"></div>
+									<div><input type="text" name="end_date" id="hiden_end_date" class="item-hidden"></div>
 								</div>
 							
 						</div>
 					</div>
 					
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-success" id="modal_submit">Zastosuj</button>
+						<button type="submit" class="btn btn-success" id="modal_submit">Pokaż</button>
 						<button type="button" class="btn btn-outline-danger" data-dismiss="modal">Porzuć pomysł</button>
 					</div>
 				</form>

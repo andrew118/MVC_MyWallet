@@ -7,8 +7,6 @@
 {% endblock %}
 
 {% block body %}
-<div class="alert d-none" role="alert" id="requestInfo"></div>
-
 
 <div class="row mx-2">
 	<div class="col-12 p-3 rounded" style="border: 2px #f2f2f2 dashed">
@@ -17,10 +15,10 @@
 		
 			<div class="col">
 				<table class="table table-sm text-light">
-					<thead class="table thead-dark">
+					<thead class="table thead-dark" id="income-category">
 						<tr>
 							<th style="width: 90%;">Kategorie przychodów</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="income-category"></i></th>
+							<th style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -38,10 +36,10 @@
 		<div class="row">
 			<div class="col">
 				<table class="table table-sm text-light">
-					<thead class="table thead-dark">
+					<thead class="table thead-dark" id="expense-category">
 						<tr>
 							<th style="width: 90%;">Kategorie wydatków</th>
-							<th colspan="2" style="width: 10%;" class="text-right"><i class="icon-dot" id="expense-category"></i></th>
+							<th colspan="2" style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -59,10 +57,10 @@
 		<div class="row">		
 			<div class="col">
 				<table class="table table-sm text-light">
-					<thead class="table thead-dark">
+					<thead class="table thead-dark" id="payment-method">
 						<tr>
 							<th style="width: 90%;">Metody płatności</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="payment-method"></i></th>
+							<th style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -81,10 +79,10 @@
 		<div class="row">
 			<div class="col">
 				<table class="table table-sm text-light">
-					<thead class="table thead-dark">
+					<thead class="table thead-dark" id="user-account">
 						<tr>
 							<th style="width: 90%;">Ustawienia użytkownika</th>
-							<th style="width: 10%;" class="text-right"><i class="icon-dot" id="user-account"></i></th>
+							<th style="width: 10%;" class="text-right"><i class="icon-dot"></i></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -115,7 +113,7 @@
 					
 					<div class="modal-footer">
 						<button type="button" class="btn btn-success" name="submit" id="modalSubmit">Zapisz zmiany</button>
-					<button type="button" class="btn btn-outline-danger" id="cancelModal">Porzuć pomysł</button>
+						<button type="button" class="btn btn-outline-danger" id="cancelModal">Porzuć pomysł</button>
 					</div>
 				</form>
 			</div>

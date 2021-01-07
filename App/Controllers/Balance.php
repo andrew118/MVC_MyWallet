@@ -96,14 +96,14 @@ class Balance extends Authenticated
 
   private function loadIncomesSum()
   {
-    $incomesSum = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    $incomesSum = CashFlow::getSumIncomesExpenses($this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
    
     return $incomesSum['summary'];
   }
   
   private function LoadExpensesSum()
   {
-    $expensesSum = CashFlow::getSumIncomesExpenses($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    $expensesSum = CashFlow::getSumIncomesExpenses($this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
     
     return $expensesSum['summary'];
   }
@@ -127,39 +127,35 @@ class Balance extends Authenticated
   {
     $incomes = new CashFlow;
     
-    return $incomes->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    return $incomes->getIncomesExpensesByCategories($this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
   }
   
   private function loadSumOfExpensesByCategories()
   {
     $expenses = new CashFlow;
     
-    return $expenses->getIncomesExpensesByCategories($_SESSION['user_id'], $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    return $expenses->getIncomesExpensesByCategories($this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
   
   public function loadAllIncomes()
   {
-    $userID = $_SESSION['user_id'];
-    
     $incomes = new CashFlow;
     
-    return $incomes->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
+    return $incomes->getAllByCategory($this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'incomes');
   }
   
   public function loadAllExpenses()
   {
-    $userID = $_SESSION['user_id'];
-    
     $expenses = new CashFlow;
     
-    return $expenses->getAllByCategory($userID, $this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
+    return $expenses->getAllByCategory($this->beginDate->format('Y-m-d'), $this->endDate->format('Y-m-d'), 'expenses');
   }
   
   public function getUserIncomeExpenseCategoriesAction()
   {
     $selector = $_POST['selector'];
     
-    $categories = CashFlow::getCategories($_SESSION['user_id'], $selector);
+    $categories = CashFlow::getCategories($selector);
     
     header('Content-Type: application/json');
 		echo json_encode($categories);
@@ -167,7 +163,7 @@ class Balance extends Authenticated
   
   public function getUserPaymentMethodsAction()
   {
-    $methods = CashFlow::getPaymentMethods($_SESSION['user_id']);
+    $methods = CashFlow::getPaymentMethods();
     
     header('Content-Type: application/json');
 		echo json_encode($methods);

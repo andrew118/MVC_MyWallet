@@ -22,13 +22,16 @@ class Signup extends \Core\Controller
             
 			$newUser = User::findByEmail($user->email);
 
-            cashFlow::assignDefaultCategoriesToUser($newUser->id);
+            CashFlow::assignDefaultCategoriesToUser($newUser->id);
             
             Flash::addMessage('Zarejestrowałeś się pomyślnie. Możesz się zalogować');
 			
 			$this->redirect('/login/new');
+      
 		} else {
+      
 			View::RenderTemplate('Signup/new.html', ['user' => $user]);
+      
 		}
 	}
 }
