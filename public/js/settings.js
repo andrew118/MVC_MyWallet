@@ -50,7 +50,7 @@ function loadUserCategoriesAndMethods() {
     userIncomeCategories = data.incomeCategories;
     userExpenseCategories = data.expenseCategories;
     userPaymentMethods = data.paymentMethods;
-    
+
   });
   
 }
@@ -75,34 +75,86 @@ function showHideDetails() {
   });
 }
 
+function showFlashMessage() {
+  
+  $('#flashMessage').empty();
+  
+  $.get('/settings/get-flash-messages',
+  
+    function(response) {
+      
+      for (i = 0; i < response.length; i++) {
+        
+        let messageHtml = '<div class="row mt-3"><div class="col-10 col-sm-8 col-md-6 col-lg-5 mx-auto mb-1 alert alert-' + response[i].type + ' alert-dismissible fade show" role="alert"><div class="text-center">' + response[i].body + '</div><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+        
+        $('#flashMessage').append(messageHtml);
+      }
+      
+    }
+  
+  );
+  
+}
+
+function removeItemFromView(itemType) {
+  
+  let removingItemId = '#' + itemType + '-' + propertyID;
+  
+  $(removingItemId).remove();
+  
+}
+
+function addNewIncomeCategoryToView() {
+
+  $.post('/settings/get-newly-added-item-data', {
+    
+      selector : 'income'
+    
+    }, function(response) {
+      
+        let rowHtml = '<tr class="font-weight-bold bg-secondary income-category-row seen" style="width: 80%;" id="income-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash income"></i></td></tr>';
+        
+        $('#newIncomeCategory').closest('tr').before(rowHtml);
+
+      }
+  
+  );
+  
+}
+
 function updateIncomesCategory(newIncomeCategoryID) {
   
-  deleteIncomeCategory();
+  deleteIncomeCategory(false);
   
   $.post('/settings/update-incomes-category', {
     
     newCategoryID : newIncomeCategoryID,
     categoryToReplaceID : propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
-      reloadPage();
-    
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
+      
   });
   
 }
 
-function deleteIncomeCategory() {
+function deleteIncomeCategory(messageNeeded = true) {
   
   $.post('settings/delete-income-category', {
     
     categoryID : propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
-      reloadPage();
+      removeItemFromView('income');
+      if (messageNeeded) {
+        showFlashMessage();
+      }
+      loadUserCategoriesAndMethods();
     
   });
   
@@ -110,7 +162,7 @@ function deleteIncomeCategory() {
 
 function deleteIncomeCategoryModal() {
   
-  $('.income').click(function() {
+  $('body').on('click', 'i.income', function() {
     
     let incomeID = $(this).closest('tr').attr('id');
     let incomeIdSeparated = incomeID.split('-');
@@ -208,10 +260,12 @@ function saveIncomeCategory() {
       
         inputCategoryName: userInputIncomeCategory
         
-    }, function(response) {
+    }, function() {
       
       hideModal();
-      reloadPage();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
+      addNewIncomeCategoryToView();
       
     });
     
@@ -318,6 +372,24 @@ function validateTransactionsLimit(limit) {
   }
 }
 
+function addNewExpenseCategoryToView() {
+  
+  $.post('/settings/get-newly-added-item-data', {
+    
+    selector: 'expense'
+    
+    }, function(response) {
+      
+        let rowHtml = '<tr class="font-weight-bold bg-secondary expense-category-row seen" style="width: 80%;" id="expense-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right"><i class="icon-pencil expense-edit edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash expense"></i></tr>';
+        
+        $('#newExpenseCategory').closest('tr').before(rowHtml);
+
+    }
+  
+  );
+  
+}
+
 function saveExpenseCategory() {
   
   let userInputExpenseCategoryName = $('#user_expense_category').val();
@@ -341,10 +413,12 @@ function saveExpenseCategory() {
         inputCategoryName: userInputExpenseCategoryName,
         inputCategoryLimit: userExpenseCategoryLimit
         
-    }, function(response) {
+    }, function() {
       
       hideModal();
-      reloadPage();
+      showFlashMessage();
+      addNewExpenseCategoryToView();
+      loadUserCategoriesAndMethods();
       
     });
   }
@@ -387,12 +461,14 @@ function updateExpenseCategory() {
         inputCategoryLimit: userExpenseCategoryLimit,
         categoryID: propertyID
         
-    }, function(response) {
+    }, function() {
       
       hideModal();
-      reloadPage();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
       
     });
+    
   } else {
     
     $('#divWarning').text('Nie wprowadziłeś żadnych zmian');
@@ -402,7 +478,7 @@ function updateExpenseCategory() {
 
 function editExpenseCategoryModal() {
   
-  $('.expense-edit').click(function() {
+  $('body').on('click', 'i.expense-edit', function() {
     
     let expenseID = $(this).closest('tr').attr('id');
     let expenseIdSeparated = expenseID.split('-');
@@ -435,16 +511,20 @@ function editExpenseCategoryModal() {
   
 }
 
-function deleteExpenseCategory() {
+function deleteExpenseCategory(messageNeeded = true) {
 
     $.post('/settings/delete-expense-category', {
     
     expenseCategoryID: propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
-      reloadPage();
+      removeItemFromView('expense');
+      if (messageNeeded) {
+        showFlashMessage();
+      }
+      loadUserCategoriesAndMethods();
       
   });
   
@@ -452,17 +532,18 @@ function deleteExpenseCategory() {
 
 function updateExpensesCategory(selectedNewExpenseCategoryID) {
   
-  deleteExpenseCategory();
+  deleteExpenseCategory(false);
   
   $.post('/settings/change-category-for-expenses', {
     
     newCategoryID : selectedNewExpenseCategoryID,
     categoryToReplaceID : propertyID
     
-  }, function(response) {
+  }, function() {
 
       hideModal();
-      reloadPage();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
     
   });
   
@@ -470,7 +551,7 @@ function updateExpensesCategory(selectedNewExpenseCategoryID) {
 
 function deleteExpenseCategoryModal() {
   
-  $('.icon-trash.expense').click(function() {
+  $('body').on('click', 'i.icon-trash.expense', function() {
     
     let expenseID = $(this).closest('tr').attr('id');
     let expenseIdSeparated = expenseID.split('-');
@@ -568,6 +649,24 @@ function validatePaymentMethod(userInput) {
   }
 }
 
+function addNewPaymentMethodToView() {
+  
+  $.post('/settings/get-newly-added-item-data', {
+    
+    selector: 'payment'
+    
+    }, function(response) {
+      
+        let rowHtml = '<tr class="font-weight-bold bg-secondary payment-method-row seen" style="width: 90%;" id="payment-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right" title="Usuń metodę"><i class="icon-trash payment"></i></td></tr>';
+        
+        $('#newPaymentMethod').closest('tr').before(rowHtml);
+
+    }
+  
+  );
+  
+}
+
 function savePaymentMethod() {
   
   let submit = $('#modalSubmit').val();
@@ -580,10 +679,12 @@ function savePaymentMethod() {
         submit: submit,
         name: userInputPayment
         
-    }, function(response) {
+    }, function() {
       
-         hideModal();
-         reloadPage();
+        hideModal();
+        showFlashMessage();
+        addNewPaymentMethodToView();
+        loadUserCategoriesAndMethods();
       
     });
     
@@ -606,7 +707,7 @@ function addNewPaymentMethod() {
 
 function deletePaymentMethodModal() {
   
-  $('.payment').click(function() {
+  $('body').on('click', 'i.payment', function() {
     
     let paymentID = $(this).closest('tr').attr('id');
     let paymentIdSeparated = paymentID.split('-');
@@ -640,32 +741,37 @@ function deletePaymentMethodModal() {
 
 function updatePaymentMethod(selectedNewMethod) {
   
-  deletePayment();
+  deletePayment(false);
   
   $.post('/settings/update-payment-method', {
     
     newPaymentID : selectedNewMethod,
     paymentToReplace : propertyID
     
-  }, function(response) {
+  }, function() {
       
       hideModal();
-      reload();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
       
   });
   
 }
 
-function deletePayment() {
+function deletePayment(messageNeeded = true) {
   
   $.post('/settings/delete-payment-method', {
     
     paymentID: propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
-      reloadPage();
+      removeItemFromView('payment');
+      if (messageNeeded) {
+        showFlashMessage();
+      }
+      loadUserCategoriesAndMethods();
       
   });
   
@@ -744,10 +850,11 @@ function updateName() {
     
     $.post('/settings/update-name', {
         name: newName
-    }, function(response) {
+    }, function() {
       
       hideModal();
-      reloadPage();
+      $('#userName td').first().text(newName);
+      showFlashMessage();
       
     });
     
@@ -815,10 +922,11 @@ function updateEmail() {
     
           email: newEmail,
           
-      }, function(response) {
+      }, function() {
           
           hideModal();
-          reloadPage();
+          $('#userEmail td').first().text(newEmail);
+          showFlashMessage();
           
       });
   }
@@ -865,10 +973,10 @@ function updatePassword() {
           password: newPassword,
           submit: submit
           
-      }, function(response) {
+      }, function() {
         
           hideModal();
-          reloadPage();
+          showFlashMessage();
             
         }
     );
@@ -1061,10 +1169,4 @@ function hideModal() {
   $('#modalTitle').text('');
   $('#modalData').empty();
   $('#divWarning').text('');
-}
-
-function reloadPage() {
-  
-  window.location.reload();
-  
 }

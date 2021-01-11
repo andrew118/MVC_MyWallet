@@ -134,6 +134,17 @@ class Settings extends Authenticated
     }
   }
   
+  public function getNewlyAddedItemDataAction()
+  {
+    if (isset($_POST['selector'])) {
+      
+      $newCategory = CashFlow::getUserLastIncomeCategory($_POST['selector']);
+      
+      header('Content-Type: application/json');
+      echo json_encode($newCategory);
+    }
+  }
+  
   public function addIncomeCategoryAction()
   {
     if (isset($_POST['inputCategoryName'])) {
@@ -416,6 +427,15 @@ class Settings extends Authenticated
     
     header('Content-Type: application/json');
     echo json_encode($data);
+  }
+  
+  public function getFlashMessagesAction() {
+    
+    $messages = Flash::getMessages();
+    
+    header('Content-Type: application/json');
+    echo json_encode($messages);
+    
   }
   
   private function loadUserIncomeCategories()

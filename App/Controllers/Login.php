@@ -48,6 +48,6 @@ class Login extends \Core\Controller
 	{
     Flash::addMessage('Wylogowałeś się', Flash::INFO);
 		
-		$this->redirect('/login');
+		$this->redirect('/');
 	}
 }
