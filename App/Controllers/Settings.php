@@ -134,13 +134,15 @@ class Settings extends Authenticated
     }
   }
   
-  public function getNewlyAddedIncomeCateogryAction()
+  public function getNewlyAddedItemDataAction()
   {
-    
-    $newCategory = CashFlow::getUserLastIncomeCategory();
-    
-    header('Content-Type: application/json');
-    echo json_encode($newCategory);
+    if (isset($_POST['selector'])) {
+      
+      $newCategory = CashFlow::getUserLastIncomeCategory($_POST['selector']);
+      
+      header('Content-Type: application/json');
+      echo json_encode($newCategory);
+    }
   }
   
   public function addIncomeCategoryAction()

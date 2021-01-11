@@ -106,15 +106,17 @@ function removeItemFromView(itemType) {
 
 function addNewIncomeCategoryToView() {
 
-  $.get('/settings/get-newly-added-income-cateogry', 
-  
-    function(response) {
+  $.post('/settings/get-newly-added-item-data', {
+    
+      selector : 'income'
+    
+    }, function(response) {
       
-      let rowHtml = '<tr class="font-weight-bold bg-secondary income-category-row seen" style="width: 80%;" id="income-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash income"></i></td></tr>';
-      
-      $('#newIncomeCategory').closest('tr').before(rowHtml);
-      
-    }
+        let rowHtml = '<tr class="font-weight-bold bg-secondary income-category-row seen" style="width: 80%;" id="income-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash income"></i></td></tr>';
+        
+        $('#newIncomeCategory').closest('tr').before(rowHtml);
+        console.log(response);
+      }
   
   );
   
@@ -370,6 +372,24 @@ function validateTransactionsLimit(limit) {
   }
 }
 
+function addNewExpenseCategoryToView() {
+  
+  $.post('/settings/get-newly-added-item-data', {
+    
+    selector: 'expense'
+    
+    }, function(response) {
+      
+        let rowHtml = '<tr class="font-weight-bold bg-secondary expense-category-row seen" style="width: 80%;" id="expense-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right"><i class="icon-pencil expense-edit edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash expense"></i></tr>';
+        
+        $('#newExpenseCategory').closest('tr').before(rowHtml);
+      console.log(response);
+    }
+  
+  );
+  
+}
+
 function saveExpenseCategory() {
   
   let userInputExpenseCategoryName = $('#user_expense_category').val();
@@ -397,6 +417,7 @@ function saveExpenseCategory() {
       
       hideModal();
       showFlashMessage();
+      addNewExpenseCategoryToView();
       loadUserCategoriesAndMethods();
       
     });
@@ -456,7 +477,7 @@ function updateExpenseCategory() {
 
 function editExpenseCategoryModal() {
   
-  $('.expense-edit').click(function() {
+  $('body').on('click', 'i.expense-edit', function() {
     
     let expenseID = $(this).closest('tr').attr('id');
     let expenseIdSeparated = expenseID.split('-');
@@ -529,7 +550,7 @@ function updateExpensesCategory(selectedNewExpenseCategoryID) {
 
 function deleteExpenseCategoryModal() {
   
-  $('.icon-trash.expense').click(function() {
+  $('body').on('click', 'i.icon-trash.expense', function() {
     
     let expenseID = $(this).closest('tr').attr('id');
     let expenseIdSeparated = expenseID.split('-');

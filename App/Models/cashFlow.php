@@ -70,11 +70,20 @@ class cashFlow extends \Core\Model
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
   
-  public static function getUserLastIncomeCategory()
+  public static function getUserLastIncomeCategory($tableSelector)
   {
     $userID = $_SESSION['user_id'];
     
-    $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID ORDER BY id DESC LIMIT 1';
+    if ($tableSelector == 'income') {
+      
+      $sql = 'SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id = :userID ORDER BY id DESC LIMIT 1';
+      
+    } else if ($tableSelector == 'expense') {
+      
+      $sql = 'SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = :userID ORDER BY id DESC LIMIT 1';
+      
+    }
+    
       
     $db = static::getDB();
     
