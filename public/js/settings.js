@@ -147,7 +147,7 @@ function deleteIncomeCategory(messageNeeded = true) {
     
     categoryID : propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
       removeItemFromView('income');
@@ -260,7 +260,7 @@ function saveIncomeCategory() {
       
         inputCategoryName: userInputIncomeCategory
         
-    }, function(response) {
+    }, function() {
       
       hideModal();
       showFlashMessage();
@@ -413,7 +413,7 @@ function saveExpenseCategory() {
         inputCategoryName: userInputExpenseCategoryName,
         inputCategoryLimit: userExpenseCategoryLimit
         
-    }, function(response) {
+    }, function() {
       
       hideModal();
       showFlashMessage();
@@ -461,13 +461,14 @@ function updateExpenseCategory() {
         inputCategoryLimit: userExpenseCategoryLimit,
         categoryID: propertyID
         
-    }, function(response) {
+    }, function() {
       
       hideModal();
       showFlashMessage();
       loadUserCategoriesAndMethods();
       
     });
+    
   } else {
     
     $('#divWarning').text('Nie wprowadziłeś żadnych zmian');
@@ -516,7 +517,7 @@ function deleteExpenseCategory(messageNeeded = true) {
     
     expenseCategoryID: propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
       removeItemFromView('expense');
@@ -538,7 +539,7 @@ function updateExpensesCategory(selectedNewExpenseCategoryID) {
     newCategoryID : selectedNewExpenseCategoryID,
     categoryToReplaceID : propertyID
     
-  }, function(response) {
+  }, function() {
 
       hideModal();
       showFlashMessage();
@@ -678,7 +679,7 @@ function savePaymentMethod() {
         submit: submit,
         name: userInputPayment
         
-    }, function(response) {
+    }, function() {
       
         hideModal();
         showFlashMessage();
@@ -747,7 +748,7 @@ function updatePaymentMethod(selectedNewMethod) {
     newPaymentID : selectedNewMethod,
     paymentToReplace : propertyID
     
-  }, function(response) {
+  }, function() {
       
       hideModal();
       showFlashMessage();
@@ -763,7 +764,7 @@ function deletePayment(messageNeeded = true) {
     
     paymentID: propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
       removeItemFromView('payment');
@@ -849,7 +850,7 @@ function updateName() {
     
     $.post('/settings/update-name', {
         name: newName
-    }, function(response) {
+    }, function() {
       
       hideModal();
       $('#userName td').first().text(newName);
@@ -921,7 +922,7 @@ function updateEmail() {
     
           email: newEmail,
           
-      }, function(response) {
+      }, function() {
           
           hideModal();
           $('#userEmail td').first().text(newEmail);
@@ -972,7 +973,7 @@ function updatePassword() {
           password: newPassword,
           submit: submit
           
-      }, function(response) {
+      }, function() {
         
           hideModal();
           showFlashMessage();

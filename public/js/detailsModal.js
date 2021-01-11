@@ -30,9 +30,6 @@ function getCategories(categoryName) {
         expenseCategories = categories;
       }
       
-    },
-    error: function() {
-      console.log("Błąd połączenia");
     }
   });
 }
@@ -44,9 +41,6 @@ function getPaymentMethods() {
     
     success: function(methods) {
       paymentMethotds = methods;
-    },
-    error: function() {
-      console.log("Błąd połączenia");
     }
   });
 }
