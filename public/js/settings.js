@@ -75,6 +75,14 @@ function showHideDetails() {
   });
 }
 
+function removeItemFromView(itemName) {
+  
+  let removingItemId = '#' + itemName + '-' + propertyID;
+  
+  $(removingItemId).remove();
+  
+}
+
 function updateIncomesCategory(newIncomeCategoryID) {
   
   deleteIncomeCategory();
@@ -87,7 +95,7 @@ function updateIncomesCategory(newIncomeCategoryID) {
   }, function(response) {
     
       hideModal();
-      reloadPage();
+      
     
   });
   
@@ -102,7 +110,8 @@ function deleteIncomeCategory() {
   }, function(response) {
     
       hideModal();
-      reloadPage();
+      removeItemFromView('income');
+      loadUserCategoriesAndMethods();
     
   });
   
@@ -444,7 +453,7 @@ function deleteExpenseCategory() {
   }, function(response) {
     
       hideModal();
-      reloadPage();
+      removeItemFromView('expense');
       
   });
   
@@ -462,7 +471,6 @@ function updateExpensesCategory(selectedNewExpenseCategoryID) {
   }, function(response) {
 
       hideModal();
-      reloadPage();
     
   });
   
@@ -650,7 +658,6 @@ function updatePaymentMethod(selectedNewMethod) {
   }, function(response) {
       
       hideModal();
-      reload();
       
   });
   
@@ -665,7 +672,7 @@ function deletePayment() {
   }, function(response) {
     
       hideModal();
-      reloadPage();
+      removeItemFromView('payment');
       
   });
   
@@ -747,7 +754,7 @@ function updateName() {
     }, function(response) {
       
       hideModal();
-      reloadPage();
+      $('#userName td').first().text(newName);
       
     });
     
@@ -818,7 +825,7 @@ function updateEmail() {
       }, function(response) {
           
           hideModal();
-          reloadPage();
+          $('#userEmail td').first().text(newEmail);
           
       });
   }
@@ -868,7 +875,7 @@ function updatePassword() {
       }, function(response) {
         
           hideModal();
-          reloadPage();
+          
             
         }
     );
