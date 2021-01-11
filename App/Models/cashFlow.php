@@ -82,6 +82,10 @@ class cashFlow extends \Core\Model
       
       $sql = 'SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id = :userID ORDER BY id DESC LIMIT 1';
       
+    } else if ($tableSelector == 'payment') {
+      
+      $sql = 'SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id = :userID ORDER BY id DESC LIMIT 1';
+      
     }
     
       

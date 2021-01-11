@@ -115,7 +115,7 @@ function addNewIncomeCategoryToView() {
         let rowHtml = '<tr class="font-weight-bold bg-secondary income-category-row seen" style="width: 80%;" id="income-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash income"></i></td></tr>';
         
         $('#newIncomeCategory').closest('tr').before(rowHtml);
-        console.log(response);
+
       }
   
   );
@@ -383,7 +383,7 @@ function addNewExpenseCategoryToView() {
         let rowHtml = '<tr class="font-weight-bold bg-secondary expense-category-row seen" style="width: 80%;" id="expense-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right"><i class="icon-pencil expense-edit edit" title="Edytuj kategorię"></i></td></td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash expense"></i></tr>';
         
         $('#newExpenseCategory').closest('tr').before(rowHtml);
-      console.log(response);
+
     }
   
   );
@@ -648,6 +648,24 @@ function validatePaymentMethod(userInput) {
   }
 }
 
+function addNewPaymentMethodToView() {
+  
+  $.post('/settings/get-newly-added-item-data', {
+    
+    selector: 'payment'
+    
+    }, function(response) {
+      
+        let rowHtml = '<tr class="font-weight-bold bg-secondary payment-method-row seen" style="width: 90%;" id="payment-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right" title="Usuń metodę"><i class="icon-trash payment"></i></td></tr>';
+        
+        $('#newPaymentMethod').closest('tr').before(rowHtml);
+
+    }
+  
+  );
+  
+}
+
 function savePaymentMethod() {
   
   let submit = $('#modalSubmit').val();
@@ -664,6 +682,7 @@ function savePaymentMethod() {
       
         hideModal();
         showFlashMessage();
+        addNewPaymentMethodToView();
         loadUserCategoriesAndMethods();
       
     });
@@ -687,7 +706,7 @@ function addNewPaymentMethod() {
 
 function deletePaymentMethodModal() {
   
-  $('.payment').click(function() {
+  $('body').on('click', 'i.payment', function() {
     
     let paymentID = $(this).closest('tr').attr('id');
     let paymentIdSeparated = paymentID.split('-');
