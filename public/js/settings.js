@@ -50,7 +50,7 @@ function loadUserCategoriesAndMethods() {
     userIncomeCategories = data.incomeCategories;
     userExpenseCategories = data.expenseCategories;
     userPaymentMethods = data.paymentMethods;
-    
+
   });
   
 }
@@ -96,11 +96,27 @@ function showFlashMessage() {
   
 }
 
-function removeItemFromView(itemName) {
+function removeItemFromView(itemType) {
   
-  let removingItemId = '#' + itemName + '-' + propertyID;
+  let removingItemId = '#' + itemType + '-' + propertyID;
   
   $(removingItemId).remove();
+  
+}
+
+function addNewIncomeCategoryToView() {
+
+  $.get('/settings/get-newly-added-income-cateogry', 
+  
+    function(response) {
+      
+      let rowHtml = '<tr class="font-weight-bold bg-secondary income-category-row seen" style="width: 80%;" id="income-' + response.id + '"><td>' + response.name + '</td><td style="width: 10%;" class="text-right" title="Usuń kategorię"><i class="icon-trash income"></i></td></tr>';
+      
+      $('#newIncomeCategory').closest('tr').before(rowHtml);
+      
+    }
+  
+  );
   
 }
 
@@ -144,7 +160,7 @@ function deleteIncomeCategory(messageNeeded = true) {
 
 function deleteIncomeCategoryModal() {
   
-  $('.income').click(function() {
+  $('body').on('click', 'i.income', function() {
     
     let incomeID = $(this).closest('tr').attr('id');
     let incomeIdSeparated = incomeID.split('-');
@@ -247,6 +263,7 @@ function saveIncomeCategory() {
       hideModal();
       showFlashMessage();
       loadUserCategoriesAndMethods();
+      addNewIncomeCategoryToView();
       
     });
     
