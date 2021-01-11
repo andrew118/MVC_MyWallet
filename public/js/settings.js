@@ -1169,9 +1169,3 @@ function hideModal() {
   $('#modalData').empty();
   $('#divWarning').text('');
 }
-
-function reloadPage() {
-  
-  window.location.reload();
-  
-}
