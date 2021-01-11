@@ -75,6 +75,27 @@ function showHideDetails() {
   });
 }
 
+function showFlashMessage() {
+  
+  $('#flashMessage').empty();
+  
+  $.get('/settings/get-flash-messages',
+  
+    function(response) {
+      
+      for (i = 0; i < response.length; i++) {
+        
+        let messageHtml = '<div class="row mt-3"><div class="col-10 col-sm-8 col-md-6 col-lg-5 mx-auto mb-1 alert alert-' + response[i].type + ' alert-dismissible fade show" role="alert"><div class="text-center">' + response[i].body + '</div><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+        
+        $('#flashMessage').append(messageHtml);
+      }
+      
+    }
+  
+  );
+  
+}
+
 function removeItemFromView(itemName) {
   
   let removingItemId = '#' + itemName + '-' + propertyID;
@@ -85,23 +106,24 @@ function removeItemFromView(itemName) {
 
 function updateIncomesCategory(newIncomeCategoryID) {
   
-  deleteIncomeCategory();
+  deleteIncomeCategory(false);
   
   $.post('/settings/update-incomes-category', {
     
     newCategoryID : newIncomeCategoryID,
     categoryToReplaceID : propertyID
     
-  }, function(response) {
+  }, function() {
     
       hideModal();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
       
-    
   });
   
 }
 
-function deleteIncomeCategory() {
+function deleteIncomeCategory(messageNeeded = true) {
   
   $.post('settings/delete-income-category', {
     
@@ -111,6 +133,9 @@ function deleteIncomeCategory() {
     
       hideModal();
       removeItemFromView('income');
+      if (messageNeeded) {
+        showFlashMessage();
+      }
       loadUserCategoriesAndMethods();
     
   });
@@ -220,7 +245,8 @@ function saveIncomeCategory() {
     }, function(response) {
       
       hideModal();
-      reloadPage();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
       
     });
     
@@ -353,7 +379,8 @@ function saveExpenseCategory() {
     }, function(response) {
       
       hideModal();
-      reloadPage();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
       
     });
   }
@@ -399,7 +426,8 @@ function updateExpenseCategory() {
     }, function(response) {
       
       hideModal();
-      reloadPage();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
       
     });
   } else {
@@ -444,7 +472,7 @@ function editExpenseCategoryModal() {
   
 }
 
-function deleteExpenseCategory() {
+function deleteExpenseCategory(messageNeeded = true) {
 
     $.post('/settings/delete-expense-category', {
     
@@ -454,6 +482,10 @@ function deleteExpenseCategory() {
     
       hideModal();
       removeItemFromView('expense');
+      if (messageNeeded) {
+        showFlashMessage();
+      }
+      loadUserCategoriesAndMethods();
       
   });
   
@@ -461,7 +493,7 @@ function deleteExpenseCategory() {
 
 function updateExpensesCategory(selectedNewExpenseCategoryID) {
   
-  deleteExpenseCategory();
+  deleteExpenseCategory(false);
   
   $.post('/settings/change-category-for-expenses', {
     
@@ -471,6 +503,8 @@ function updateExpensesCategory(selectedNewExpenseCategoryID) {
   }, function(response) {
 
       hideModal();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
     
   });
   
@@ -590,8 +624,9 @@ function savePaymentMethod() {
         
     }, function(response) {
       
-         hideModal();
-         reloadPage();
+        hideModal();
+        showFlashMessage();
+        loadUserCategoriesAndMethods();
       
     });
     
@@ -648,7 +683,7 @@ function deletePaymentMethodModal() {
 
 function updatePaymentMethod(selectedNewMethod) {
   
-  deletePayment();
+  deletePayment(false);
   
   $.post('/settings/update-payment-method', {
     
@@ -658,12 +693,14 @@ function updatePaymentMethod(selectedNewMethod) {
   }, function(response) {
       
       hideModal();
+      showFlashMessage();
+      loadUserCategoriesAndMethods();
       
   });
   
 }
 
-function deletePayment() {
+function deletePayment(messageNeeded = true) {
   
   $.post('/settings/delete-payment-method', {
     
@@ -673,6 +710,10 @@ function deletePayment() {
     
       hideModal();
       removeItemFromView('payment');
+      if (messageNeeded) {
+        showFlashMessage();
+      }
+      loadUserCategoriesAndMethods();
       
   });
   
@@ -755,6 +796,7 @@ function updateName() {
       
       hideModal();
       $('#userName td').first().text(newName);
+      showFlashMessage();
       
     });
     
@@ -826,6 +868,7 @@ function updateEmail() {
           
           hideModal();
           $('#userEmail td').first().text(newEmail);
+          showFlashMessage();
           
       });
   }
@@ -875,7 +918,7 @@ function updatePassword() {
       }, function(response) {
         
           hideModal();
-          
+          showFlashMessage();
             
         }
     );

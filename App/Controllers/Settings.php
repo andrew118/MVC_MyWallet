@@ -418,6 +418,15 @@ class Settings extends Authenticated
     echo json_encode($data);
   }
   
+  public function getFlashMessagesAction() {
+    
+    $messages = Flash::getMessages();
+    
+    header('Content-Type: application/json');
+    echo json_encode($messages);
+    
+  }
+  
   private function loadUserIncomeCategories()
   {
     return CashFlow::getCategories('incomes');
